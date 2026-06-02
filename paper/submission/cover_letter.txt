@@ -1,0 +1,14 @@
+[PLACEHOLDER — Cover letter for Empirical Software Engineering]
+
+Dear Editor,
+
+[TO BE WRITTEN]
+
+We submit the manuscript entitled "Beyond Structural Validity: Evaluating Behavioral Correctness, Robustness, and Reproducibility of LLM-Generated Finite State Machines from Natural-Language Requirements" for consideration in Empirical Software Engineering.
+
+[Contribution summary — 3 paragraphs]
+
+[Replication statement — Zenodo DOI, benchmark repository URL]
+
+Sincerely,
+Cesar Andres Sanchez

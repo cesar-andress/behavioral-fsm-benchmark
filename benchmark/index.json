@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "benchmark_name": "FSM-Behavior-Bench",
+  "upstream_dataset": "FSM-Bench-20",
+  "systems_count": 20,
+  "gold_fsm_status": "placeholder",
+  "oracle_status": "placeholder",
+  "perturbation_status": "placeholder",
+  "systems": [],
+  "notes": "System entries will be populated as gold FSMs, oracles, and perturbations are authored."
+}

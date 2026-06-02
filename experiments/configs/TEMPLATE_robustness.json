@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "TEMPLATE_robustness",
+  "purpose": "robustness",
+  "description": "Template for requirement perturbation robustness campaign.",
+  "status": "template",
+  "pilot": false,
+  "frozen_at": null,
+  "depends_on_campaign": "TEMPLATE_structural_baseline",
+  "perturbation_types": ["paraphrase", "ordering", "omission"],
+  "models": [],
+  "systems": [],
+  "perturbation_schema": "benchmark/perturbations/schema.json",
+  "notes": "Each variant must reference baseline run for delta metrics."
+}

@@ -1,0 +1,11 @@
+{
+  "campaign_id": "C0_structural_parity",
+  "description": "Spot-check structural metrics against IST 2026 freeze (10% sample)",
+  "status": "template",
+  "upstream_manifest": "20260602T195520Z",
+  "sample_fraction": 0.10,
+  "models": [],
+  "systems": [],
+  "gates": ["G1", "G2", "G3"],
+  "notes": "Do not execute until scripts are implemented"
+}

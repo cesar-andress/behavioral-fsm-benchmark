@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fsm-bench-next/catalog/v1",
+  "title": "FSM-Bench-Next Catalog",
+  "description": "Placeholder — see paper/notes/benchmark_specification.md",
+  "type": "object"
+}

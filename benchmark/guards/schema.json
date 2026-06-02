@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fsm-behavior-bench/perturbation/v1",
+  "title": "Requirement Perturbation Specification",
+  "description": "Schema for robustness perturbation variant files. PLACEHOLDER — refine at implementation.",
+  "type": "object",
+  "required": ["system_id", "schema_version", "base_system", "variants"],
+  "properties": {
+    "system_id": { "type": "string" },
+    "schema_version": { "type": "string", "const": "1.0" },
+    "base_system": {
+      "type": "string",
+      "description": "Reference to unperturbed system in dataset/systems/"
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["variant_id", "perturbation_type", "requirements"],
+        "properties": {
+          "variant_id": { "type": "string" },
+          "perturbation_type": {
+            "type": "string",
+            "enum": ["paraphrase", "ordering", "omission", "ambiguity_injection", "negation_flip"]
+          },
+          "seed": { "type": "integer", "description": "Fixed seed for reproducible perturbation" },
+          "requirements": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "expected_behavior_change": {
+            "type": "string",
+            "description": "Documented hypothesis for analysis"
+          }
+        }
+      }
+    }
+  }
+}

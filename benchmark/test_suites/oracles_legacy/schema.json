@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fsm-behavior-bench/oracle/v1",
+  "title": "Behavioral Oracle Specification",
+  "description": "Schema for per-system behavioral oracle files. PLACEHOLDER — refine at implementation.",
+  "type": "object",
+  "required": ["system_id", "schema_version", "oracles"],
+  "properties": {
+    "system_id": {
+      "type": "string",
+      "description": "System identifier matching dataset filename stem"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "oracles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["oracle_id", "category", "trace", "expected"],
+        "properties": {
+          "oracle_id": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["positive_trace", "negative_trace", "invariant_check", "requirement_binding"]
+          },
+          "trace": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Ordered event sequence from initial state"
+          },
+          "expected": {
+            "type": "object",
+            "description": "Expected outcome (final state, rejection, invariant hold)"
+          },
+          "requirement_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

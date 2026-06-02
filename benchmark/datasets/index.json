@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "status": "pending_import",
+  "dataset_name": "FSM-Bench-20 (imported)",
+  "upstream_doi": "10.5281/zenodo.20516296",
+  "imported_at": null,
+  "import_git_commit": null,
+  "systems": [],
+  "notes": "Populated by scripts/import_upstream_dataset.py after first successful import."
+}

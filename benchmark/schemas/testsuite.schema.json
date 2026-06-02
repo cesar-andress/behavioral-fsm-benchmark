@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fsm-bench-next/testsuite/v1",
+  "title": "Behavioral Test Suite",
+  "description": "Placeholder — see paper/notes/benchmark_specification.md",
+  "type": "object"
+}

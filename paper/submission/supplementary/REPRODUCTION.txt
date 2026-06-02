@@ -1,0 +1,16 @@
+Replication Instructions (Supplementary)
+=========================================
+
+[PLACEHOLDER — condensed from llm-fsm-behavioral-benchmark/REPRODUCIBILITY.md]
+
+1. Install Python 3.12+, Ollama, and pull models per config.py
+2. Clone llm-fsm-behavioral-benchmark at tag v1.0.0
+3. Import FSM-Bench-20: python3.12 scripts/import_upstream_dataset.py
+4. Create prompts from docs/experimental_prompts.md
+5. Run ./run_all.sh OR step-by-step campaigns per experiments/campaigns/
+6. Compare results/ against Zenodo snapshot checksums
+
+Campaign ID (final freeze): TBD
+Zenodo DOI: TBD
+
+Upstream dataset: FSM-Bench-20 — https://doi.org/10.5281/zenodo.20516296

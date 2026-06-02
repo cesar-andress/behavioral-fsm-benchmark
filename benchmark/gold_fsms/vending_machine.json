@@ -1,0 +1,16 @@
+{
+  "system_name": "PLACEHOLDER — Vending Machine",
+  "domain": "Retail automation",
+  "metadata": {
+    "status": "placeholder",
+    "approved_by": null,
+    "approved_at": null,
+    "source": "pending_migration_from_ist2026",
+    "notes": "Replace with approved gold FSM before behavioral evaluation"
+  },
+  "states": [],
+  "initial_state": "",
+  "events": [],
+  "transitions": [],
+  "forbidden_behaviours": []
+}

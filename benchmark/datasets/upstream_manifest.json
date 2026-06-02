@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "upstream": {
+    "name": "FSM-Bench-20",
+    "doi": "10.5281/zenodo.20516296",
+    "repository": "https://github.com/cesar-andress/llm-fsm-local-benchmark",
+    "git_tag": "v1.0.0",
+    "git_commit": "PLACEHOLDER — pin at first import",
+    "zenodo_record": "20516296",
+    "release_date": "2026-06-02"
+  },
+  "import_policy": {
+    "method": "script",
+    "script": "scripts/import_upstream_dataset.py",
+    "verify_checksums": true,
+    "local_path_after_import": "benchmark/datasets/systems/"
+  },
+  "expected_systems": 20,
+  "systems_checksum_algorithm": "sha256",
+  "systems_checksums": {},
+  "notes": "Checksums will be populated after first verified import. Do not commit imported system JSON files."
+}

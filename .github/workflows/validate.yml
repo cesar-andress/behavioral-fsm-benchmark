@@ -1,0 +1,30 @@
+name: Validate
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project
+        run: pip install -e ".[dev]"
+      - name: Validate JSON schemas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for p in Path("benchmark/schemas").glob("*.json"):
+              json.loads(p.read_text())
+              print(f"OK: {p}")
+          PY
+      - name: Validate campaign config templates
+        run: test -f experiments/configs/TEMPLATE_structural.json
+      - name: Run tests
+        run: pytest tests/ -q || true

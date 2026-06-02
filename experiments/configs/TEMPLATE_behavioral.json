@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "TEMPLATE_behavioral_oracles",
+  "purpose": "behavioral",
+  "description": "Template for behavioral oracle evaluation on G2+ FSM outputs.",
+  "status": "template",
+  "pilot": false,
+  "frozen_at": null,
+  "depends_on_campaign": "TEMPLATE_structural_baseline",
+  "prerequisite_gate": "G2",
+  "models": [],
+  "systems": [],
+  "oracle_schema": "benchmark/oracles/schema.json",
+  "notes": "Requires structural campaign outputs in outputs/cleaned/."
+}

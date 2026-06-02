@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "fsm-bench-next/candidate_fsm/v1",
+  "title": "Candidate FSM (FSMOutput-compatible)",
+  "description": "Placeholder — see paper/notes/benchmark_specification.md",
+  "type": "object"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "TEMPLATE_reproducibility",
+  "purpose": "reproducibility",
+  "description": "Template for multi-run reproducibility campaign at fixed temperature.",
+  "status": "template",
+  "pilot": false,
+  "frozen_at": null,
+  "repeats_per_cell": null,
+  "models": [],
+  "systems": [],
+  "inference": {
+    "backend": "ollama",
+    "temperature": 0.0,
+    "structured_output": true
+  },
+  "notes": "Set repeats_per_cell after pilot variance estimate."
+}

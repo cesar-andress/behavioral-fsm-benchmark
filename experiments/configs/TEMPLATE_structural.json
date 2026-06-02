@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "TEMPLATE_structural_baseline",
+  "purpose": "structural",
+  "description": "Template for structural G1-G3 baseline campaign. Copy and rename before use.",
+  "status": "template",
+  "pilot": false,
+  "frozen_at": null,
+  "frozen_by": null,
+  "git_commit": null,
+  "upstream_manifest": "dataset/upstream_manifest.json",
+  "prompt_version": "docs/experimental_prompts.md#0.1.0-skeleton",
+  "models": [],
+  "systems": [],
+  "inference": {
+    "backend": "ollama",
+    "temperature": 0.0,
+    "structured_output": true,
+    "num_ctx": 8192,
+    "timeout_seconds": 600
+  },
+  "expected_runs": null,
+  "notes": "Populate models and systems before pilot. Set frozen_at after review."
+}

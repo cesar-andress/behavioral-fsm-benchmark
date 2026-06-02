@@ -1,0 +1,80 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Experiment outputs (regeneratable)
+experiments/runs/*
+!experiments/runs/.gitkeep
+experiments/logs/*
+!experiments/logs/.gitkeep
+analysis/figures/*
+!analysis/figures/.gitkeep
+analysis/tables/*
+!analysis/tables/.gitkeep
+
+# Imported dataset (regeneratable from upstream)
+benchmark/datasets/systems/*.json
+
+# AI-only and local assistant artifacts
+prompts/
+prompt_drafts/
+ai_prompts/
+cursor_rules/
+.cursor/
+chat_logs/
+assistant_logs/
+scratch_prompts/
+local_notes/
+AGENTS.md
+*.prompt.txt
+*.chat.txt
+*.assistant.txt
+
+# Environment and secrets
+.env
+.env.*
+*.secret
+*.key
+
+# OS / editors
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.bbl
+paper/*.blg
+paper/*.synctex.gz
+paper/*.fdb_latexmk
+paper/*.fls
+
+# Large local artefacts
+*.gguf
+*.bin
+*.safetensors
+
+# Release build artifacts
+releases/*.zip
+releases/*.tar.gz
+reproducibility/build/*
+!reproducibility/build/.gitkeep

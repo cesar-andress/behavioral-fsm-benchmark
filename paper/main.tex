@@ -1,0 +1,75 @@
+%% main.tex — Empirical Software Engineering (Springer Nature)
+%% Manuscript skeleton — content pending campaign freeze
+
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb}
+\usepackage{url}
+\usepackage{xurl}
+\usepackage[hypertexnames=false]{hyperref}
+
+\raggedbottom
+
+\title[Beyond Structural Validity]{%
+  Beyond Structural Validity: Evaluating Behavioral Correctness, Robustness, and
+  Reproducibility of LLM-Generated Finite State Machines from Natural-Language
+  Requirements%
+}
+
+\author*[1]{\fnm{C\'esar Andr\'es} \sur{S\'anchez}}
+\affil*[1]{%
+  \orgdiv{CRIA-BDHS Research Group},%
+  \orgname{Higher Polytechnic School of Technology and Science, Camilo Jos\'e Cela University},%
+  \orgaddress{%
+    \street{Calle Castillo de Alarc\'on 49},%
+    \city{Villafranca del Castillo, Madrid},%
+    \postcode{28692},%
+    \country{Spain}%
+  }%
+}
+
+%% Abstract: populate after results freeze (IMRaD structure reserved)
+\abstract{%
+  \textbf{Context:} Pending.
+  \textbf{Objective:} Pending.
+  \textbf{Method:} Pending.
+  \textbf{Results:} Pending.
+  \textbf{Conclusions:} Pending.
+}
+
+\keywords{finite state machines, large language models, behavioral correctness, model-based testing, robustness, reproducibility, empirical software engineering}
+
+\begin{document}
+
+\maketitle
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_study_design}
+\input{sections/04_benchmark}
+\input{sections/05_experimental_setup}
+\input{sections/06_results}
+\input{sections/07_discussion}
+\input{sections/08_threats_to_validity}
+\FloatBarrier
+\input{sections/09_conclusion}
+
+\section*{Declarations}
+\subsection*{Funding}
+\subsection*{Conflict of interest}
+\subsection*{Data availability}
+\subsection*{Code availability}
+
+\bibliography{references/references}
+
+\end{document}
