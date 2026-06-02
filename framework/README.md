@@ -1,14 +1,27 @@
-# Framework
+# Framework — behavioral-fsm-benchmark
 
-Python evaluation engine for structural gates, behavioral oracles, equivalence, coverage, and repair.
+Python evaluation engine. Install from repository root: `pip install -e ".[dev]"`.
 
-| Package | Role |
-|---------|------|
-| `behavioral/` | Trace simulator and oracle execution |
-| `validators/` | G1–G3 structural gates, schema validation |
-| `equivalence/` | Reference FSM comparison (FBNS, bisimulation tiers) |
-| `coverage/` | TCov, PCov, TEQ metrics |
-| `repair/` | Optional candidate FSM normalization |
-| `io/` | JSON I/O, manifest readers, report writers |
+## Modules
 
-Implementation pending. Install with `pip install -e .` from repository root.
+| Package | Responsibility |
+|---------|----------------|
+| `framework.validators` | G1–G3 structural gates, JSON schema validation |
+| `framework.behavioral` | Trace simulator, oracle execution |
+| `framework.equivalence` | Reference FSM comparison (FBNS, bisimulation tiers) |
+| `framework.coverage` | TCov, PCov, TEQ metrics |
+| `framework.guards` | Guard DSL parse/evaluate, guard-aware determinism |
+| `framework.io` | Artifact loading, manifest I/O, report writers |
+| `framework.repair` | Optional candidate normalization |
+| `framework.types` | Shared dataclasses (placeholder) |
+
+## Benchmark data vs framework code
+
+| Location | Role |
+|----------|------|
+| `benchmark/guards/` | Guard **definitions** and perturbation variants (data) |
+| `framework/guards/` | Guard **evaluation** logic (code) |
+
+## Status
+
+Package skeleton only — implementations pending per [docs/evaluation_protocol.md](../docs/evaluation_protocol.md).

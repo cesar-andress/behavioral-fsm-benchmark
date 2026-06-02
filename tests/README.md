@@ -1,9 +1,8 @@
 # Tests
 
-Unit and integration tests for the evaluation framework.
-
 ```bash
 pytest
+ruff check framework/ tests/
 ```
 
-Implementation pending.
+Smoke tests verify package import and placeholder types. Integration tests will be added with framework implementation.

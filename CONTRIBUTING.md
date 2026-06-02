@@ -1,36 +1,31 @@
 # Contributing — behavioral-fsm-benchmark
 
-Thank you for your interest in this research artifact.
-
 ## Scope
 
-This repository supports an EMSE empirical study. Contributions should align with the study design in [docs/study_design.md](docs/study_design.md).
+Contributions must align with [docs/study_design.md](docs/study_design.md) and [docs/repository_governance.md](docs/repository_governance.md).
 
-## Before you start
-
-1. Read [docs/benchmark_specification.md](docs/benchmark_specification.md).
-2. Read [docs/evaluation_protocol.md](docs/evaluation_protocol.md).
-3. Do not commit raw model outputs, imported datasets, or LaTeX build artifacts.
-
-## Development setup
+## Setup
 
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 pytest
+ruff check framework/ tests/
 ```
 
-## Pull requests
+## Pull request checklist
 
-- English only for tracked files.
-- One logical change per PR.
-- Update docs when changing protocols or schemas.
-- No experimental results in PRs until campaign freeze is documented.
+- [ ] English only for tracked files
+- [ ] No raw experiment outputs or imported datasets committed
+- [ ] Schemas updated if artifact formats change
+- [ ] `docs/benchmark_specification.md` updated if metrics or layers change
+- [ ] Tests pass (`pytest`)
+- [ ] Lint clean (`ruff check`)
 
-## Gold FSM authoring
+## Gold FSM and test-suite authoring
 
-Reference FSMs require reviewer approval before use in scoring. See `benchmark/gold_fsms/` README and [docs/benchmark_specification.md](docs/benchmark_specification.md).
+Requires reviewer approval documented in artifact metadata. See [docs/artifact_policy.md](docs/artifact_policy.md).
 
-## Questions
+## Campaign execution
 
-Open a GitHub issue with label `question`.
+Do not merge executed run data until campaign manifest is frozen per [docs/release_policy.md](docs/release_policy.md).

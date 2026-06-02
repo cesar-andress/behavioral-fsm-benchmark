@@ -198,38 +198,28 @@ TEQ ∈ [0, 1]. Equivalence **pass** threshold (reporting): TEQ ≥ 0.80 (config
 ### 3.1 Repository layout
 
 ```text
-llm-fsm-behavioral-benchmark/          # implementation root
-├── catalog.json                       # Benchmark manifest
-├── dataset/                           # FSM-Bench-20 import (requirements)
-│   ├── upstream_manifest.json
-│   └── systems/*.json                 # gitignored after import
-├── reference/                         # FSM-Bench-Next reference FSMs
-│   ├── index.json
-│   └── <system_id>.json
-├── testsuites/                        # Behavioral test suites
-│   ├── index.json
-│   └── <system_id>.json
-├── schemas/                           # JSON Schema documents
-│   ├── catalog.schema.json
-│   ├── reference_fsm.schema.json
-│   ├── testsuite.schema.json
-│   ├── candidate_fsm.schema.json      # = FSMOutput (+ optional meta)
-│   └── evaluation_report.schema.json
-├── scripts/
-│   ├── evaluate_next.py               # Main pipeline entry
-│   └── fsm_benchmark/
-│       ├── schema.py
-│       ├── structural.py              # L0
-│       ├── determinism.py             # L1
-│       ├── simulator.py               # L2–L4
-│       ├── coverage.py                # L3
-│       ├── equivalence.py             # L4
-│       └── scoring.py                 # L5
-├── outputs/cleaned/                   # Candidate FSMs (gitignored)
-└── results/next/                      # Evaluation outputs (gitignored)
-    ├── metrics.csv
-    ├── details/<run_id>.json
-    └── manifest_<campaign>.json
+behavioral-fsm-benchmark/              # implementation root
+├── benchmark/
+│   ├── datasets/                      # FSM-Bench-20 import (requirements)
+│   │   ├── upstream_manifest.json
+│   │   └── systems/*.json             # gitignored after import
+│   ├── gold_fsms/                     # FSM-Bench-Next reference FSMs
+│   ├── test_suites/                   # Behavioral test suites
+│   ├── guards/                        # Guard DSL + perturbation variants
+│   └── schemas/                       # JSON Schema documents
+├── framework/                         # Python evaluation engine
+│   ├── validators/                    # L0 structural
+│   ├── guards/                        # L1 guard-aware determinism
+│   ├── behavioral/                    # L2–L4 simulation
+│   ├── coverage/                      # L3 metrics
+│   ├── equivalence/                   # L4
+│   └── io/                            # reports, manifest I/O
+├── experiments/
+│   ├── configs/                       # Campaign templates
+│   ├── manifests/
+│   ├── runs/                          # gitignored
+│   └── logs/                          # gitignored
+└── scripts/                           # CLI entry points (planned)
 ```
 
 ### 3.2 Catalog file (`catalog.json`)

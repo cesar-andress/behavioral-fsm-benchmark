@@ -14,10 +14,10 @@
 
 | Field | Value |
 |-------|-------|
-| Supersedes | `llm-fsm-behavioral-benchmark/docs/evaluation_protocol.md` (draft RQs only) |
-| Implementation repo | `~/papers/emse2026/llm-fsm-behavioral-benchmark/` |
-| Manuscript repo | `~/papers/emse2026/paper/` |
-| Freeze policy | Campaign manifests in `experiments/campaigns/` become immutable at `frozen_at` |
+| Supersedes | prior draft evaluation protocol (pre-normalization) |
+| Implementation repo | `behavioral-fsm-benchmark/` (this repository) |
+| Manuscript sources | `paper/` (within this repository) |
+| Freeze policy | Campaign configs in `experiments/configs/` become immutable at `frozen_at` |
 | Change control | Material design changes require new `study_design_vX.Y` and changelog entry |
 
 **How to use this document:** Each section maps to repository paths and scripts listed in §18. Do not begin full-scale campaigns until §16 pre-registration checklist is complete and pilot campaigns (§15) pass acceptance criteria.
@@ -785,7 +785,7 @@ When citing IST structural numbers:
 | Study component | Path |
 |-----------------|------|
 | Study design (this doc) | `paper/notes/study_design.md` |
-| Operational protocols | `llm-fsm-behavioral-benchmark/docs/*_protocol.md` |
+| Operational protocols | `docs/evaluation_protocol.md`, `REPRODUCIBILITY.md` |
 | Gold FSMs | `benchmark/gold/` |
 | Oracles | `benchmark/oracles/systems/` |
 | Perturbations | `benchmark/perturbations/variants/` |

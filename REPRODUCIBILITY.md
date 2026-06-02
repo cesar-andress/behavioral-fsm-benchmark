@@ -1,83 +1,66 @@
 # Reproducibility Guide — behavioral-fsm-benchmark
 
-How to reproduce the EMSE empirical study on your machine using **Ollama only** (no paid APIs).
+End-to-end replication of the EMSE empirical study using **local Ollama inference** (no paid APIs required for the primary campaign).
 
-> **Status:** Bootstrap phase — pipeline documented but not yet implemented.
+> **Status:** Bootstrap — framework skeleton in place; pipeline entry points not yet implemented.
 
----
-
-## 1. Overview
+## Overview
 
 | Item | Value |
 |------|-------|
-| Project | behavioral-fsm-benchmark |
 | Upstream dataset | FSM-Bench-20 — [10.5281/zenodo.20516296](https://doi.org/10.5281/zenodo.20516296) |
-| Evaluation pillars | Structural (G1–G3), behavioral, robustness, reproducibility |
-| Primary inference | Ollama local API, temperature 0.0 |
-| Hardware | NVIDIA RTX 4090 or equivalent (24 GB VRAM) recommended |
+| Import manifest | `benchmark/datasets/upstream_manifest.json` |
+| Structural gates | G1–G3 (IST-compatible baseline) |
+| Behavioral layers | Oracles, gold conformance, equivalence (planned) |
+| Robustness | Requirement perturbations (`benchmark/guards/`) |
+| Reproducibility | Multi-run variance (campaign C4) |
+| Temperature | 0.0 (primary); variance study uses repeated runs |
 
----
-
-## 2. Prerequisites
+## Prerequisites
 
 ```bash
-python3.12 --version
+python3.11 --version   # or 3.12
 ollama --version
-ollama serve   # separate terminal if needed
 ```
 
----
-
-## 3. Installation
+## Installation
 
 ```bash
 git clone git@github.com-ucjc:cesar-andress/behavioral-fsm-benchmark.git
 cd behavioral-fsm-benchmark
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
+pytest
 ```
 
----
-
-## 4. Dataset import
-
-Upstream manifest: `benchmark/datasets/upstream_manifest.json`
+## Dataset import (planned)
 
 ```bash
-# Planned:
 python scripts/import_upstream_dataset.py
 ```
 
-Imported requirement JSON files are gitignored; regenerate from Zenodo.
+Imported files land in `benchmark/datasets/systems/` (gitignored).
 
----
+## Campaign workflow (planned)
 
-## 5. Campaign execution (planned)
-
-| Campaign | Config | Purpose |
-|----------|--------|---------|
-| C0 | `experiments/configs/TEMPLATE_parity.json` | Structural parity spot-check vs IST freeze |
+| ID | Config | Purpose |
+|----|--------|---------|
+| C0 | `experiments/configs/TEMPLATE_parity.json` | Structural parity vs IST freeze |
 | C1 | `experiments/configs/TEMPLATE_structural.json` | Structural baseline |
 | C2 | `experiments/configs/TEMPLATE_behavioral.json` | Behavioral evaluation |
 | C3 | `experiments/configs/TEMPLATE_robustness.json` | Perturbation sensitivity |
 | C4 | `experiments/configs/TEMPLATE_reproducibility.json` | Multi-run variance |
 
-Runs write to `experiments/runs/`; logs to `experiments/logs/`.
+Outputs: `experiments/runs/` (artifacts), `experiments/logs/` (logs).
 
----
+## Analysis export
 
-## 6. Analysis and paper tables
+Post-hoc scripts in `analysis/scripts/` export LaTeX tables to `paper/tables/`.
 
-Post-hoc analysis scripts live in `analysis/scripts/`. Publication LaTeX tables are exported to `paper/tables/`.
+## Archival
 
----
+Follow [docs/release_policy.md](docs/release_policy.md). Build script: `reproducibility/build_replication_package.sh`.
 
-## 7. Docker (optional)
+## Artifact policy
 
-See `reproducibility/docker/` when available.
-
----
-
-## 8. Archival
-
-Release packaging follows [docs/release_policy.md](docs/release_policy.md). Build script: `reproducibility/build_replication_package.sh`.
+Raw outputs are not committed. See [docs/artifact_policy.md](docs/artifact_policy.md).

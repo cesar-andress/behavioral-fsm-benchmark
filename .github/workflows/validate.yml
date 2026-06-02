@@ -24,7 +24,7 @@ jobs:
               json.loads(p.read_text())
               print(f"OK: {p}")
           PY
-      - name: Validate campaign config templates
-        run: test -f experiments/configs/TEMPLATE_structural.json
-      - name: Run tests
-        run: pytest tests/ -q || true
+      - name: Lint
+        run: ruff check framework/ tests/
+      - name: Test
+        run: pytest tests/ -q

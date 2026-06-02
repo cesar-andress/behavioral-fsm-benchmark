@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-title: "behavioral-fsm-benchmark: Behavioral, Robustness, and Reproducibility Evaluation of LLM-Generated FSMs"
-message: "If you use this benchmark or experiment pipeline, please cite it using the metadata below."
+title: "behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs"
+message: "If you use this benchmark or framework, please cite using the metadata below."
 type: software
 authors:
   - family-names: Sanchez
@@ -8,18 +8,18 @@ authors:
 repository-code: "https://github.com/cesar-andress/behavioral-fsm-benchmark"
 url: "https://github.com/cesar-andress/behavioral-fsm-benchmark"
 license: MIT
-version: 0.1.0-bootstrap
+version: 0.1.0
 date-released: 2026-06-03
 keywords:
   - finite state machines
-  - model-based testing
   - large language models
   - behavioral correctness
-  - robustness testing
+  - model-based testing
+  - robustness
   - reproducibility
   - empirical software engineering
 abstract: >
-  behavioral-fsm-benchmark extends FSM-Bench-20 with behavioral oracles, guard
-  semantics, gold reference FSMs, test-suite agreement, robustness perturbations,
-  and multi-run reproducibility instrumentation. Bootstrap skeleton only; no
-  experimental data yet.
+  behavioral-fsm-benchmark extends FSM-Bench-20 (IST 2026) with behavioral
+  oracles, gold reference FSMs, guard-aware determinism, test-suite agreement,
+  equivalence checking, robustness perturbations, and multi-run reproducibility
+  instrumentation for EMSE submission.
