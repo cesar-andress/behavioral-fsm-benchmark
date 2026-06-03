@@ -176,7 +176,7 @@ Citation metadata and software record fields: [CITATION.cff](CITATION.cff).
 
 ```bibtex
 @software{sanchez2026behavioral,
-  author       = {Sanchez, Cesar Andres},
+  author       = {Andr{\'e}s, C{\'e}sar},
   title        = {behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs},
   version      = {0.1.0},
   date         = {2026-06-03},

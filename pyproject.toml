@@ -9,7 +9,7 @@ description = "Behavioral, robustness, and reproducibility evaluation of LLM-gen
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
-authors = [{ name = "Cesar Andres Sanchez" }]
+authors = [{ name = "César Andrés" }]
 keywords = [
   "finite-state-machines",
   "llm",
