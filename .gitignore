@@ -1,10 +1,14 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyc
 *.pyo
 *.pyd
 *.egg-info/
+*.egg
 .eggs/
+dist/
+build/
 .venv/
 venv/
 env/
@@ -17,10 +21,15 @@ htmlcov/
 # Outputs and experiments
 outputs/
 results/
+tmp/
+temp/
+.tmp/
+*.tmp
 experiments/runs/*
 !experiments/runs/.gitkeep
 experiments/logs/*
 !experiments/logs/.gitkeep
+paper_results/
 analysis/figures/*.png
 analysis/figures/*.pdf
 analysis/figures/*.svg
@@ -49,6 +58,10 @@ benchmark/datasets/systems/*.json
 # Private manuscript (maintained outside this public repository)
 paper/
 ../paper/
+manuscript/
+submission/
+reviewer/
+editorial/
 
 # LaTeX build artifacts
 *.aux
