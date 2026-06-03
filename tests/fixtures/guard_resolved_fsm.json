@@ -1,0 +1,23 @@
+{
+  "system_name": "Guard-resolved fixture",
+  "states": ["Idle", "High", "Low"],
+  "initial_state": "Idle",
+  "events": ["insert_coin"],
+  "transitions": [
+    {
+      "source": "Idle",
+      "event": "insert_coin",
+      "guard": "balance >= 10",
+      "target": "High",
+      "requirement": "R1"
+    },
+    {
+      "source": "Idle",
+      "event": "insert_coin",
+      "guard": "balance < 10",
+      "target": "Low",
+      "requirement": "R2"
+    }
+  ],
+  "forbidden_behaviours": []
+}
