@@ -29,6 +29,14 @@ RUN_STATUS_COMPLETED = "completed"
 RUN_STATUS_FAILED = "failed"
 RUN_STATUS_SKIPPED = "skipped"
 
+RUN_OUTCOME_PASSED = "passed"
+RUN_OUTCOME_FAILED = "failed"
+
+FAILURE_STAGE_NONE = "none"
+FAILURE_CATEGORY_NONE = "none"
+
+UNEVALUABLE = None
+
 
 @dataclass(frozen=True)
 class CampaignConfig:
@@ -58,6 +66,16 @@ class RunSpec:
     model: str
     replicate: int
     index: int
+
+
+@dataclass
+class CandidateEvaluationOutcome:
+    run_status: str
+    failure_stage: str = FAILURE_STAGE_NONE
+    failure_category: str = FAILURE_CATEGORY_NONE
+    failure_reason: str = ""
+    evaluation_export: dict[str, Any] | None = None
+    metrics: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -155,11 +173,21 @@ def load_manifest(run_dir: Path) -> dict[str, Any]:
 
 def detect_completed_run_ids(run_dir: Path) -> set[str]:
     manifest = load_manifest(run_dir)
-    completed: set[str] = set()
+    executed: set[str] = set()
     for item in manifest.get("runs", []):
-        if item.get("status") == RUN_STATUS_COMPLETED and item.get("run_id"):
-            completed.add(str(item["run_id"]))
-    return completed
+        run_id = item.get("run_id")
+        if not run_id:
+            continue
+        status = item.get("status")
+        if status in {RUN_STATUS_COMPLETED, RUN_STATUS_FAILED}:
+            executed.add(str(run_id))
+    return executed
+
+
+def format_metric_csv_value(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value)
 
 
 def resolve_resume_run_dir(config: CampaignConfig, run_dir: Path | None) -> Path:
@@ -235,12 +263,42 @@ def extract_json_object(text: str) -> tuple[dict[str, Any] | None, str | None]:
     return None, last_error
 
 
+def classify_json_extraction_error(error: str | None) -> tuple[str, str]:
+    message = (error or "").lower()
+    if "empty" in message:
+        return "json_extraction", "no_json_found"
+    if "not an object" in message:
+        return "json_extraction", "invalid_json"
+    if "expect" in message or "decode" in message or "json" in message:
+        return "json_extraction", "invalid_json"
+    return "json_extraction", "no_json_found"
+
+
+def unevaluable_metric_fields() -> dict[str, Any]:
+    return {
+        "schema_valid": UNEVALUABLE,
+        "referential_valid": UNEVALUABLE,
+        "strict_deterministic": UNEVALUABLE,
+        "guard_aware_deterministic": UNEVALUABLE,
+        "requirement_coverage": UNEVALUABLE,
+        "behavioral_pass_rate": UNEVALUABLE,
+        "final_state_agreement": UNEVALUABLE,
+        "trace_agreement": UNEVALUABLE,
+        "rejected_event_agreement": UNEVALUABLE,
+        "missing_transitions": UNEVALUABLE,
+        "extra_transitions": UNEVALUABLE,
+    }
+
+
 def build_metric_row(
     run_spec: RunSpec,
     *,
-    status: str,
-    error: str | None = None,
+    run_status: str,
+    failure_stage: str = FAILURE_STAGE_NONE,
+    failure_category: str = FAILURE_CATEGORY_NONE,
+    failure_reason: str = "",
     evaluation_export: dict[str, Any] | None = None,
+    schema_valid_override: bool | None = None,
     started_at: str | None = None,
     finished_at: str | None = None,
 ) -> dict[str, Any]:
@@ -251,23 +309,18 @@ def build_metric_row(
         "model": run_spec.model,
         "replicate": run_spec.replicate,
         "run_index": run_spec.index,
-        "status": status,
-        "error": error or "",
+        "run_status": run_status,
+        "failure_stage": failure_stage,
+        "failure_category": failure_category,
+        "failure_reason": failure_reason or "",
         "started_at": started_at or "",
         "finished_at": finished_at or "",
-        "schema_valid": False,
-        "referential_valid": False,
-        "strict_deterministic": False,
-        "guard_aware_deterministic": False,
-        "requirement_coverage": 0.0,
-        "behavioral_pass_rate": 0.0,
-        "final_state_agreement": 0.0,
-        "trace_agreement": 0.0,
-        "rejected_event_agreement": 0.0,
-        "missing_transitions": 0,
-        "extra_transitions": 0,
+        **unevaluable_metric_fields(),
     }
+
     if evaluation_export is None:
+        if schema_valid_override is not None:
+            row["schema_valid"] = schema_valid_override
         return row
 
     structural = evaluation_export.get("structural", {})
@@ -295,7 +348,33 @@ def build_metric_row(
             "extra_transitions": len(equivalence.get("extra_transitions", [])),
         }
     )
+    if schema_valid_override is not None:
+        row["schema_valid"] = schema_valid_override
     return row
+
+
+def build_failure_export(
+    *,
+    failure_stage: str,
+    failure_category: str,
+    failure_reason: str,
+    schema_valid: bool | None = None,
+    schema_errors: list[str] | None = None,
+) -> dict[str, Any]:
+    export: dict[str, Any] = {
+        "run_status": RUN_OUTCOME_FAILED,
+        "failure_stage": failure_stage,
+        "failure_category": failure_category,
+        "failure_reason": failure_reason,
+    }
+    if schema_valid is not None:
+        export["structural"] = {
+            "schema_valid": schema_valid,
+            "referential_valid": False,
+            "errors": list(schema_errors or []),
+            "warnings": [],
+        }
+    return export
 
 
 def evaluate_candidate_payload(
@@ -304,12 +383,65 @@ def evaluate_candidate_payload(
     system_id: str,
     repo_root: Path,
     candidate_label: str,
-) -> tuple[dict[str, Any] | None, str | None]:
+    run_spec: RunSpec,
+) -> CandidateEvaluationOutcome:
     schema_ok, schema_errors = validate_against_schema(payload, "generated_fsm.schema.json")
+
     try:
         candidate = fsm_from_dict(payload)
     except (KeyError, TypeError, ValueError) as exc:
-        return None, f"fsm parse error: {exc}"
+        reason = f"fsm parse error: {exc}"
+        export = build_failure_export(
+            failure_stage="parsing",
+            failure_category="parse_error",
+            failure_reason=reason,
+            schema_valid=schema_ok,
+            schema_errors=schema_errors,
+        )
+        metrics = build_metric_row(
+            run_spec,
+            run_status=RUN_OUTCOME_FAILED,
+            failure_stage="parsing",
+            failure_category="parse_error",
+            failure_reason=reason,
+            evaluation_export=None,
+            schema_valid_override=schema_ok,
+        )
+        return CandidateEvaluationOutcome(
+            run_status=RUN_OUTCOME_FAILED,
+            failure_stage="parsing",
+            failure_category="parse_error",
+            failure_reason=reason,
+            evaluation_export=export,
+            metrics=metrics,
+        )
+
+    if not schema_ok:
+        reason = "; ".join(schema_errors) if schema_errors else "schema validation failed"
+        export = build_failure_export(
+            failure_stage="schema_validation",
+            failure_category="schema_error",
+            failure_reason=reason,
+            schema_valid=False,
+            schema_errors=schema_errors,
+        )
+        metrics = build_metric_row(
+            run_spec,
+            run_status=RUN_OUTCOME_FAILED,
+            failure_stage="schema_validation",
+            failure_category="schema_error",
+            failure_reason=reason,
+            evaluation_export=None,
+            schema_valid_override=False,
+        )
+        return CandidateEvaluationOutcome(
+            run_status=RUN_OUTCOME_FAILED,
+            failure_stage="schema_validation",
+            failure_category="schema_error",
+            failure_reason=reason,
+            evaluation_export=export,
+            metrics=metrics,
+        )
 
     spec = load_requirement_spec(system_id, datasets_dir=repo_root / "benchmark/datasets/systems")
     gold = load_gold_fsm(system_id, validate=False, gold_dir=repo_root / "benchmark/gold_fsms")
@@ -321,14 +453,24 @@ def evaluate_candidate_payload(
         spec=spec,
         gold=gold,
         test_suite=suite,
-        schema_valid=schema_ok,
+        schema_valid=True,
     )
     export = evaluation_to_export(result)
-    if not schema_ok:
-        export.setdefault("structural", {})["schema_valid"] = False
-        export["structural"].setdefault("errors", [])
-        export["structural"]["errors"] = list(schema_errors)
-    return export, None
+    export["run_status"] = RUN_OUTCOME_PASSED
+    export["failure_stage"] = FAILURE_STAGE_NONE
+    export["failure_category"] = FAILURE_CATEGORY_NONE
+    export["failure_reason"] = ""
+
+    metrics = build_metric_row(
+        run_spec,
+        run_status=RUN_OUTCOME_PASSED,
+        evaluation_export=export,
+    )
+    return CandidateEvaluationOutcome(
+        run_status=RUN_OUTCOME_PASSED,
+        evaluation_export=export,
+        metrics=metrics,
+    )
 
 
 def populate_environment_metadata(config: CampaignConfig, *, repo_root: Path) -> dict[str, Any]:
@@ -406,8 +548,10 @@ METRIC_CSV_COLUMNS = [
     "model",
     "replicate",
     "run_index",
-    "status",
-    "error",
+    "run_status",
+    "failure_stage",
+    "failure_category",
+    "failure_reason",
     "started_at",
     "finished_at",
     "schema_valid",
@@ -431,14 +575,23 @@ def write_metrics_files(run_dir: Path, rows: list[dict[str, Any]]) -> None:
         writer = csv.DictWriter(handle, fieldnames=METRIC_CSV_COLUMNS)
         writer.writeheader()
         for row in rows:
-            writer.writerow({key: row.get(key, "") for key in METRIC_CSV_COLUMNS})
+            writer.writerow(
+                {
+                    key: format_metric_csv_value(row.get(key))
+                    for key in METRIC_CSV_COLUMNS
+                }
+            )
     write_json(
         json_path,
         {
             "generated_at": datetime.now(tz=UTC).replace(microsecond=0).isoformat(),
             "runs_total": len(rows),
-            "runs_completed": sum(1 for row in rows if row.get("status") == RUN_STATUS_COMPLETED),
-            "runs_failed": sum(1 for row in rows if row.get("status") == RUN_STATUS_FAILED),
+            "runs_passed": sum(
+                1 for row in rows if row.get("run_status") == RUN_OUTCOME_PASSED
+            ),
+            "runs_failed": sum(
+                1 for row in rows if row.get("run_status") == RUN_OUTCOME_FAILED
+            ),
             "metrics": rows,
         },
     )
@@ -490,17 +643,56 @@ def execute_run(
     ]
     finished_at = datetime.now(tz=UTC).replace(microsecond=0).isoformat()
 
-    if ollama_error:
-        log_lines.append(f"error={ollama_error}")
+    def finish_failed(
+        *,
+        failure_stage: str,
+        failure_category: str,
+        failure_reason: str,
+        evaluation_export: dict[str, Any] | None = None,
+        schema_valid_override: bool | None = None,
+    ) -> RunOutcome:
+        log_lines.extend(
+            [
+                f"run_status={RUN_OUTCOME_FAILED}",
+                f"failure_stage={failure_stage}",
+                f"failure_category={failure_category}",
+                f"failure_reason={failure_reason}",
+                f"finished_at={finished_at}",
+            ]
+        )
         log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
+        if evaluation_export is not None:
+            write_json(evaluation_path, evaluation_export)
         metrics = build_metric_row(
             run_spec,
-            status=RUN_STATUS_FAILED,
-            error=ollama_error,
+            run_status=RUN_OUTCOME_FAILED,
+            failure_stage=failure_stage,
+            failure_category=failure_category,
+            failure_reason=failure_reason,
+            evaluation_export=None,
+            schema_valid_override=schema_valid_override,
             started_at=started_at,
             finished_at=finished_at,
         )
-        return RunOutcome(run_spec=run_spec, status=RUN_STATUS_FAILED, error=ollama_error, metrics=metrics)
+        return RunOutcome(
+            run_spec=run_spec,
+            status=RUN_STATUS_FAILED,
+            error=failure_reason,
+            metrics=metrics,
+        )
+
+    if ollama_error:
+        export = build_failure_export(
+            failure_stage="generation",
+            failure_category="ollama_error",
+            failure_reason=ollama_error,
+        )
+        return finish_failed(
+            failure_stage="generation",
+            failure_category="ollama_error",
+            failure_reason=ollama_error,
+            evaluation_export=export,
+        )
 
     write_json(
         raw_path,
@@ -514,48 +706,68 @@ def execute_run(
 
     payload, extract_error = extract_json_object(response_text or "")
     if payload is None:
-        log_lines.append(f"extract_error={extract_error}")
-        log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
-        metrics = build_metric_row(
-            run_spec,
-            status=RUN_STATUS_FAILED,
-            error=extract_error,
-            started_at=started_at,
-            finished_at=finished_at,
+        failure_stage, failure_category = classify_json_extraction_error(extract_error)
+        reason = extract_error or "json extraction failed"
+        export = build_failure_export(
+            failure_stage=failure_stage,
+            failure_category=failure_category,
+            failure_reason=reason,
         )
-        return RunOutcome(run_spec=run_spec, status=RUN_STATUS_FAILED, error=extract_error, metrics=metrics)
+        return finish_failed(
+            failure_stage=failure_stage,
+            failure_category=failure_category,
+            failure_reason=reason,
+            evaluation_export=export,
+        )
 
     write_json(candidate_path, payload)
-    evaluation_export, eval_error = evaluate_candidate_payload(
+    eval_outcome = evaluate_candidate_payload(
         payload,
         system_id=run_spec.system_id,
         repo_root=repo_root,
         candidate_label=run_spec.run_id,
+        run_spec=run_spec,
     )
 
-    if evaluation_export is None:
-        log_lines.append(f"evaluation_error={eval_error}")
-        log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
-        metrics = build_metric_row(
-            run_spec,
-            status=RUN_STATUS_FAILED,
-            error=eval_error,
-            started_at=started_at,
-            finished_at=finished_at,
+    if eval_outcome.run_status == RUN_OUTCOME_FAILED:
+        log_lines.extend(
+            [
+                f"run_status={RUN_OUTCOME_FAILED}",
+                f"failure_stage={eval_outcome.failure_stage}",
+                f"failure_category={eval_outcome.failure_category}",
+                f"failure_reason={eval_outcome.failure_reason}",
+                f"finished_at={finished_at}",
+            ]
         )
-        return RunOutcome(run_spec=run_spec, status=RUN_STATUS_FAILED, error=eval_error, metrics=metrics)
+        log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
+        if eval_outcome.evaluation_export is not None:
+            write_json(evaluation_path, eval_outcome.evaluation_export)
+        eval_outcome.metrics["started_at"] = started_at
+        eval_outcome.metrics["finished_at"] = finished_at
+        return RunOutcome(
+            run_spec=run_spec,
+            status=RUN_STATUS_FAILED,
+            error=eval_outcome.failure_reason,
+            metrics=eval_outcome.metrics,
+        )
 
-    write_json(evaluation_path, evaluation_export)
-    log_lines.append("status=completed")
-    log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
-    metrics = build_metric_row(
-        run_spec,
-        status=RUN_STATUS_COMPLETED,
-        evaluation_export=evaluation_export,
-        started_at=started_at,
-        finished_at=finished_at,
+    write_json(evaluation_path, eval_outcome.evaluation_export)
+    log_lines.extend(
+        [
+            f"run_status={RUN_OUTCOME_PASSED}",
+            f"failure_stage={FAILURE_STAGE_NONE}",
+            f"failure_category={FAILURE_CATEGORY_NONE}",
+            f"finished_at={finished_at}",
+        ]
     )
-    return RunOutcome(run_spec=run_spec, status=RUN_STATUS_COMPLETED, metrics=metrics)
+    log_path.write_text("\n".join(log_lines) + "\n", encoding="utf-8")
+    eval_outcome.metrics["started_at"] = started_at
+    eval_outcome.metrics["finished_at"] = finished_at
+    return RunOutcome(
+        run_spec=run_spec,
+        status=RUN_STATUS_COMPLETED,
+        metrics=eval_outcome.metrics,
+    )
 
 
 def run_campaign(
@@ -603,8 +815,20 @@ def run_campaign(
                     metric_rows.append(
                         build_metric_row(
                             run_spec,
-                            status=RUN_STATUS_COMPLETED,
-                            evaluation_export=export,
+                            run_status=str(
+                                export.get("run_status", RUN_OUTCOME_PASSED)
+                            ),
+                            failure_stage=str(
+                                export.get("failure_stage", FAILURE_STAGE_NONE)
+                            ),
+                            failure_category=str(
+                                export.get("failure_category", FAILURE_CATEGORY_NONE)
+                            ),
+                            failure_reason=str(export.get("failure_reason", "")),
+                            evaluation_export=export
+                            if export.get("run_status", RUN_OUTCOME_PASSED)
+                            == RUN_OUTCOME_PASSED
+                            else None,
                         )
                     )
             manifest_entry = existing or {"run_id": run_spec.run_id, "status": RUN_STATUS_SKIPPED}
@@ -637,12 +861,14 @@ def run_campaign(
     metric_rows.sort(key=lambda row: int(row.get("run_index", 0)))
     write_metrics_files(campaign_dir, metric_rows)
 
-    failed = sum(1 for row in metric_rows if row.get("status") == RUN_STATUS_FAILED)
+    failed = sum(1 for row in metric_rows if row.get("run_status") == RUN_OUTCOME_FAILED)
+    passed = sum(1 for row in metric_rows if row.get("run_status") == RUN_OUTCOME_PASSED)
     return {
         "dry_run": False,
         "run_dir": str(campaign_dir),
         "planned_runs": len(matrix),
         "executed_runs": len(metric_rows),
+        "passed_runs": passed,
         "failed_runs": failed,
         "all_passed": failed == 0,
     }

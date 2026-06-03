@@ -12,11 +12,16 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from ollama_campaign_lib import (  # noqa: E402
+    RUN_OUTCOME_FAILED,
+    RUN_OUTCOME_PASSED,
     RUN_STATUS_COMPLETED,
+    RUN_STATUS_FAILED,
+    RunSpec,
     build_metric_row,
     build_run_matrix,
     create_campaign_run_dir,
     detect_completed_run_ids,
+    evaluate_candidate_payload,
     extract_json_object,
     load_campaign_config,
     make_run_id,
@@ -82,17 +87,16 @@ def test_detect_completed_run_ids(tmp_path: Path) -> None:
         "campaign_id": "C1",
         "runs": [
             {"run_id": "a", "status": RUN_STATUS_COMPLETED},
-            {"run_id": "b", "status": "failed"},
+            {"run_id": "b", "status": RUN_STATUS_FAILED},
+            {"run_id": "c", "status": "pending"},
         ],
     }
     (run_dir / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     completed = detect_completed_run_ids(run_dir)
-    assert completed == {"a"}
+    assert completed == {"a", "b"}
 
 
 def test_build_metric_row_from_evaluation() -> None:
-    from ollama_campaign_lib import RunSpec
-
     run = RunSpec(
         run_id="test__vending__model__r01",
         campaign_id="C1",
@@ -113,7 +117,13 @@ def test_build_metric_row_from_evaluation() -> None:
         "equivalence": {"missing_transitions": ["A:e:B"], "extra_transitions": ["C:d:D"]},
         "coverage": {"requirement_coverage": 0.75},
     }
-    row = build_metric_row(run, status=RUN_STATUS_COMPLETED, evaluation_export=export)
+    row = build_metric_row(
+        run,
+        run_status=RUN_OUTCOME_PASSED,
+        evaluation_export=export,
+    )
+    assert row["run_status"] == RUN_OUTCOME_PASSED
+    assert row["failure_stage"] == "none"
     assert row["schema_valid"] is True
     assert row["strict_deterministic"] is True
     assert row["guard_aware_deterministic"] is True
@@ -121,6 +131,153 @@ def test_build_metric_row_from_evaluation() -> None:
     assert row["final_state_agreement"] == 0.8
     assert row["missing_transitions"] == 1
     assert row["extra_transitions"] == 1
+
+
+def test_build_metric_row_failed_run_uses_null_downstream_metrics() -> None:
+    run = RunSpec(
+        run_id="test__vending__model__r01",
+        campaign_id="C1",
+        system_id="vending_machine",
+        model="llama3.1:8b",
+        replicate=1,
+        index=1,
+    )
+    row = build_metric_row(
+        run,
+        run_status=RUN_OUTCOME_FAILED,
+        failure_stage="parsing",
+        failure_category="parse_error",
+        failure_reason="fsm parse error: 'target'",
+        schema_valid_override=False,
+    )
+    assert row["run_status"] == RUN_OUTCOME_FAILED
+    assert row["failure_stage"] == "parsing"
+    assert row["failure_category"] == "parse_error"
+    assert row["schema_valid"] is False
+    assert row["behavioral_pass_rate"] is None
+    assert row["missing_transitions"] is None
+
+
+def _minimal_run_spec() -> RunSpec:
+    return RunSpec(
+        run_id="C1__vending_machine__model__r01",
+        campaign_id="C1_pilot_ollama_behavioral",
+        system_id="vending_machine",
+        model="llama3.1:8b",
+        replicate=1,
+        index=1,
+    )
+
+
+def test_evaluate_candidate_missing_transition_target() -> None:
+    payload = {
+        "states": ["Idle"],
+        "initial_state": "Idle",
+        "events": ["insert_coin"],
+        "transitions": [{"source": "Idle", "event": "insert_coin"}],
+    }
+    outcome = evaluate_candidate_payload(
+        payload,
+        system_id="vending_machine",
+        repo_root=REPO_ROOT,
+        candidate_label="missing_target",
+        run_spec=_minimal_run_spec(),
+    )
+    assert outcome.run_status == RUN_OUTCOME_FAILED
+    assert outcome.failure_stage == "parsing"
+    assert outcome.failure_category == "parse_error"
+    assert "'target'" in outcome.failure_reason
+    assert outcome.metrics["behavioral_pass_rate"] is None
+
+
+def test_evaluate_candidate_schema_invalid_still_produces_metrics_row() -> None:
+    payload = {
+        "states": [],
+        "initial_state": "Idle",
+        "events": [],
+        "transitions": [],
+    }
+    outcome = evaluate_candidate_payload(
+        payload,
+        system_id="vending_machine",
+        repo_root=REPO_ROOT,
+        candidate_label="schema_invalid",
+        run_spec=_minimal_run_spec(),
+    )
+    assert outcome.run_status == RUN_OUTCOME_FAILED
+    assert outcome.failure_stage == "schema_validation"
+    assert outcome.failure_category == "schema_error"
+    assert outcome.metrics["run_status"] == RUN_OUTCOME_FAILED
+    assert outcome.metrics["schema_valid"] is False
+    assert outcome.metrics["behavioral_pass_rate"] is None
+
+
+def test_extract_json_object_invalid_json() -> None:
+    payload, error = extract_json_object("not json at all")
+    assert payload is None
+    assert error is not None
+
+
+def test_extract_json_object_no_json_found() -> None:
+    payload, error = extract_json_object("model returned plain text only")
+    assert payload is None
+    assert error is not None
+
+
+def test_failed_run_does_not_stop_campaign(campaign_config, tmp_path: Path, monkeypatch) -> None:
+    run_dir = tmp_path / "campaign"
+    for sub in ("raw", "candidates", "evaluations", "logs"):
+        (run_dir / sub).mkdir(parents=True)
+
+    matrix = build_run_matrix(campaign_config)[:2]
+    calls: list[str] = []
+
+    def fake_ollama(**kwargs):
+        model = kwargs["model"]
+        calls.append(model)
+        if len(calls) == 1:
+            return "plain text without json", None
+        candidate = {
+            "states": ["Idle", "CreditAvailable"],
+            "initial_state": "Idle",
+            "events": ["insert_coin"],
+            "transitions": [
+                {
+                    "source": "Idle",
+                    "event": "insert_coin",
+                    "target": "CreditAvailable",
+                }
+            ],
+        }
+        return json.dumps(candidate), None
+
+    monkeypatch.setattr("ollama_campaign_lib.call_ollama_chat", fake_ollama)
+    result = run_campaign(
+        campaign_config,
+        repo_root=REPO_ROOT,
+        run_dir=run_dir,
+        limit=2,
+    )
+
+    assert len(calls) == 2
+    assert result["executed_runs"] == 2
+    assert result["failed_runs"] == 1
+    assert result["passed_runs"] == 1
+
+    metrics_path = run_dir / "metrics.json"
+    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    assert len(metrics["metrics"]) == 2
+    statuses = {row["run_status"] for row in metrics["metrics"]}
+    assert statuses == {RUN_OUTCOME_FAILED, RUN_OUTCOME_PASSED}
+
+    failed_row = next(
+        row for row in metrics["metrics"] if row["run_status"] == RUN_OUTCOME_FAILED
+    )
+    assert failed_row["failure_category"] in {"no_json_found", "invalid_json"}
+    assert failed_row["behavioral_pass_rate"] is None
+
+    assert (run_dir / "logs" / f"{matrix[0].run_id}.log").is_file()
+    assert (run_dir / "logs" / f"{matrix[1].run_id}.log").is_file()
 
 
 def test_render_prompt_includes_requirements(campaign_config) -> None:
@@ -173,7 +330,10 @@ def test_resume_skips_completed_runs(campaign_config, tmp_path: Path, monkeypatc
             {
                 "run_id": run_id,
                 "status": RUN_STATUS_COMPLETED,
-                "metrics": {"run_id": run_id, "status": RUN_STATUS_COMPLETED},
+                "metrics": {
+                    "run_id": run_id,
+                    "run_status": RUN_OUTCOME_PASSED,
+                },
             }
         ],
     }

@@ -204,7 +204,37 @@ python scripts/run_ollama_campaign.py \
   --run-dir experiments/runs/C1_pilot_ollama_behavioral/<timestamp>
 ```
 
-Completed runs (`status=completed` in `manifest.json`) are skipped automatically.
+Completed runs (`status=completed` or `status=failed` in `manifest.json`) are skipped automatically. Both outcomes mean the run was executed and a metrics row was written; resume does not re-run failed candidates.
+
+### Failed runs and metrics
+
+Every executed run produces a row in `metrics.csv` and `metrics.json`, including malformed or unevaluable candidates. Failed runs are **not** repaired, discarded, or retried automatically.
+
+| Field | Values | Meaning |
+|-------|--------|---------|
+| `run_status` | `passed`, `failed` | Whether the full evaluation pipeline completed |
+| `failure_stage` | `generation`, `json_extraction`, `parsing`, `schema_validation`, `referential_validation`, `determinism_validation`, `behavioral_evaluation`, `none` | Last stage reached before failure |
+| `failure_category` | `ollama_error`, `no_json_found`, `invalid_json`, `parse_error`, `schema_error`, `referential_error`, `determinism_error`, `behavioral_error`, `none` | Failure classifier |
+| `failure_reason` | string | Human-readable error (empty when `run_status=passed`) |
+
+When parsing or schema validation fails, downstream behavioral metrics are left empty in CSV and `null` in JSON — not `0`. A blank `behavioral_pass_rate` means *not evaluable*, not a behavioral score of zero.
+
+Artifacts for failed runs (when available):
+
+| Artifact | Typical failure stages |
+|----------|------------------------|
+| `raw/<run_id>.json` | JSON extraction, parsing, schema, evaluation |
+| `candidates/<run_id>.json` | Parsing, schema, evaluation (extracted JSON saved before validation) |
+| `evaluations/<run_id>.json` | All stages (failure stub or partial export) |
+| `logs/<run_id>.log` | All stages |
+
+Example metrics row for a parse error (missing transition `target`):
+
+```csv
+run_status,failed,failure_stage,parsing,failure_category,parse_error,failure_reason,"fsm parse error: 'target'",...,behavioral_pass_rate,
+```
+
+(`behavioral_pass_rate` and other downstream columns are empty in CSV.)
 
 ## Future campaigns
 
