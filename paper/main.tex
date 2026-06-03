@@ -1,5 +1,6 @@
 %% main.tex — Empirical Software Engineering (Springer Nature)
-%% Manuscript skeleton — content pending campaign freeze
+%% Repository: behavioral-fsm-benchmark
+%% Results populated only after campaign freeze (M9)
 
 \documentclass[pdflatex,sn-mathphys-num]{sn-jnl}
 
@@ -38,13 +39,28 @@
   }%
 }
 
-%% Abstract: populate after results freeze (IMRaD structure reserved)
 \abstract{%
-  \textbf{Context:} Pending.
-  \textbf{Objective:} Pending.
-  \textbf{Method:} Pending.
-  \textbf{Results:} Pending.
-  \textbf{Conclusions:} Pending.
+\textbf{Context.}
+Practitioners increasingly use large language models (LLMs) to draft finite state machines (FSMs)
+from natural-language requirements for model-based testing and simulation.
+Prior work on local open-weight models established that many outputs are structurally valid
+yet often fail strict determinism checks; behavioral correctness, robustness under requirement
+change, and multi-run reproducibility remain insufficiently measured.
+\textbf{Objective.}
+We empirically investigate whether structurally valid LLM-generated FSMs behave as specified
+when evaluated with approved gold references, executable behavioral test suites, and guard-aware
+determinism analysis.
+\textbf{Method.}
+We extend the FSM-Bench-20 benchmark (20 systems, local Ollama protocol) with tiered gold FSMs
+(12 core, 8 stretch, 3 pilot), a decidable guard DSL, and an offline evaluation framework
+reporting structural gates (G1--G3a), behavioral test-suite agreement, gold conformance,
+coverage, perturbation deltas, and reproducibility variance.
+Four frozen campaigns address seven pre-registered research questions on the structural--behavioral
+gap, failure taxonomy, proxy validity, robustness, and metric stability.
+\textbf{Results.}
+Reported after campaign freeze.
+\textbf{Conclusions.}
+Reported after campaign freeze.
 }
 
 \keywords{finite state machines, large language models, behavioral correctness, model-based testing, robustness, reproducibility, empirical software engineering}
@@ -66,9 +82,13 @@
 
 \section*{Declarations}
 \subsection*{Funding}
+%% Goal: Funding sources (if any).
 \subsection*{Conflict of interest}
+%% Goal: COI statement.
 \subsection*{Data availability}
+%% Goal: Zenodo / repository DOI after M9.
 \subsection*{Code availability}
+%% Goal: behavioral-fsm-benchmark repository URL and license.
 
 \bibliography{references/references}
 
