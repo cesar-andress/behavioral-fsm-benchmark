@@ -60,6 +60,13 @@ FORBIDDEN_EXPERIMENT_PATTERNS = (
     "results/",
 )
 
+# Matches .gitignore whitelist for the frozen C1 generation prompt (v0.1.0).
+ALLOWED_TRACKED_PATHS = frozenset(
+    {
+        "prompts/behavioral_fsm_generation.md",
+    }
+)
+
 
 def git_ls_files(repo_root: Path) -> list[str]:
     result = subprocess.run(
@@ -77,6 +84,9 @@ def audit_tracked_paths(tracked_files: list[str]) -> list[str]:
     for rel_path in tracked_files:
         normalized = rel_path.replace("\\", "/")
         basename = Path(normalized).name
+
+        if normalized in ALLOWED_TRACKED_PATHS:
+            continue
 
         if basename in FORBIDDEN_BASENAMES:
             violations.append(f"forbidden basename tracked: {rel_path}")
