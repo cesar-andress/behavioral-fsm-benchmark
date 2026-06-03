@@ -11,9 +11,9 @@ This repository provides:
 1. A **Python evaluation framework** for structural gates (G1–G3), guard-aware determinism (G3a), behavioral oracles, gold comparison, and coverage metrics.
 2. A **tiered behavioral benchmark** extending [FSM-Bench-20](https://doi.org/10.5281/zenodo.20516296) with human-approved gold FSMs and behavioral test suites.
 3. **Study documentation** (design, benchmark specification, evaluation protocol) and replication instructions.
-4. **Release hygiene** tooling to keep the public repository free of manuscript drafts and local experiment outputs.
+4. **Release hygiene** tooling to keep the public repository free of local experiment outputs and non-public content.
 
-Campaign execution (LLM inference runs) is planned for a later milestone; `v0.1.0` freezes the evaluation stack and gold corpus.
+`v0.1.0` freezes the evaluation stack and approved gold corpus. Ollama campaign scripts and configs are included; timestamped run outputs remain local and gitignored until explicitly frozen in a future release.
 
 ## Repository layout
 

@@ -4,31 +4,81 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.1.0 - 2026-06-03
+## [0.1.0] - 2026-06-03
 
-First public pre-release of the behavioral evaluation stack and approved gold corpus.
+First public release of the behavioral FSM evaluation framework and approved gold corpus.
 
-### Framework
+### Added
 
-- Offline evaluation engine under `framework/` (structural validation, guard-aware determinism, behavioral simulator, test runner, gold comparison, coverage metrics).
-- JSON schema validation for generated, reference, requirement, and test-suite artifacts.
-- CLI scripts for FSM validation, behavioral test execution, gold comparison, and case evaluation.
+**Framework**
 
-### Benchmark
+- Python evaluation engine under `framework/`: structural gates (G1–G3), guard-aware determinism (G3a), behavioral simulator, oracle and test-suite runner, gold comparison, transition diagnostics, and coverage metrics.
+- Nine JSON Schema files under `benchmark/schemas/` for generated, reference, requirement, test-suite, catalog, and evaluation artifacts.
+- End-to-end single-case evaluation pipeline (`framework/evaluation.py`).
 
-- Three pilot systems: `vending_machine`, `login_system`, `atm`.
+**Benchmark**
+
+- Three pilot systems with approved gold FSMs, requirement specs, and behavioral test suites: `vending_machine`, `login_system`, `atm`.
 - Nine core systems: `parking_gate`, `access_control`, `bike_rental`, `warehouse_inventory`, `smart_thermostat`, `elevator`, `hotel_booking`, `train_ticket_booking`, `package_locker`.
-- Approved gold FSMs, requirement specs, and behavioral test suites for all twelve systems.
-- Benchmark catalog and index metadata under `benchmark/catalog.json` and `benchmark/index.json`.
+- Benchmark catalog and system index (`benchmark/catalog.json`, `benchmark/index.json`).
+- Upstream dataset pin to FSM-Bench-20 (`benchmark/datasets/upstream_manifest.json`).
+- 177 behavioral tests across twelve test suites (oracle, path, and negative cases).
 
-### Tests
+**CLI scripts**
 
-- 172+ unit and integration tests covering validators, simulator, coverage, benchmark loading, and gold self-tests.
-- Parametrized benchmark validation for all pilot and core systems.
+- `validate_fsm.py` — schema, structural, and determinism validation.
+- `run_behavioral_tests.py` — behavioral test-suite execution.
+- `compare_to_gold.py` — gold reference comparison.
+- `evaluate_case.py` — single-candidate end-to-end evaluation.
+- `evaluate_gold_corpus.py` — corpus-level gold self-test and coverage reporting.
+- `run_ollama_campaign.py` and `ollama_campaign_lib.py` — local Ollama FSM generation and evaluation campaigns with dry-run, resume, and failure recording.
+- `aggregate_campaign_results.py` — campaign summary CSV and RQ-oriented markdown export.
+- `generate_paper_results.py` — CSV, LaTeX, and figure export from campaign summaries.
+- `audit_public_release.py` — tracked-content hygiene audit.
+
+**Campaign configuration**
+
+- C1 pilot config (`experiments/configs/C1_pilot_ollama_behavioral.json`) and five campaign templates under `experiments/configs/TEMPLATE_*.json`.
+- Frozen generation prompt (`prompts/behavioral_fsm_generation.md`).
+
+**Documentation**
+
+- Study design, benchmark specification, evaluation protocol, artifact policy, release policy, and repository governance under `docs/`.
+- `REPRODUCIBILITY.md` replication guide.
+- `docs/repository_hygiene.md` public-release exclusion checklist.
+- `RELEASE_READINESS.md` pre-tag audit report.
+- Methodology audit notes for C1 pilot replicate stability and negative-test coverage (`experiments/analysis/`).
+
+**Tooling and packaging**
+
+- Editable install via `pyproject.toml` (Python 3.11+, runtime deps: `jsonschema`, `pyyaml`).
+- Citation metadata (`CITATION.cff`, MIT `LICENSE`).
+- CI workflows: `validate.yml` (push/PR) and `release-audit.yml` (version tags).
+
+### Validation
+
+- **208** pytest unit and integration tests across validators, simulator, coverage, benchmark loading, campaign utilities, and gold self-tests.
+- `ruff check framework/ tests/ scripts/` passes on the release tree.
+- `python scripts/audit_public_release.py` → `release_audit=PASS` (183 tracked files; no LaTeX, PDF, or local run outputs in Git).
+- `python scripts/evaluate_gold_corpus.py` → `systems_total=12`, `systems_passed=12`, `all_passed=True`; behavioral pass rate `1.000` for every system.
+- Parametrized benchmark validation for all twelve pilot and core systems.
+- CI runs schema JSON checks, lint, tests, release audit, and gold corpus evaluation on every push to `main`.
 
 ### Reproducibility
 
-- `REPRODUCIBILITY.md` with environment setup, validation commands, and gold corpus evaluation workflow.
-- `scripts/evaluate_gold_corpus.py` for corpus-level schema, determinism, coverage, and self-test reporting.
-- `scripts/audit_public_release.py` and CI release audit workflow to block manuscript and local-output leakage.
-- Local outputs (`results/`, `experiments/runs/`, `experiments/logs/`) excluded from version control by default.
+- Step-by-step environment setup and validation commands in `REPRODUCIBILITY.md`.
+- Gold corpus evaluation regenerates local reports under `results/gold_corpus/` (gitignored).
+- Campaign outputs under `experiments/runs/` and `experiments/logs/` excluded from version control by default; only `.gitkeep` placeholders tracked.
+- `.gitignore` and `docs/repository_hygiene.md` document exclusions for Python caches, virtual environments, editor metadata, temporary outputs, generated reports, and local PDFs.
+- `reproducibility/build_replication_package.sh` stub present for future archival packaging.
+
+### Known limitations
+
+- **Corpus scope:** twelve of twenty FSM-Bench-20 systems; stretch tier not included.
+- **Pilot requirement coverage:** legacy transition-level traceability yields requirement coverage below `1.000` on pilot systems despite passing behavioral self-tests.
+- **Campaign archival:** Ollama campaign tooling and configs ship with the release, but timestamped run directories remain local and gitignored; no frozen campaign metrics bundle is included in this tag.
+- **Replication packaging:** Zenodo ZIP builder and environment/Docker pins are placeholders (`reproducibility/environment/`, `reproducibility/docker/`).
+- **PyPI classifier:** `Development Status :: 2 - Pre-Alpha`.
+- **Dependency warning:** `jsonschema.RefResolver` deprecation notice during tests (non-blocking).
+
+[0.1.0]: https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.0
