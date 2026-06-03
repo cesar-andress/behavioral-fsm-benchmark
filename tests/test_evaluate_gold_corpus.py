@@ -50,7 +50,7 @@ def test_evaluate_corpus_all_pass(corpus_eval) -> None:
     for item in report.systems:
         assert item.all_pass
         assert item.schema_valid
-        assert item.g2_pass
+        assert item.referential_valid
         assert item.g3_pass
         assert item.g3a_pass
         assert item.gold_self_test_pass
@@ -89,7 +89,7 @@ def test_export_corpus_report_writes_outputs(corpus_eval, tmp_path: Path) -> Non
         "system_id",
         "tier",
         "schema_valid",
-        "g2_pass",
+        "referential_valid",
         "g3_pass",
         "g3a_pass",
         "gold_self_test_pass",
@@ -168,7 +168,7 @@ def test_evaluate_system_detects_schema_failure(corpus_eval, tmp_path: Path) -> 
         corpus_eval.CorpusSystemEntry("broken", "pilot"),
         repo_root=repo,
     )
-    assert not metrics.g2_pass
+    assert not metrics.referential_valid
     assert not metrics.gold_self_test_pass
     assert not metrics.all_pass
     assert metrics.errors

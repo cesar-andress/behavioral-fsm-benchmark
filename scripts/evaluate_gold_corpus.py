@@ -37,7 +37,7 @@ CSV_COLUMNS = [
     "system_id",
     "tier",
     "schema_valid",
-    "g2_pass",
+    "referential_valid",
     "g3_pass",
     "g3a_pass",
     "gold_self_test_pass",
@@ -63,7 +63,7 @@ class SystemCorpusMetrics:
     system_id: str
     tier: str
     schema_valid: bool
-    g2_pass: bool
+    referential_valid: bool
     g3_pass: bool
     g3a_pass: bool
     gold_self_test_pass: bool
@@ -170,8 +170,8 @@ def evaluate_system(
 
     gold = fsm_from_dict(gold_payload)
     structural = validate_fsm(gold, schema_valid=gold_schema_ok)
-    g2_pass = gold_schema_ok and structural.referential_valid
-    if not g2_pass:
+    referential_valid = structural.referential_valid
+    if not referential_valid:
         errors.extend(structural.errors)
 
     determinism = validate_determinism(gold)
@@ -202,13 +202,20 @@ def evaluate_system(
             if not result.passed:
                 errors.append(f"self-test failed: {result.test_id}: {result.message}")
 
-    all_pass = schema_valid and g2_pass and g3_pass and g3a_pass and self_ok and gold_ok
+    all_pass = (
+        schema_valid
+        and referential_valid
+        and g3_pass
+        and g3a_pass
+        and self_ok
+        and gold_ok
+    )
 
     return SystemCorpusMetrics(
         system_id=entry.system_id,
         tier=entry.tier,
         schema_valid=schema_valid,
-        g2_pass=g2_pass,
+        referential_valid=referential_valid,
         g3_pass=g3_pass,
         g3a_pass=g3a_pass,
         gold_self_test_pass=self_ok,
@@ -272,7 +279,7 @@ def write_summary_markdown(report: CorpusEvaluationReport, output_path: Path) ->
         "",
         "## Per-system metrics",
         "",
-        "| System | Tier | Schema | G2 | G3 | G3a | Self-test | RCov | TCov | PCov | Status |",
+        "| System | Tier | Schema | Ref | G3 | G3a | Self-test | RCov | TCov | PCov | Status |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
 
@@ -285,7 +292,7 @@ def write_summary_markdown(report: CorpusEvaluationReport, output_path: Path) ->
                     f"`{item.system_id}`",
                     item.tier,
                     _bool_mark(item.schema_valid),
-                    _bool_mark(item.g2_pass),
+                    _bool_mark(item.referential_valid),
                     _bool_mark(item.g3_pass),
                     _bool_mark(item.g3a_pass),
                     _bool_mark(item.gold_self_test_pass),
