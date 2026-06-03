@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "behavioral-fsm-benchmark"
-version = "0.1.0"
+version = "0.1.2"
 description = "Behavioral, robustness, and reproducibility evaluation of LLM-generated FSMs"
 readme = "README.md"
 license = { text = "MIT" }

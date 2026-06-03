@@ -4,7 +4,7 @@
 
 Public **research-software repository** for an Empirical Software Engineering (EMSE) study on LLM-generated finite state machines.
 
-**Release:** [`v0.1.1`](https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.1) (2026-06-03) — documentation patch aligning terminology with the EMSE manuscript and frozen C1/C2 campaign records. Evaluator logic and metrics unchanged from [`v0.1.0`](https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.0), archived on Zenodo as [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834).
+**Release:** [`v0.1.2`](https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.2) (2026-06-03) — EMSE submission alignment release (documentation, terminology, traceability, and metadata only). Evaluator logic, metrics, and frozen campaign outcomes unchanged from [`v0.1.0`](https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.0), archived on Zenodo as [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834). See [RELEASE_NOTES.md](RELEASE_NOTES.md).
 
 ## Purpose
 
@@ -170,16 +170,17 @@ Enforced by `.gitignore`, `scripts/audit_public_release.py`, and the [Release Au
 
 MIT — see [LICENSE](LICENSE).
 
-**Zenodo archive (v0.1.0):** [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834)
+**Zenodo archive:** [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834) (v0.1.0 software deposit; v0.1.2 is a documentation and metadata alignment release)
 
-Citation metadata and software record fields: [CITATION.cff](CITATION.cff).
+Citation metadata and software record fields: [CITATION.cff](CITATION.cff), [RELEASE_NOTES.md](RELEASE_NOTES.md).
 
 ```bibtex
 @software{behavioral_fsm_bench_2026,
   author       = {Andr{\'e}s, C{\'e}sar},
-  title        = {behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs},
-  version      = {0.1.0},
-  date         = {2026-06-03},
+  title        = {behavioral-fsm-benchmark: Behavioral Evaluation Companion for LLM-Generated FSMs},
+  version      = {0.1.2},
+  year         = {2026},
+  publisher    = {Zenodo},
   doi          = {10.5281/zenodo.20522834},
   url          = {https://github.com/cesar-andress/behavioral-fsm-benchmark}
 }

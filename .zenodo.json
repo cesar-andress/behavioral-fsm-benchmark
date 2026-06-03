@@ -1,5 +1,5 @@
 {
-  "title": "behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs",
+  "title": "behavioral-fsm-benchmark: Behavioral Evaluation Companion for LLM-Generated FSMs",
   "description": "Offline Python evaluation framework and approved gold corpus extending FSM-Bench-20 with behavioral oracles, guard-aware determinism (G3a), gold reference FSMs, test-suite agreement, coverage metrics, and frozen C1/C2 campaign records.",
   "upload_type": "software",
   "access_right": "open",

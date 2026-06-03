@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-06-03
+
+EMSE submission alignment release. **No benchmark systems, campaign outcomes, oracle logic, scoring procedures, or reported empirical results were modified.**
+
+### Added
+
+- [RELEASE_NOTES.md](RELEASE_NOTES.md) — submission-facing release summary and citation block for the EMSE manuscript companion artifact.
+
+### Changed
+
+- [CITATION.cff](CITATION.cff) — version `0.1.2`; title aligned with manuscript companion citation; author metadata (César Andrés, ORCID).
+- [README.md](README.md) — v0.1.2 release banner and citation metadata.
+- [REPRODUCIBILITY.md](REPRODUCIBILITY.md) — release pointer updated to v0.1.2.
+- [pyproject.toml](pyproject.toml), [framework/__init__.py](framework/__init__.py) — package version `0.1.2`.
+- [.zenodo.json](.zenodo.json) — canonical creator name and ORCID for GitHub–Zenodo integration.
+
+### Unchanged
+
+- Python evaluation framework (`framework/`, `scripts/`).
+- JSON schemas, gold corpus artefacts, frozen C1/C2 campaign exports, and scoring strata definitions.
+- All manuscript-reported empirical endpoints (N=240; G2 189/240; BPR=1.0 30/189 among G2-pass behaviourally scored stratum).
+
 ## [0.1.1] - 2026-06-03
 
 Documentation patch aligning public repository terminology with the EMSE manuscript and frozen C1/C2 campaign records. **No evaluator logic, metrics, or campaign output changes.**
@@ -112,6 +134,7 @@ First public release of the behavioral FSM evaluation framework and approved gol
 - **PyPI classifier:** `Development Status :: 2 - Pre-Alpha`.
 - **Dependency warning:** `jsonschema.RefResolver` deprecation notice during tests (non-blocking).
 
+[0.1.2]: https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.2
 [0.1.1]: https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.1
 
 [0.1.0]: https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.0

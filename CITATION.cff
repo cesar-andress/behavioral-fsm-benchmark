@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs"
+title: "behavioral-fsm-benchmark: Behavioral Evaluation Companion for LLM-Generated FSMs"
 message: "If you use this benchmark or framework, please cite using the metadata below."
 type: software
 authors:
@@ -9,7 +9,7 @@ authors:
 repository-code: "https://github.com/cesar-andress/behavioral-fsm-benchmark"
 url: "https://github.com/cesar-andress/behavioral-fsm-benchmark"
 license: MIT
-version: 0.1.1
+version: 0.1.2
 date-released: 2026-06-03
 doi: 10.5281/zenodo.20522834
 keywords:
@@ -21,9 +21,9 @@ keywords:
   - reproducibility
   - empirical software engineering
 abstract: >
-  behavioral-fsm-benchmark v0.1.1 documents scoring strata and frozen C1/C2 campaign
-  terminology aligned with the EMSE manuscript. v0.1.0 provides the offline Python
-  evaluation framework and an approved gold corpus (three pilot and nine core systems)
-  extending FSM-Bench-20 with behavioral oracles, guard-aware determinism (G3a),
-  gold reference FSMs, test-suite agreement, coverage metrics, and corpus-level
-  validation tooling for empirical software engineering research.
+  behavioral-fsm-benchmark v0.1.2 aligns the companion artifact with the submitted EMSE
+  manuscript. No benchmark systems, campaign outcomes, oracle logic, scoring procedures, or
+  reported empirical results were modified. v0.1.0 provides the offline Python evaluation
+  framework and approved gold corpus extending FSM-Bench-20 with behavioral oracles,
+  guard-aware determinism (G3a), gold reference FSMs, test-suite agreement, coverage metrics,
+  and frozen C1/C2 campaign records (N=240).

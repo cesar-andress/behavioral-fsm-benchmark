@@ -1,12 +1,12 @@
 # Reproducibility Guide — behavioral-fsm-benchmark
 
-Replication instructions for release **v0.1.1** (documentation alignment with frozen C1/C2 campaign records). Evaluator logic and metrics are unchanged from **v0.1.0**.
+Replication instructions for release **v0.1.2** (EMSE submission alignment; evaluator logic and metrics unchanged from **v0.1.0**).
 
 ## Overview
 
 | Item | Value |
 |------|-------|
-| Release | `v0.1.1` (2026-06-03); framework archive `v0.1.0` on Zenodo |
+| Release | `v0.1.2` (2026-06-03); framework archive `v0.1.0` on Zenodo |
 | Zenodo archive | [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834) |
 | Upstream dataset | FSM-Bench-20 — [10.5281/zenodo.20516296](https://doi.org/10.5281/zenodo.20516296) |
 | Import manifest | `benchmark/datasets/upstream_manifest.json` |
