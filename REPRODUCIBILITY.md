@@ -7,6 +7,7 @@ Replication instructions for release **v0.1.0** (framework + approved gold corpu
 | Item | Value |
 |------|-------|
 | Release | `v0.1.0` (2026-06-03) |
+| Zenodo archive | [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834) |
 | Upstream dataset | FSM-Bench-20 — [10.5281/zenodo.20516296](https://doi.org/10.5281/zenodo.20516296) |
 | Import manifest | `benchmark/datasets/upstream_manifest.json` |
 | Gold corpus | 12 systems (3 pilot + 9 core) — see `benchmark/index.json` |
@@ -243,6 +244,8 @@ Additional templates remain under `experiments/configs/TEMPLATE_*.json` for pari
 Outputs land in `experiments/runs/` and `experiments/logs/` (gitignored until explicitly frozen).
 
 ## Archival
+
+Release **v0.1.0** is archived on Zenodo: [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834).
 
 Follow [docs/release_policy.md](docs/release_policy.md). Build script: `reproducibility/build_replication_package.sh` (when campaign data is frozen).
 

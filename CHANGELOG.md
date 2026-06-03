@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 First public release of the behavioral FSM evaluation framework and approved gold corpus.
 
+**Zenodo:** [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834)
+
 ### Added
 
 **Framework**
@@ -82,3 +84,5 @@ First public release of the behavioral FSM evaluation framework and approved gol
 - **Dependency warning:** `jsonschema.RefResolver` deprecation notice during tests (non-blocking).
 
 [0.1.0]: https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.0
+
+[0.1.0 Zenodo]: https://doi.org/10.5281/zenodo.20522834

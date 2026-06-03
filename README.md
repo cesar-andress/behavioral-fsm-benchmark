@@ -1,8 +1,10 @@
 # behavioral-fsm-benchmark
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20522834.svg)](https://doi.org/10.5281/zenodo.20522834)
+
 Public **research-software repository** for an Empirical Software Engineering (EMSE) study on LLM-generated finite state machines.
 
-**Release:** `v0.1.0` — framework, approved gold corpus (pilot + core), corpus evaluation, and reproducibility documentation.
+**Release:** [`v0.1.0`](https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.0) (2026-06-03) — archived on Zenodo as [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834). Includes the evaluation framework, approved gold corpus (pilot + core), corpus evaluation, and reproducibility documentation.
 
 ## Purpose
 
@@ -149,4 +151,19 @@ Enforced by `.gitignore`, `scripts/audit_public_release.py`, and the [Release Au
 
 ## License and citation
 
-MIT — see [LICENSE](LICENSE). Citation metadata: [CITATION.cff](CITATION.cff).
+MIT — see [LICENSE](LICENSE).
+
+**Zenodo archive (v0.1.0):** [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834)
+
+Citation metadata and software record fields: [CITATION.cff](CITATION.cff).
+
+```bibtex
+@software{sanchez2026behavioral,
+  author       = {Sanchez, Cesar Andres},
+  title        = {behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs},
+  version      = {0.1.0},
+  date         = {2026-06-03},
+  doi          = {10.5281/zenodo.20522834},
+  url          = {https://github.com/cesar-andress/behavioral-fsm-benchmark}
+}
+```

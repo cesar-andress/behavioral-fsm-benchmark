@@ -10,6 +10,7 @@ url: "https://github.com/cesar-andress/behavioral-fsm-benchmark"
 license: MIT
 version: 0.1.0
 date-released: 2026-06-03
+doi: 10.5281/zenodo.20522834
 keywords:
   - finite state machines
   - large language models
