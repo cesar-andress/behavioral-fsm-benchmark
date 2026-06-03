@@ -13,6 +13,8 @@
 
 **Related audits:** [C1_scientific_audit.md](C1_scientific_audit.md), [C1_replicate_audit.md](C1_replicate_audit.md)
 
+**Terminology (v0.1.1):** See [docs/scoring_strata_and_campaign_freeze.md](../../docs/scoring_strata_and_campaign_freeze.md) for manuscript-aligned stratum names (behaviorally scored **n=209**; G2-pass behaviorally scored **n=189**).
+
 ---
 
 ## 1. Executive summary

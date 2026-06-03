@@ -256,7 +256,26 @@ Perturbation and reproducibility exports add columns defined in §5.5–§5.7.
 |---------|------|--------|
 | 1.0 | 2026-06-03 | Draft skeleton |
 | **2.0** | 2026-06-03 | Full metric catalog; G3a; RQ mapping; repair/repro/robustness deltas |
+| **2.1** | 2026-06-03 | v0.1.1 alignment addendum (§12); no metric computation changes |
 
 ---
 
-*End of evaluation protocol v2.0*
+## 12. v0.1.1 alignment addendum (documentation only)
+
+This addendum aligns terminology with the EMSE manuscript and frozen C1/C2 exports. **Evaluator logic is unchanged from v0.1.0.** Authoritative detail: [scoring_strata_and_campaign_freeze.md](scoring_strata_and_campaign_freeze.md).
+
+| Topic | Manuscript / export terminology |
+|-------|--------------------------------|
+| **G2 pass** | `schema_valid` **and** `referential_valid` (not schema alone) |
+| **Behaviorally scored stratum** | Non-null `behavioral_pass_rate` after schema validation (**209/240**) |
+| **G2-pass behaviorally scored stratum** | G2 pass with non-null BPR (**189/240**) |
+| **Behavioral hard stop** | Parsing or schema failure → null behavioral fields (**31** runs) |
+| **Referential-invalid scored** | `referential_valid=false`, schema valid → oracles may run (**20** runs) |
+| **G3 / G3a** | Post-G2 determinism checks on G2-pass runs, **in parallel**; G3a may exceed G3 |
+| **Frozen campaigns** | C1 `20260603T003118Z` (60) + C2 `20260603T080817Z` (180) |
+
+Section 5.1 table row “Schema validity | G2” in v2.0 shorthand means the **G2 gate pair** above, not schema validation in isolation.
+
+---
+
+*End of evaluation protocol v2.0 (v0.1.1 addendum §12)*

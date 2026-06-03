@@ -4,6 +4,35 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-06-03
+
+Documentation patch aligning public repository terminology with the EMSE manuscript and frozen C1/C2 campaign records. **No evaluator logic, metrics, or campaign output changes.**
+
+### Added
+
+- [docs/scoring_strata_and_campaign_freeze.md](docs/scoring_strata_and_campaign_freeze.md) — authoritative definitions for:
+  - scoring strata (behaviorally scored **n=209**; G2-pass behaviorally scored **n=189**);
+  - **G2** = `schema_valid` ∧ `referential_valid`;
+  - schema failure as behavioral hard stop vs `referential_valid=false` oracle-on-parsed-object scores;
+  - **G3** and **G3a** as parallel post-G2 determinism checks;
+  - approved gold FSM authorship and checklist workflow;
+  - frozen C1/C2 run directories (`20260603T003118Z`, `20260603T080817Z`; N=240).
+
+### Changed
+
+- [README.md](README.md) — v0.1.1 release note, scoring strata summary, IST comparison table, governance link.
+- [REPRODUCIBILITY.md](REPRODUCIBILITY.md) — scoring strata section, frozen C1/C2 paths, C2 replication notes, referential-invalid scoring clarification, corrected C1 run count (60).
+- [docs/evaluation_protocol.md](docs/evaluation_protocol.md) — v0.1.1 alignment addendum (terminology only).
+- [benchmark/gold_fsms/README.md](benchmark/gold_fsms/README.md) — pointer to gold approval workflow.
+- [experiments/analysis/C1_C2_evaluable_stratum_audit.md](experiments/analysis/C1_C2_evaluable_stratum_audit.md) — cross-reference to scoring strata doc.
+- [CITATION.cff](CITATION.cff) — version `0.1.1`.
+
+### Unchanged
+
+- Python evaluation framework (`framework/`, `scripts/`).
+- JSON schemas, gold corpus artefacts, campaign configs.
+- Frozen `metrics.csv` values and local run directories.
+
 ## [0.1.0] - 2026-06-03
 
 First public release of the behavioral FSM evaluation framework and approved gold corpus.
@@ -82,6 +111,8 @@ First public release of the behavioral FSM evaluation framework and approved gol
 - **Replication packaging:** Zenodo ZIP builder and environment/Docker pins are placeholders (`reproducibility/environment/`, `reproducibility/docker/`).
 - **PyPI classifier:** `Development Status :: 2 - Pre-Alpha`.
 - **Dependency warning:** `jsonschema.RefResolver` deprecation notice during tests (non-blocking).
+
+[0.1.1]: https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.1
 
 [0.1.0]: https://github.com/cesar-andress/behavioral-fsm-benchmark/releases/tag/v0.1.0
 

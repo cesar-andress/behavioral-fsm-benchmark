@@ -36,3 +36,9 @@ Human-approved gold (reference) finite state machines for behavioral evaluation.
 | `package_locker` | `package_locker.json` |
 
 Each approved gold FSM MUST pass its paired test suite at 100% (reference self-test).
+
+## Authorship and approval
+
+Gold FSMs are hand-authored from FSM-Bench-20 requirement specs, paired with behavioural test suites, and approved via the checklist in `docs/benchmark_specification.md` (§3–§8.1): schema validation, DSL guards, requirement-ID mapping, reference self-test (G2, G3a, full-suite behavioural pass), and metadata sign-off (`metadata.status=approved`).
+
+See also [docs/scoring_strata_and_campaign_freeze.md](../../docs/scoring_strata_and_campaign_freeze.md) §5.
