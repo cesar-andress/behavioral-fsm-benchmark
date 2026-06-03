@@ -67,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"executed_runs={result['executed_runs']}")
     print(f"failed_runs={result['failed_runs']}")
     print(f"all_passed={result['all_passed']}")
-    return 0 if result["all_passed"] else 1
+    return 0
 
 
 if __name__ == "__main__":

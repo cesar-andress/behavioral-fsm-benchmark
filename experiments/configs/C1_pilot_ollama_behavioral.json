@@ -12,11 +12,9 @@
   ],
   "models": [
     "qwen2.5-coder:7b",
-    "qwen2.5-coder:14b",
     "llama3.1:8b",
     "mistral-nemo:12b",
-    "gemma2:9b",
-    "phi3:14b"
+    "gemma2:9b"
   ],
   "replicates": 5,
   "inference": {
@@ -46,5 +44,5 @@
     "repair_loop": false,
     "post_processing": "json_extraction_and_validation_only"
   },
-  "expected_runs": 90
+  "expected_runs": 60
 }

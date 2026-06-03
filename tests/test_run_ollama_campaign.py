@@ -35,7 +35,12 @@ def campaign_config():
 def test_load_campaign_config(campaign_config) -> None:
     assert campaign_config.campaign_id == "C1_pilot_ollama_behavioral"
     assert campaign_config.systems == ["vending_machine", "login_system", "atm"]
-    assert len(campaign_config.models) == 6
+    assert campaign_config.models == [
+        "qwen2.5-coder:7b",
+        "llama3.1:8b",
+        "mistral-nemo:12b",
+        "gemma2:9b",
+    ]
     assert campaign_config.replicates == 5
     assert campaign_config.temperature == 0.0
     assert campaign_config.structured_output is True
@@ -44,7 +49,7 @@ def test_load_campaign_config(campaign_config) -> None:
 
 def test_build_run_matrix_size(campaign_config) -> None:
     matrix = build_run_matrix(campaign_config)
-    assert len(matrix) == 90
+    assert len(matrix) == 60
     assert matrix[0].system_id == "vending_machine"
     assert matrix[0].model == "qwen2.5-coder:7b"
     assert matrix[0].replicate == 1
@@ -110,10 +115,12 @@ def test_build_metric_row_from_evaluation() -> None:
     }
     row = build_metric_row(run, status=RUN_STATUS_COMPLETED, evaluation_export=export)
     assert row["schema_valid"] is True
-    assert row["g3_pass"] is True
+    assert row["strict_deterministic"] is True
+    assert row["guard_aware_deterministic"] is True
     assert row["behavioral_pass_rate"] == 0.5
-    assert row["missing_transitions_count"] == 1
-    assert row["extra_transitions_count"] == 1
+    assert row["final_state_agreement"] == 0.8
+    assert row["missing_transitions"] == 1
+    assert row["extra_transitions"] == 1
 
 
 def test_render_prompt_includes_requirements(campaign_config) -> None:

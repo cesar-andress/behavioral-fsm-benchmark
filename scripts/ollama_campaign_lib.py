@@ -257,15 +257,15 @@ def build_metric_row(
         "finished_at": finished_at or "",
         "schema_valid": False,
         "referential_valid": False,
-        "g3_pass": False,
-        "g3a_pass": False,
+        "strict_deterministic": False,
+        "guard_aware_deterministic": False,
         "requirement_coverage": 0.0,
         "behavioral_pass_rate": 0.0,
-        "final_state_agreement_rate": 0.0,
-        "trace_agreement_rate": 0.0,
-        "rejected_event_agreement_rate": 0.0,
-        "missing_transitions_count": 0,
-        "extra_transitions_count": 0,
+        "final_state_agreement": 0.0,
+        "trace_agreement": 0.0,
+        "rejected_event_agreement": 0.0,
+        "missing_transitions": 0,
+        "extra_transitions": 0,
     }
     if evaluation_export is None:
         return row
@@ -280,19 +280,19 @@ def build_metric_row(
         {
             "schema_valid": bool(structural.get("schema_valid")),
             "referential_valid": bool(structural.get("referential_valid")),
-            "g3_pass": bool(determinism.get("strict_deterministic")),
-            "g3a_pass": bool(determinism.get("guard_aware_deterministic")),
+            "strict_deterministic": bool(determinism.get("strict_deterministic")),
+            "guard_aware_deterministic": bool(determinism.get("guard_aware_deterministic")),
             "requirement_coverage": float(coverage.get("requirement_coverage", 0.0)),
             "behavioral_pass_rate": float(
                 behavioral.get("behavioral_pass_rate", behavioral.get("oracle_pass_rate", 0.0))
             ),
-            "final_state_agreement_rate": float(behavioral.get("final_state_agreement_rate", 0.0)),
-            "trace_agreement_rate": float(behavioral.get("trace_agreement_rate", 0.0)),
-            "rejected_event_agreement_rate": float(
+            "final_state_agreement": float(behavioral.get("final_state_agreement_rate", 0.0)),
+            "trace_agreement": float(behavioral.get("trace_agreement_rate", 0.0)),
+            "rejected_event_agreement": float(
                 behavioral.get("rejected_event_agreement_rate", 0.0)
             ),
-            "missing_transitions_count": len(equivalence.get("missing_transitions", [])),
-            "extra_transitions_count": len(equivalence.get("extra_transitions", [])),
+            "missing_transitions": len(equivalence.get("missing_transitions", [])),
+            "extra_transitions": len(equivalence.get("extra_transitions", [])),
         }
     )
     return row
@@ -412,15 +412,15 @@ METRIC_CSV_COLUMNS = [
     "finished_at",
     "schema_valid",
     "referential_valid",
-    "g3_pass",
-    "g3a_pass",
+    "strict_deterministic",
+    "guard_aware_deterministic",
     "requirement_coverage",
     "behavioral_pass_rate",
-    "final_state_agreement_rate",
-    "trace_agreement_rate",
-    "rejected_event_agreement_rate",
-    "missing_transitions_count",
-    "extra_transitions_count",
+    "final_state_agreement",
+    "trace_agreement",
+    "rejected_event_agreement",
+    "missing_transitions",
+    "extra_transitions",
 ]
 
 
@@ -634,6 +634,7 @@ def run_campaign(
     manifest["runs"] = [existing_by_id[run.run_id] for run in matrix if run.run_id in existing_by_id]
     manifest["updated_at"] = datetime.now(tz=UTC).replace(microsecond=0).isoformat()
     update_manifest(campaign_dir, manifest)
+    metric_rows.sort(key=lambda row: int(row.get("run_index", 0)))
     write_metrics_files(campaign_dir, metric_rows)
 
     failed = sum(1 for row in metric_rows if row.get("status") == RUN_STATUS_FAILED)
