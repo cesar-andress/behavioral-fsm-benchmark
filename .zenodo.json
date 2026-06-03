@@ -1,0 +1,22 @@
+{
+  "title": "behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs",
+  "description": "Offline Python evaluation framework and approved gold corpus extending FSM-Bench-20 with behavioral oracles, guard-aware determinism (G3a), gold reference FSMs, test-suite agreement, coverage metrics, and frozen C1/C2 campaign records.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "mit",
+  "creators": [
+    {
+      "name": "Andrés, César",
+      "orcid": "0009-0001-8968-3404"
+    }
+  ],
+  "keywords": [
+    "finite state machines",
+    "large language models",
+    "behavioral correctness",
+    "model-based testing",
+    "robustness",
+    "reproducibility",
+    "empirical software engineering"
+  ]
+}

@@ -175,7 +175,7 @@ MIT — see [LICENSE](LICENSE).
 Citation metadata and software record fields: [CITATION.cff](CITATION.cff).
 
 ```bibtex
-@software{sanchez2026behavioral,
+@software{behavioral_fsm_bench_2026,
   author       = {Andr{\'e}s, C{\'e}sar},
   title        = {behavioral-fsm-benchmark: Behavioral Evaluation of LLM-Generated FSMs},
   version      = {0.1.0},
