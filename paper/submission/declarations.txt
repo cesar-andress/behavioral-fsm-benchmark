@@ -1,8 +1,0 @@
-EMSE Declarations — PLACEHOLDER
-
-Funding: [TO BE COMPLETED]
-Conflict of interest: The author declares no competing interests.
-Ethics approval: Not applicable (secondary analysis of public benchmark data and LLM-generated artifacts).
-Data availability: FSM-Bench-20 (DOI 10.5281/zenodo.20516296); FSM-Behavior-Bench replication package (Zenodo DOI TBD).
-Code availability: https://github.com/[TBD]/llm-fsm-behavioral-benchmark (tag v1.0.0 at submission).
-Author contributions: [TO BE COMPLETED]

@@ -55,7 +55,7 @@ Outputs: `experiments/runs/` (artifacts), `experiments/logs/` (logs).
 
 ## Analysis export
 
-Post-hoc scripts in `analysis/scripts/` export LaTeX tables to `paper/tables/`.
+Post-hoc scripts in `analysis/scripts/` export tables and figures for manuscript use (private, outside this repository).
 
 ## Archival
 

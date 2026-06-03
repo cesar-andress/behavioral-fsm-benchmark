@@ -1,18 +1,27 @@
 # behavioral-fsm-benchmark
 
-Research artifact and evaluation framework for an **Empirical Software Engineering (EMSE)** study on LLM-generated finite state machines.
+Public **research-software repository** for an Empirical Software Engineering (EMSE) study on LLM-generated finite state machines.
 
-## Project scope
+## Public scope
 
-This repository provides:
+This repository contains:
 
-1. **Benchmark artifacts** — datasets, gold reference FSMs, test suites, guard definitions, JSON schemas.
-2. **Evaluation framework** — Python packages for structural validation, behavioral oracles, equivalence, coverage, and guard-aware checks.
-3. **Experiment infrastructure** — campaign configs, manifests, run registry (no executed campaigns in bootstrap phase).
-4. **Manuscript sources** — LaTeX skeleton for the EMSE submission (`paper/`).
-5. **Reproducibility packaging** — environment pins, replication scripts, release workflow.
+1. **Evaluation framework** — Python packages for structural validation, behavioral oracles, gold comparison, coverage, and guard-aware checks.
+2. **Benchmark artifacts** — JSON schemas, pilot gold FSMs, behavioral test suites, guard definitions, and dataset import manifests.
+3. **Study documentation** — pre-registered study design, benchmark specification, evaluation protocol, and reproducibility guides.
+4. **Experiment infrastructure** — campaign templates and manifest schemas (raw run outputs are not committed by default).
 
-**Out of scope (bootstrap phase):** executed experiments, populated gold FSMs, manuscript prose, published results.
+## Private manuscript (not in this repository)
+
+The EMSE manuscript is maintained **separately** in a private directory outside this public repository (`~/papers/emse2026/paper`). Draft prose, submission files, reviewer correspondence, and LaTeX build outputs are **not** part of this GitHub project.
+
+Future **Zenodo** releases will archive only:
+
+- reproducible software (framework, scripts, tests),
+- benchmark schemas and approved pilot artifacts,
+- documentation and replication instructions.
+
+No private draft manuscript files are included in public releases.
 
 ## Working title
 
@@ -26,7 +35,7 @@ This repository provides:
 
 | IST 2026 (structural) | This study (behavioral extension) |
 |-----------------------|-----------------------------------|
-| G1 JSON, G2 schema, G3 guard-blind determinism | Guard-aware determinism + behavioral oracles |
+| G1 JSON, G2 schema, G3 guard-blind determinism | Guard-aware determinism (G3a) + behavioral oracles |
 | Requirement citation coverage as proxy | Test-suite agreement + gold reference conformance |
 | Single-run descriptive campaign (140 runs) | Multi-run reproducibility + perturbation robustness |
 | Placeholder gold FSMs | Tiered human-approved reference FSMs |
@@ -36,15 +45,14 @@ This repository provides:
 
 ```text
 behavioral-fsm-benchmark/
-├── benchmark/       datasets, gold_fsms, schemas, test_suites, guards
+├── benchmark/       schemas, gold_fsms, test_suites, datasets, guards
 ├── framework/       Python evaluation engine
-├── experiments/     configs, manifests, runs, logs
-├── analysis/        post-hoc scripts, tables, figures
-├── paper/           EMSE manuscript (LaTeX skeleton)
+├── experiments/     configs, manifests, runs/, logs/
+├── analysis/        post-hoc scripts, tables/, figures/
 ├── docs/            study design, protocols, policies
 ├── reproducibility/ environment, docker, replication scripts
 ├── releases/        versioned release artifacts
-├── scripts/         CLI entry points (planned)
+├── scripts/         CLI entry points
 └── tests/           unit and integration tests
 ```
 
@@ -55,13 +63,11 @@ behavioral-fsm-benchmark/
 | Study design | [docs/study_design.md](docs/study_design.md) |
 | Benchmark specification | [docs/benchmark_specification.md](docs/benchmark_specification.md) |
 | Evaluation protocol | [docs/evaluation_protocol.md](docs/evaluation_protocol.md) |
-| Release policy | [docs/release_policy.md](docs/release_policy.md) |
 | Artifact policy | [docs/artifact_policy.md](docs/artifact_policy.md) |
+| Release policy | [docs/release_policy.md](docs/release_policy.md) |
 | Repository governance | [docs/repository_governance.md](docs/repository_governance.md) |
 | Reproducibility | [REPRODUCIBILITY.md](REPRODUCIBILITY.md) |
 | Contributing | [CONTRIBUTING.md](CONTRIBUTING.md) |
-
-**Artifact policy (summary):** Raw model outputs, experiment runs, logs, imported datasets, and LaTeX build artifacts are **gitignored by default**. Only frozen manifests, schemas, approved gold FSMs, and publication exports are committed after review.
 
 ## Quick start
 
@@ -70,12 +76,12 @@ cd ~/papers/emse2026/behavioral-fsm-benchmark
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 pytest
-ruff check framework/ tests/
+ruff check framework/ tests/ scripts/
 ```
 
 ## Status
 
-Bootstrap phase — framework package skeleton and governance docs in place. No experiments or benchmark data yet.
+Pilot benchmark systems (`vending_machine`, `login_system`) with approved gold FSMs and behavioral test suites. Framework M1–M2 implemented; campaign execution pending.
 
 ## License
 

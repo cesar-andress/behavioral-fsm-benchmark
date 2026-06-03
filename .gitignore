@@ -1,37 +1,77 @@
 # Python
-.venv/
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyd
 *.egg-info/
 .eggs/
-dist/
-build/
+.venv/
+venv/
+env/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+htmlcov/
 
-# Experiment outputs (regeneratable)
+# Outputs and experiments
+outputs/
+results/
 experiments/runs/*
 !experiments/runs/.gitkeep
 experiments/logs/*
 !experiments/logs/.gitkeep
-analysis/figures/*
-!analysis/figures/.gitkeep
-analysis/tables/*
-!analysis/tables/.gitkeep
+analysis/figures/*.png
+analysis/figures/*.pdf
+analysis/figures/*.svg
+analysis/tables/*.tex
+analysis/tables/*.csv
+releases/*.zip
+releases/*.tar.gz
+reproducibility/build/*
+!reproducibility/build/.gitkeep
 
 # Imported dataset (regeneratable from upstream; pilot specs are tracked)
 benchmark/datasets/systems/*.json
 !benchmark/datasets/systems/vending_machine.json
 !benchmark/datasets/systems/login_system.json
 
-# AI-only and local assistant artifacts
+# Private manuscript (maintained outside this public repository)
+paper/
+../paper/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+
+# AI/editor metadata
+.cursor/
+.cursorignore
+.cursorindexingignore
+.cursorrules
+.continue/
+.windsurf/
+.claude/
+.claude.json
+.aider*
+.aider/
+.chatgpt/
+.openai/
+*.code-workspace
 prompts/
 prompt_drafts/
 ai_prompts/
 cursor_rules/
-.cursor/
 chat_logs/
 assistant_logs/
 scratch_prompts/
@@ -47,37 +87,16 @@ AGENTS.md
 *.secret
 *.key
 
-# OS / editors
+# OS/editor
 .DS_Store
 Thumbs.db
-*~
-*.swp
-*.swo
 .idea/
 .vscode/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# LaTeX build artifacts
-paper/*.pdf
-paper/*.aux
-paper/*.log
-paper/*.out
-paper/*.toc
-paper/*.bbl
-paper/*.blg
-paper/*.synctex.gz
-paper/*.fdb_latexmk
-paper/*.fls
+*.swp
+*.swo
+*~
 
 # Large local artefacts
 *.gguf
 *.bin
 *.safetensors
-
-# Release build artifacts
-releases/*.zip
-releases/*.tar.gz
-reproducibility/build/*
-!reproducibility/build/.gitkeep
