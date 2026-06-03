@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "behavioral-fsm-benchmark/evaluation_result/v1",
+  "title": "Evaluation Result",
+  "type": "object",
+  "required": ["system_name", "candidate_label", "structural", "determinism", "traceability"],
+  "properties": {
+    "system_name": { "type": "string" },
+    "candidate_label": { "type": "string" },
+    "structural": {
+      "type": "object",
+      "required": ["schema_valid", "referential_valid"],
+      "properties": {
+        "schema_valid": { "type": "boolean" },
+        "referential_valid": { "type": "boolean" },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "determinism": { "type": "object" },
+    "traceability": { "type": "object" },
+    "behavioral": { "type": ["object", "null"] },
+    "equivalence": { "type": ["object", "null"] },
+    "coverage": { "type": ["object", "null"] }
+  },
+  "additionalProperties": true
+}

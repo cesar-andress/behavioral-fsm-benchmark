@@ -1,7 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "fsm-bench-next/reference_fsm/v1",
-  "title": "Reference FSM",
-  "description": "Placeholder — see paper/notes/benchmark_specification.md",
-  "type": "object"
+  "$id": "behavioral-fsm-benchmark/reference_fsm/v1",
+  "title": "Gold / Reference FSM",
+  "allOf": [{ "$ref": "generated_fsm.schema.json" }],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["draft", "review", "approved", "deprecated", "placeholder"] },
+        "approved_by": { "type": ["string", "null"] },
+        "approved_at": { "type": ["string", "null"] },
+        "source": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
 }

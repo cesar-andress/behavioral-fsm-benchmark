@@ -1,0 +1,23 @@
+{
+  "system_name": "Non-deterministic fixture",
+  "states": ["Idle", "CreditAvailable", "Alt"],
+  "initial_state": "Idle",
+  "events": ["insert_coin"],
+  "transitions": [
+    {
+      "source": "Idle",
+      "event": "insert_coin",
+      "guard": "",
+      "target": "CreditAvailable",
+      "requirement": "R2"
+    },
+    {
+      "source": "Idle",
+      "event": "insert_coin",
+      "guard": "balance >= 10",
+      "target": "Alt",
+      "requirement": "R2"
+    }
+  ],
+  "forbidden_behaviours": []
+}

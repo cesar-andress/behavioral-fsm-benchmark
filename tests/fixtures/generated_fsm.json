@@ -1,0 +1,37 @@
+{
+  "system_name": "Drink Vending Machine (fixture)",
+  "states": ["Idle", "CreditAvailable", "Dispensing"],
+  "initial_state": "Idle",
+  "events": ["insert_coin", "press_coffee", "dispense_complete"],
+  "transitions": [
+    {
+      "source": "Idle",
+      "event": "insert_coin",
+      "guard": "",
+      "target": "CreditAvailable",
+      "requirement": "R2"
+    },
+    {
+      "source": "CreditAvailable",
+      "event": "press_coffee",
+      "guard": "",
+      "target": "Dispensing",
+      "requirement": "R3"
+    },
+    {
+      "source": "Dispensing",
+      "event": "dispense_complete",
+      "guard": "",
+      "target": "Idle",
+      "requirement": "R6"
+    },
+    {
+      "source": "Idle",
+      "event": "press_coffee",
+      "guard": "",
+      "target": "Idle",
+      "requirement": "R1"
+    }
+  ],
+  "forbidden_behaviours": []
+}

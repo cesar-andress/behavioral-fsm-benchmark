@@ -1,0 +1,27 @@
+{
+  "system_name": "Drink Vending Machine (fixture)",
+  "tests": [
+    {
+      "test_id": "happy_path_coffee",
+      "kind": "oracle",
+      "events": ["insert_coin", "press_coffee", "dispense_complete"],
+      "expected_final_state": "Idle",
+      "description": "Full coffee transaction returns to Idle"
+    },
+    {
+      "test_id": "reject_coffee_from_idle",
+      "kind": "negative",
+      "events": ["press_coffee"],
+      "expected_final_state": null,
+      "description": "Coffee button ignored in Idle"
+    },
+    {
+      "test_id": "guarded_insert",
+      "kind": "oracle",
+      "events": ["insert_coin"],
+      "guard_context": { "balance": 20 },
+      "expected_final_state": "CreditAvailable",
+      "description": "Coin insert with sufficient balance"
+    }
+  ]
+}

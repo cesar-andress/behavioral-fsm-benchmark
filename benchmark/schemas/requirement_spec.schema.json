@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "behavioral-fsm-benchmark/requirement_spec/v1",
+  "title": "Requirement Specification",
+  "type": "object",
+  "required": ["system_name", "requirements"],
+  "properties": {
+    "system_name": { "type": "string", "minLength": 1 },
+    "domain": { "type": "string" },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          { "type": "string", "minLength": 1 },
+          {
+            "type": "object",
+            "required": ["text"],
+            "properties": {
+              "requirement_id": { "type": "string" },
+              "id": { "type": "string" },
+              "text": { "type": "string", "minLength": 1 }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

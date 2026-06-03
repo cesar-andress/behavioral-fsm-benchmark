@@ -1,15 +1,12 @@
-# JSON Schemas — FSM-Bench-Next
+# JSON Schemas — behavioral-fsm-benchmark
 
-Machine-readable schemas for benchmark artifacts and evaluation reports.
+| Schema | Purpose |
+|--------|---------|
+| `requirement_spec.schema.json` | Natural-language requirement sets |
+| `generated_fsm.schema.json` | LLM-generated / candidate FSM (FSMOutput-compatible) |
+| `reference_fsm.schema.json` | Gold / reference FSM metadata |
+| `testsuite.schema.json` | Behavioral test suites |
+| `evaluation_result.schema.json` | Structured evaluation export |
+| `experiment_manifest.schema.json` | Campaign / experiment manifests |
 
-| File | Purpose |
-|------|---------|
-| `catalog.schema.json` | Benchmark catalog metadata |
-| `reference_fsm.schema.json` | Reference FSM artifact |
-| `testsuite.schema.json` | Behavioral test suite |
-| `candidate_fsm.schema.json` | LLM output (FSMOutput-compatible) |
-| `evaluation_report.schema.json` | Per-run evaluation report |
-
-Authoritative field definitions: `../../paper/notes/benchmark_specification.md` §4.
-
-Skeleton phase: schema files are placeholders until implementation milestone v0.2.
+Legacy placeholders (`catalog.schema.json`, `candidate_fsm.schema.json`, `evaluation_report.schema.json`) remain for migration; prefer the schemas above.

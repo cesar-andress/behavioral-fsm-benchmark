@@ -1,0 +1,10 @@
+{
+  "system_name": "Drink Vending Machine (fixture)",
+  "domain": "vending machine",
+  "requirements": [
+    "R1: The machine starts in Idle.",
+    "R2: Inserting a coin in Idle moves to CreditAvailable.",
+    "R3: Pressing coffee in CreditAvailable moves to Dispensing.",
+    "R6: Dispense complete returns to Idle."
+  ]
+}
