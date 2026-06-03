@@ -78,7 +78,8 @@ paper/
 .chatgpt/
 .openai/
 *.code-workspace
-prompts/
+prompts/*
+!prompts/behavioral_fsm_generation.md
 prompt_drafts/
 ai_prompts/
 cursor_rules/

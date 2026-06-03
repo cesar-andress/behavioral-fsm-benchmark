@@ -131,19 +131,86 @@ The EMSE manuscript is **not** in this repository. It is maintained privately at
 
 Do not commit manuscript sources, PDFs, submission files, or reviewer correspondence to the public repository. Run `python scripts/audit_public_release.py` before tagging releases.
 
-## Campaign workflow (future)
+## Ollama pilot campaign C1
 
-Planned experiment campaigns (not part of v0.1.0 freeze):
+Campaign config: `experiments/configs/C1_pilot_ollama_behavioral.json`
 
-| ID | Config template | Purpose |
-|----|-----------------|---------|
-| C0 | `experiments/configs/TEMPLATE_parity.json` | Structural parity vs IST freeze |
-| C1 | `experiments/configs/TEMPLATE_structural.json` | Structural baseline |
-| C2 | `experiments/configs/TEMPLATE_behavioral.json` | Behavioral evaluation |
-| C3 | `experiments/configs/TEMPLATE_robustness.json` | Perturbation sensitivity |
-| C4 | `experiments/configs/TEMPLATE_reproducibility.json` | Multi-run variance |
+| Factor | Value |
+|--------|-------|
+| Systems | `vending_machine`, `login_system`, `atm` |
+| Models | 6 local Ollama tags (see config) |
+| Replicates | 5 per model-system pair |
+| Expected runs | 90 |
+| Temperature | 0.0 |
+| Structured JSON | enabled when supported by Ollama |
 
-Outputs will land in `experiments/runs/` and `experiments/logs/` (gitignored until explicitly frozen).
+### Prerequisites
+
+```bash
+ollama --version
+ollama pull qwen2.5-coder:7b
+# pull remaining models listed in the campaign config
+```
+
+### Dry run (no Ollama calls)
+
+Prints the planned 90-run matrix:
+
+```bash
+python scripts/run_ollama_campaign.py \
+  --config experiments/configs/C1_pilot_ollama_behavioral.json \
+  --dry-run
+```
+
+### Limited smoke campaign
+
+Execute the first two runs (requires Ollama; failures are recorded and the campaign continues):
+
+```bash
+python scripts/run_ollama_campaign.py \
+  --config experiments/configs/C1_pilot_ollama_behavioral.json \
+  --limit 2
+```
+
+### Full overnight campaign
+
+```bash
+python scripts/run_ollama_campaign.py \
+  --config experiments/configs/C1_pilot_ollama_behavioral.json
+```
+
+### Output layout
+
+Each campaign start creates a timestamped directory (never overwritten):
+
+```text
+experiments/runs/C1_pilot_ollama_behavioral/<timestamp>/
+  manifest.json
+  metrics.csv
+  metrics.json
+  raw/
+  candidates/
+  evaluations/
+  logs/
+```
+
+### Resume interrupted campaigns
+
+Re-run against the same timestamp directory:
+
+```bash
+python scripts/run_ollama_campaign.py \
+  --config experiments/configs/C1_pilot_ollama_behavioral.json \
+  --run-dir experiments/runs/C1_pilot_ollama_behavioral/<timestamp>
+```
+
+Completed runs (`status=completed` in `manifest.json`) are skipped automatically.
+
+## Future campaigns
+
+Additional templates remain under `experiments/configs/TEMPLATE_*.json` for parity, robustness, and reproducibility studies.
+
+Outputs land in `experiments/runs/` and `experiments/logs/` (gitignored until explicitly frozen).
 
 ## Archival
 

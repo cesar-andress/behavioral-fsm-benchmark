@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "C1_pilot_ollama_behavioral",
+  "purpose": "behavioral",
+  "description": "Overnight pilot campaign: local Ollama FSM generation and behavioral evaluation on three pilot systems.",
+  "status": "active",
+  "pilot": true,
+  "systems": [
+    "vending_machine",
+    "login_system",
+    "atm"
+  ],
+  "models": [
+    "qwen2.5-coder:7b",
+    "qwen2.5-coder:14b",
+    "llama3.1:8b",
+    "mistral-nemo:12b",
+    "gemma2:9b",
+    "phi3:14b"
+  ],
+  "replicates": 5,
+  "inference": {
+    "backend": "ollama",
+    "temperature": 0.0,
+    "structured_output": true,
+    "num_ctx": 8192,
+    "timeout_seconds": 600,
+    "ollama_host": "http://localhost:11434"
+  },
+  "prompt_template": "prompts/behavioral_fsm_generation.md",
+  "system_message": "You are a formal methods engineer. Produce exactly one finite state machine as JSON that satisfies the given requirements. Return JSON only with no prose, markdown, or commentary.",
+  "schema_reference": "benchmark/schemas/generated_fsm.schema.json",
+  "output": {
+    "base_dir": "experiments/runs/C1_pilot_ollama_behavioral",
+    "timestamp_policy": "utc_iso_compact"
+  },
+  "environment": {
+    "hostname": null,
+    "platform": null,
+    "python_version": null,
+    "git_commit": null,
+    "notes": "Populated automatically at campaign start when fields are null."
+  },
+  "generation_policy": {
+    "one_fsm_per_run": true,
+    "repair_loop": false,
+    "post_processing": "json_extraction_and_validation_only"
+  },
+  "expected_runs": 90
+}
