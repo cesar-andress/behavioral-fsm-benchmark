@@ -58,6 +58,9 @@ FORBIDDEN_EXPERIMENT_PATTERNS = (
     "experiments/runs/",
     "outputs/",
     "results/",
+    "campaign_reports/",
+    "paper_results/",
+    "manuscript_exports/",
 )
 
 # Matches .gitignore whitelist for the frozen C1 generation prompt (v0.1.0).

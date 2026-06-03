@@ -1,9 +1,10 @@
-"""Tests for scripts/generate_paper_results.py."""
+"""Tests for scripts/generate_campaign_reports.py."""
 
 from __future__ import annotations
 
 import csv
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -11,7 +12,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AGGREGATE_SCRIPT = REPO_ROOT / "scripts" / "aggregate_campaign_results.py"
-GENERATE_SCRIPT = REPO_ROOT / "scripts" / "generate_paper_results.py"
+GENERATE_SCRIPT = REPO_ROOT / "scripts" / "generate_campaign_reports.py"
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 
@@ -31,7 +32,7 @@ def aggregate_mod():
 
 @pytest.fixture(scope="module")
 def generate_mod():
-    return _load_module(GENERATE_SCRIPT, "generate_paper_results")
+    return _load_module(GENERATE_SCRIPT, "generate_campaign_reports")
 
 
 def _sample_rows() -> list[dict[str, object]]:
@@ -187,34 +188,20 @@ EXPECTED_CSV_FILES = [
     "rq5_system_difficulty.csv",
 ]
 
-EXPECTED_TEX_FILES = [
-    "rq1_table.tex",
-    "rq2_table.tex",
-    "rq3_table.tex",
-    "rq4_table.tex",
-    "rq5_table.tex",
-]
-
-EXPECTED_FIGURE_STEMS = [
-    "rq1_structural_funnel",
-    "rq2_behavioral_gap",
-    "rq3_gold_agreement",
-    "rq4_replicate_variance",
-    "rq5_system_difficulty",
-]
+FORBIDDEN_SUFFIXES = (".tex", ".pdf", ".png", ".svg")
 
 
 def test_output_directory_creation(generate_mod, prepared_run_dir: Path) -> None:
-    output_dir = prepared_run_dir / "paper_results"
-    paths = generate_mod.generate_paper_results(prepared_run_dir, output_dir)
+    output_dir = prepared_run_dir / "campaign_reports"
+    paths = generate_mod.generate_campaign_reports(prepared_run_dir, output_dir)
 
     assert output_dir.is_dir()
     assert paths["output_dir"] == output_dir
 
 
 def test_csv_artefact_creation(generate_mod, prepared_run_dir: Path) -> None:
-    output_dir = prepared_run_dir / "paper_results"
-    generate_mod.generate_paper_results(prepared_run_dir, output_dir)
+    output_dir = prepared_run_dir / "campaign_reports"
+    generate_mod.generate_campaign_reports(prepared_run_dir, output_dir)
 
     for filename in EXPECTED_CSV_FILES:
         path = output_dir / filename
@@ -224,30 +211,27 @@ def test_csv_artefact_creation(generate_mod, prepared_run_dir: Path) -> None:
         assert rows
 
 
-def test_latex_table_creation(generate_mod, prepared_run_dir: Path) -> None:
-    output_dir = prepared_run_dir / "paper_results"
-    generate_mod.generate_paper_results(prepared_run_dir, output_dir)
+def test_json_report_creation(generate_mod, prepared_run_dir: Path) -> None:
+    output_dir = prepared_run_dir / "campaign_reports"
+    generate_mod.generate_campaign_reports(prepared_run_dir, output_dir)
 
-    for filename in EXPECTED_TEX_FILES:
-        text = (output_dir / filename).read_text(encoding="utf-8")
-        assert r"\begin{table}" in text
-        assert r"\toprule" in text
-        assert r"\bottomrule" in text
+    payload = json.loads((output_dir / "campaign_report.json").read_text(encoding="utf-8"))
+    assert payload["rq1_structural_validity"]
+    assert payload["rq5_system_difficulty"]
 
 
-def test_figure_creation(generate_mod, prepared_run_dir: Path) -> None:
-    output_dir = prepared_run_dir / "paper_results"
-    generate_mod.generate_paper_results(prepared_run_dir, output_dir)
-    figures_dir = output_dir / "figures"
+def test_no_manuscript_artefacts(generate_mod, prepared_run_dir: Path) -> None:
+    output_dir = prepared_run_dir / "campaign_reports"
+    generate_mod.generate_campaign_reports(prepared_run_dir, output_dir)
 
-    for stem in EXPECTED_FIGURE_STEMS:
-        assert (figures_dir / f"{stem}.png").is_file()
-        assert (figures_dir / f"{stem}.pdf").is_file()
+    for path in output_dir.rglob("*"):
+        if path.is_file():
+            assert path.suffix not in FORBIDDEN_SUFFIXES
 
 
 def test_results_summary_creation(generate_mod, prepared_run_dir: Path) -> None:
-    output_dir = prepared_run_dir / "paper_results"
-    generate_mod.generate_paper_results(prepared_run_dir, output_dir)
+    output_dir = prepared_run_dir / "campaign_reports"
+    generate_mod.generate_campaign_reports(prepared_run_dir, output_dir)
 
     summary_path = output_dir / "results_summary.md"
     text = summary_path.read_text(encoding="utf-8")
@@ -298,13 +282,6 @@ def test_null_values_not_treated_as_zero(generate_mod, aggregate_mod) -> None:
     assert login_row["mean_missing_transitions"] == ""
     assert login_row["mean_extra_transitions"] == ""
 
-    assert generate_mod.optional_float_or_nan("") != 0.0
-    assert generate_mod.parse_optional_float("") is None
-
-    missing_plot = generate_mod.optional_float_or_nan(login_row["mean_missing_transitions"])
-    assert missing_plot != 0.0
-    assert missing_plot != missing_plot  # NaN check
-
 
 def test_main_cli(generate_mod, prepared_run_dir: Path, capsys) -> None:
     exit_code = generate_mod.main(["--run-dir", str(prepared_run_dir)])
@@ -312,4 +289,4 @@ def test_main_cli(generate_mod, prepared_run_dir: Path, capsys) -> None:
 
     assert exit_code == 0
     assert "output_dir=" in output
-    assert (prepared_run_dir / "paper_results" / "results_summary.md").is_file()
+    assert (prepared_run_dir / "campaign_reports" / "results_summary.md").is_file()

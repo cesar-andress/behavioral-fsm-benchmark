@@ -29,7 +29,9 @@ experiments/runs/*
 !experiments/runs/.gitkeep
 experiments/logs/*
 !experiments/logs/.gitkeep
+campaign_reports/
 paper_results/
+manuscript_exports/
 analysis/figures/*.png
 analysis/figures/*.pdf
 analysis/figures/*.svg

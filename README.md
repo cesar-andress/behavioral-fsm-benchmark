@@ -120,7 +120,7 @@ This public repository must **not** contain:
 - Reviewer materials or private research notes
 - Local experiment logs or editor/tooling metadata (`.cursor/`, `.claude/`, `.venv/`, etc.)
 
-Enforced by `.gitignore`, `scripts/audit_public_release.py`, and the [Release Audit](.github/workflows/release-audit.yml) CI workflow. See [docs/repository_hygiene.md](docs/repository_hygiene.md) for the full exclusion checklist. Zenodo/GitHub releases archive **software and benchmark artifacts only**.
+Enforced by `.gitignore`, `scripts/audit_public_release.py`, and the [Release Audit](.github/workflows/release-audit.yml) CI workflow. Reporting scripts emit CSV, JSON, and Markdown only — LaTeX tables and publication figures belong in the private writing repository. See [docs/public_private_boundary.md](docs/public_private_boundary.md).
 
 ## Relationship to FSM-Bench-20 (IST 2026)
 
@@ -141,6 +141,7 @@ Enforced by `.gitignore`, `scripts/audit_public_release.py`, and the [Release Au
 | Evaluation protocol | [docs/evaluation_protocol.md](docs/evaluation_protocol.md) |
 | Artifact policy | [docs/artifact_policy.md](docs/artifact_policy.md) |
 | Repository hygiene | [docs/repository_hygiene.md](docs/repository_hygiene.md) |
+| Public / private boundary | [docs/public_private_boundary.md](docs/public_private_boundary.md) |
 | Release policy | [docs/release_policy.md](docs/release_policy.md) |
 | Reproducibility | [REPRODUCIBILITY.md](REPRODUCIBILITY.md) |
 | Changelog | [CHANGELOG.md](CHANGELOG.md) |

@@ -9,8 +9,10 @@ CLI entry points for validation, benchmark evaluation, and release hygiene.
 | `compare_to_gold.py` | Compare a candidate FSM to a gold reference |
 | `evaluate_case.py` | End-to-end evaluation of one candidate case |
 | `evaluate_gold_corpus.py` | Corpus-level gold validation and coverage report |
+| `aggregate_campaign_results.py` | Campaign summary CSV and markdown export |
+| `generate_campaign_reports.py` | Repository-neutral CSV, JSON, and Markdown reports |
 | `run_ollama_campaign.py` | Ollama FSM generation + behavioral evaluation campaign |
-| `audit_public_release.py` | Pre-release audit for manuscript and local-output leakage |
+| `audit_public_release.py` | Pre-release audit for tracked-content hygiene |
 | `build_core_batch1.py` | Offline helper to regenerate core benchmark artifacts |
 
 ## Common commands

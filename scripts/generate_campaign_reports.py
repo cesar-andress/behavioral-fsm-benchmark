@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Generate paper-ready CSV, LaTeX, figures, and markdown from campaign summaries."""
+"""Generate repository-neutral campaign reports (CSV, JSON, Markdown) from summaries."""
 
 from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 import sys
 from dataclasses import dataclass
@@ -16,18 +17,8 @@ SCRIPTS_DIR = REPO_ROOT / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from aggregate_campaign_results import (  # noqa: E402
-    is_g3_eligible,
-    is_g3_pass,
-    is_g3a_eligible,
-    is_g3a_pass,
-    load_campaign_metrics,
-    structural_rates,
-)
-
 SUMMARY_DIR_NAME = "summary"
-PAPER_RESULTS_DIR_NAME = "paper_results"
-FIGURES_DIR_NAME = "figures"
+REPORTS_DIR_NAME = "campaign_reports"
 
 FORBIDDEN_SUMMARY_PHRASES = (
     "this proves",
@@ -61,20 +52,6 @@ def read_single_row_csv(path: Path) -> dict[str, str]:
         msg = f"Expected one row in {path}"
         raise ValueError(msg)
     return rows[0]
-
-
-def parse_optional_float(value: str | None) -> float | None:
-    if value is None:
-        return None
-    text = str(value).strip()
-    if not text:
-        return None
-    return float(text)
-
-
-def optional_float_or_nan(value: str | None) -> float:
-    parsed = parse_optional_float(value)
-    return parsed if parsed is not None else float("nan")
 
 
 def parse_optional_int(value: str | None) -> int | None:
@@ -137,59 +114,6 @@ def write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> 
         writer.writeheader()
         for row in rows:
             writer.writerow({key: row.get(key, "") for key in fieldnames})
-
-
-def format_number(value: float | int | None) -> str:
-    if value is None:
-        return ""
-    if isinstance(value, int):
-        return str(value)
-    return format(value, ".6g")
-
-
-def escape_latex(text: str) -> str:
-    replacements = {
-        "\\": r"\textbackslash{}",
-        "&": r"\&",
-        "%": r"\%",
-        "_": r"\_",
-        "#": r"\#",
-    }
-    escaped = text
-    for old, new in replacements.items():
-        escaped = escaped.replace(old, new)
-    return escaped
-
-
-def write_latex_table(
-    path: Path,
-    caption: str,
-    label: str,
-    columns: list[str],
-    rows: list[list[str]],
-) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    col_spec = "l" * len(columns)
-    header = " & ".join(escape_latex(column) for column in columns) + r" \\"
-    body_lines = [" & ".join(escape_latex(cell) for cell in row) + r" \\" for row in rows]
-    content = "\n".join(
-        [
-            r"\begin{table}[t]",
-            r"  \centering",
-            f"  \\caption{{{escape_latex(caption)}}}",
-            f"  \\label{{{label}}}",
-            f"  \\begin{{tabular}}{{{col_spec}}}",
-            r"    \toprule",
-            f"    {header}",
-            r"    \midrule",
-            *(f"    {line}" for line in body_lines),
-            r"    \bottomrule",
-            r"  \end{tabular}",
-            r"\end{table}",
-            "",
-        ]
-    )
-    path.write_text(content, encoding="utf-8")
 
 
 def aggregate_failure_stage_counts(failure_rows: list[dict[str, str]]) -> dict[str, int]:
@@ -330,144 +254,6 @@ def build_rq5_rows(inputs: SummaryInputs) -> list[dict[str, Any]]:
     return rows
 
 
-def structural_funnel_counts(run_dir: Path, total_runs: int) -> dict[str, int]:
-    metrics_path = run_dir / "metrics.csv"
-    if not metrics_path.is_file():
-        return {
-            "total_runs": total_runs,
-            "g1_pass": 0,
-            "g2_pass": 0,
-            "g3_pass": 0,
-            "g3a_pass": 0,
-        }
-    rows = load_campaign_metrics(run_dir)
-    g1_rate, g2_rate, _g3_rate, _g3a_rate = structural_rates(rows)
-    g1_pass = round((g1_rate or 0.0) * len(rows))
-    g2_eligible = sum(
-        1
-        for row in rows
-        if str(row.get("failure_stage") or "")
-        not in {"parsing", "json_extraction", "generation"}
-    )
-    g2_pass = round((g2_rate or 0.0) * g2_eligible) if g2_eligible else 0
-    g3_eligible = sum(1 for row in rows if is_g3_eligible(row))
-    g3_pass = sum(1 for row in rows if is_g3_pass(row))
-    g3a_eligible = sum(1 for row in rows if is_g3a_eligible(row))
-    g3a_pass = sum(1 for row in rows if is_g3a_pass(row))
-    return {
-        "total_runs": len(rows),
-        "g1_pass": g1_pass,
-        "g2_pass": g2_pass,
-        "g3_pass": g3_pass if g3_eligible else 0,
-        "g3a_pass": g3a_pass if g3a_eligible else 0,
-    }
-
-
-def save_matplotlib_figure(stem: Path, plot_fn) -> tuple[Path, Path]:
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    fig, ax = plt.subplots(figsize=(6, 4))
-    plot_fn(ax)
-    fig.tight_layout()
-    png_path = stem.with_suffix(".png")
-    pdf_path = stem.with_suffix(".pdf")
-    stem.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(png_path, dpi=150)
-    fig.savefig(pdf_path)
-    plt.close(fig)
-    return png_path, pdf_path
-
-
-def generate_figures(inputs: SummaryInputs, figures_dir: Path) -> dict[str, Path]:
-    paths: dict[str, Path] = {}
-    campaign = inputs.campaign_summary
-    total_runs = parse_optional_int(campaign.get("total_runs")) or 0
-    funnel = structural_funnel_counts(inputs.run_dir, total_runs)
-
-    png, pdf = save_matplotlib_figure(
-        figures_dir / "rq1_structural_funnel",
-        lambda ax: ax.bar(
-            ["Total", "G1 pass", "G2 pass", "G3 pass", "G3a pass"],
-            [
-                funnel["total_runs"],
-                funnel["g1_pass"],
-                funnel["g2_pass"],
-                funnel["g3_pass"],
-                funnel["g3a_pass"],
-            ],
-        ),
-    )
-    paths["rq1_structural_funnel_png"] = png
-    paths["rq1_structural_funnel_pdf"] = pdf
-
-    png, pdf = save_matplotlib_figure(
-        figures_dir / "rq2_behavioral_gap",
-        lambda ax: ax.bar(
-            ["G2 pass rate", "Mean behavioral pass rate"],
-            [
-                optional_float_or_nan(inputs.rq_summary_parsed.get("G2 pass rate")),
-                optional_float_or_nan(campaign.get("mean_behavioral_pass_rate")),
-            ],
-        ),
-    )
-    paths["rq2_behavioral_gap_png"] = png
-    paths["rq2_behavioral_gap_pdf"] = pdf
-
-    systems = [row["system_id"] for row in inputs.system_summary]
-    missing = [
-        optional_float_or_nan(row.get("mean_missing_transitions"))
-        for row in inputs.system_summary
-    ]
-    extra = [
-        optional_float_or_nan(row.get("mean_extra_transitions"))
-        for row in inputs.system_summary
-    ]
-    x = range(len(systems))
-    width = 0.35
-
-    def plot_rq3(ax):
-        ax.bar([i - width / 2 for i in x], missing, width, label="missing_transitions")
-        ax.bar([i + width / 2 for i in x], extra, width, label="extra_transitions")
-        ax.set_xticks(list(x))
-        ax.set_xticklabels(systems, rotation=20, ha="right")
-        ax.legend()
-
-    png, pdf = save_matplotlib_figure(figures_dir / "rq3_gold_agreement", plot_rq3)
-    paths["rq3_gold_agreement_png"] = png
-    paths["rq3_gold_agreement_pdf"] = pdf
-
-    labels = [
-        f"{row.get('model', '')}\n{row.get('system_id', '')}"
-        for row in inputs.model_system_summary
-    ]
-    std_values = [
-        optional_float_or_nan(row.get("std_behavioral_pass_rate"))
-        for row in inputs.model_system_summary
-    ]
-    png, pdf = save_matplotlib_figure(
-        figures_dir / "rq4_replicate_variance",
-        lambda ax: ax.bar(labels, std_values),
-    )
-    paths["rq4_replicate_variance_png"] = png
-    paths["rq4_replicate_variance_pdf"] = pdf
-
-    system_ids = [row["system_id"] for row in inputs.system_summary]
-    bpr_values = [
-        optional_float_or_nan(row.get("mean_behavioral_pass_rate"))
-        for row in inputs.system_summary
-    ]
-    png, pdf = save_matplotlib_figure(
-        figures_dir / "rq5_system_difficulty",
-        lambda ax: ax.bar(system_ids, bpr_values),
-    )
-    paths["rq5_system_difficulty_png"] = png
-    paths["rq5_system_difficulty_pdf"] = pdf
-    return paths
-
-
 def build_results_summary(inputs: SummaryInputs) -> str:
     campaign = inputs.campaign_summary
     rq = inputs.rq_summary_parsed
@@ -476,14 +262,6 @@ def build_results_summary(inputs: SummaryInputs) -> str:
         "",
         f"Campaign: `{campaign.get('campaign_id', rq.get('campaign_id', ''))}`",
         f"Run directory: `{inputs.run_dir}`",
-        "",
-        "## Campaign totals",
-        "",
-        f"- The campaign contains {campaign.get('total_runs', rq.get('total_runs', ''))} runs.",
-        f"- Passed runs: {campaign.get('passed_runs', '')}.",
-        f"- Failed runs: {campaign.get('failed_runs', '')}.",
-        f"- Evaluable runs: {campaign.get('evaluable_runs', '')}.",
-        f"- Non-evaluable runs: {campaign.get('non_evaluable_runs', '')}.",
         "",
         "## RQ1 Structural Validity",
         "",
@@ -528,10 +306,9 @@ def build_results_summary(inputs: SummaryInputs) -> str:
     return text
 
 
-def generate_paper_results(run_dir: Path, output_dir: Path | None = None) -> dict[str, Path]:
+def generate_campaign_reports(run_dir: Path, output_dir: Path | None = None) -> dict[str, Path]:
     inputs = load_summary_inputs(run_dir)
-    out_dir = output_dir or (run_dir / PAPER_RESULTS_DIR_NAME)
-    figures_dir = out_dir / FIGURES_DIR_NAME
+    out_dir = output_dir or (run_dir / REPORTS_DIR_NAME)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     rq1_rows = build_rq1_rows(inputs)
@@ -616,124 +393,42 @@ def generate_paper_results(run_dir: Path, output_dir: Path | None = None) -> dic
         rq5_rows,
     )
 
-    write_latex_table(
-        out_dir / "rq1_table.tex",
-        "Structural validity summary (RQ1)",
-        "tab:rq1-structural-validity",
-        [
-            "Campaign",
-            "Runs",
-            "G1",
-            "G2",
-            "G3",
-            "G3a",
-            "Non-evaluable",
-        ],
-        [
-            [
-                rq1_rows[0]["campaign_id"],
-                str(rq1_rows[0]["total_runs"]),
-                str(rq1_rows[0]["g1_pass_rate"]),
-                str(rq1_rows[0]["g2_pass_rate"]),
-                str(rq1_rows[0]["g3_pass_rate"]),
-                str(rq1_rows[0]["g3a_pass_rate"]),
-                str(rq1_rows[0]["non_evaluable_runs"]),
-            ]
-        ],
-    )
-    write_latex_table(
-        out_dir / "rq2_table.tex",
-        "Behavioral correctness by model (RQ2)",
-        "tab:rq2-behavioral-correctness",
-        ["Model", "Runs", "Mean BPR", "Mean FSA", "Mean trace", "Mean REA"],
-        [
-            [
-                row.get("model") or "campaign",
-                str(row.get("total_runs", "")),
-                str(row.get("mean_behavioral_pass_rate", "")),
-                str(row.get("mean_final_state_agreement", "")),
-                str(row.get("mean_trace_agreement", "")),
-                str(row.get("mean_rejected_event_agreement", "")),
-            ]
-            for row in rq2_rows
-        ],
-    )
-    write_latex_table(
-        out_dir / "rq3_table.tex",
-        "Gold agreement by system (RQ3)",
-        "tab:rq3-gold-agreement",
-        ["System", "Mean BPR", "Missing", "Extra", "Mean FSA", "Mean trace"],
-        [
-            [
-                row["system_id"],
-                str(row.get("mean_behavioral_pass_rate", "")),
-                str(row.get("mean_missing_transitions", "")),
-                str(row.get("mean_extra_transitions", "")),
-                str(row.get("mean_final_state_agreement", "")),
-                str(row.get("mean_trace_agreement", "")),
-            ]
-            for row in rq3_rows
-        ],
-    )
-    write_latex_table(
-        out_dir / "rq4_table.tex",
-        "Cross-run dispersion by model-system cell (RQ4)",
-        "tab:rq4-robustness",
-        ["Model", "System", "Std BPR", "Min BPR", "Max BPR"],
-        [
-            [
-                row.get("model", ""),
-                row.get("system_id", ""),
-                str(row.get("std_behavioral_pass_rate", "")),
-                str(row.get("min_behavioral_pass_rate", "")),
-                str(row.get("max_behavioral_pass_rate", "")),
-            ]
-            for row in rq4_rows
-            if row.get("system_id") not in {"", "model_aggregate", "campaign"}
-        ],
-    )
-    write_latex_table(
-        out_dir / "rq5_table.tex",
-        "System difficulty summary (RQ5)",
-        "tab:rq5-system-difficulty",
-        ["System", "Runs", "Non-evaluable rate", "Mean BPR", "Median BPR"],
-        [
-            [
-                row["system_id"],
-                str(row.get("total_runs", "")),
-                str(row.get("non_evaluable_rate", "")),
-                str(row.get("mean_behavioral_pass_rate", "")),
-                str(row.get("median_behavioral_pass_rate", "")),
-            ]
-            for row in rq5_rows
-        ],
+    report_json = out_dir / "campaign_report.json"
+    report_json.write_text(
+        json.dumps(
+            {
+                "campaign_id": rq1_rows[0].get("campaign_id", ""),
+                "run_dir": str(inputs.run_dir),
+                "rq1_structural_validity": rq1_rows,
+                "rq2_behavioral_correctness": rq2_rows,
+                "rq3_behavioral_agreement": rq3_rows,
+                "rq4_robustness": rq4_rows,
+                "rq5_system_difficulty": rq5_rows,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
     )
 
-    figure_paths = generate_figures(inputs, figures_dir)
     summary_path = out_dir / "results_summary.md"
     summary_path.write_text(build_results_summary(inputs), encoding="utf-8")
 
-    paths = {
+    return {
         "output_dir": out_dir,
         "rq1_csv": rq1_csv,
         "rq2_csv": rq2_csv,
         "rq3_csv": rq3_csv,
         "rq4_csv": rq4_csv,
         "rq5_csv": rq5_csv,
-        "rq1_table": out_dir / "rq1_table.tex",
-        "rq2_table": out_dir / "rq2_table.tex",
-        "rq3_table": out_dir / "rq3_table.tex",
-        "rq4_table": out_dir / "rq4_table.tex",
-        "rq5_table": out_dir / "rq5_table.tex",
+        "campaign_report_json": report_json,
         "results_summary": summary_path,
-        **figure_paths,
     }
-    return paths
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate paper-ready artefacts from campaign summary CSV files.",
+        description="Generate repository-neutral campaign reports from summary CSV files.",
     )
     parser.add_argument(
         "--run-dir",
@@ -745,13 +440,13 @@ def main(argv: list[str] | None = None) -> int:
         "--output-dir",
         type=Path,
         default=None,
-        help=f"Output directory (default: <run-dir>/{PAPER_RESULTS_DIR_NAME})",
+        help=f"Output directory (default: <run-dir>/{REPORTS_DIR_NAME})",
     )
     args = parser.parse_args(argv)
     run_dir = args.run_dir.resolve()
-    output_dir = (args.output_dir or (run_dir / PAPER_RESULTS_DIR_NAME)).resolve()
+    output_dir = (args.output_dir or (run_dir / REPORTS_DIR_NAME)).resolve()
 
-    paths = generate_paper_results(run_dir, output_dir)
+    paths = generate_campaign_reports(run_dir, output_dir)
     print(f"output_dir={paths['output_dir']}")
     for key, path in sorted(paths.items()):
         if key != "output_dir":

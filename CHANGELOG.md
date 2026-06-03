@@ -33,7 +33,7 @@ First public release of the behavioral FSM evaluation framework and approved gol
 - `evaluate_gold_corpus.py` — corpus-level gold self-test and coverage reporting.
 - `run_ollama_campaign.py` and `ollama_campaign_lib.py` — local Ollama FSM generation and evaluation campaigns with dry-run, resume, and failure recording.
 - `aggregate_campaign_results.py` — campaign summary CSV and RQ-oriented markdown export.
-- `generate_paper_results.py` — CSV, LaTeX, and figure export from campaign summaries.
+- `generate_campaign_reports.py` — repository-neutral CSV, JSON, and Markdown export from campaign summaries.
 - `audit_public_release.py` — tracked-content hygiene audit.
 
 **Campaign configuration**

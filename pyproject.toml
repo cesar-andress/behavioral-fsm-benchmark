@@ -32,7 +32,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "matplotlib>=3.8",
   "pytest>=8.0",
   "ruff>=0.4",
 ]
@@ -57,7 +56,7 @@ select = ["E", "F", "I", "UP"]
 "scripts/build_core_batch1.py" = ["E501", "I001", "E402"]
 "scripts/evaluate_gold_corpus.py" = ["E402", "I001"]
 "scripts/aggregate_campaign_results.py" = ["E402", "I001"]
-"scripts/generate_paper_results.py" = ["E402", "I001"]
+"scripts/generate_campaign_reports.py" = ["E402", "I001"]
 "scripts/audit_public_release.py" = ["E402"]
 "scripts/run_ollama_campaign.py" = ["E402"]
 "scripts/ollama_campaign_lib.py" = ["E501"]

@@ -83,7 +83,9 @@ Campaign configs under `experiments/configs/` and methodology notes under `exper
 | Pattern | Status | Notes |
 |---------|--------|-------|
 | `results/` | ✅ Ignored | Gold corpus reports, local evaluation exports |
-| `paper_results/` | ✅ Ignored | CSV/LaTeX/figures from `scripts/generate_paper_results.py` |
+| `campaign_reports/` | ✅ Ignored | CSV/JSON/Markdown from `scripts/generate_campaign_reports.py` |
+| `paper_results/` | ✅ Ignored | Legacy paper-export directory name (removed from tooling) |
+| `manuscript_exports/` | ✅ Ignored | Private writing-repository staging copies |
 | `analysis/figures/*.{png,pdf,svg}` | ✅ Ignored | Manuscript figure exports |
 | `analysis/tables/*.{tex,csv}` | ✅ Ignored | Manuscript table exports |
 | `reproducibility/build/*` | ✅ Ignored | Replication ZIP staging |
@@ -94,7 +96,7 @@ Regenerate locally:
 ```bash
 python scripts/evaluate_gold_corpus.py          # → results/gold_corpus/
 python scripts/aggregate_campaign_results.py  # → <run-dir>/summary/
-python scripts/generate_paper_results.py      # → <run-dir>/paper_results/
+python scripts/generate_campaign_reports.py      # → <run-dir>/campaign_reports/
 ```
 
 ### Manuscript, editorial, and reviewer material
@@ -218,4 +220,4 @@ Development clones may contain gitignored directories such as `.venv/`, `experim
 3. Do not commit campaign run directories under `experiments/runs/`.
 4. Push only after `release_audit=PASS` and CI green.
 
-For release scope and deferred items, see [RELEASE_READINESS.md](../RELEASE_READINESS.md).
+See [public_private_boundary.md](public_private_boundary.md) for what belongs in the private writing repository.
