@@ -1,8 +1,9 @@
 # C2 Full Campaign Plan — Behavioral Evaluation (EMSE Primary Dataset)
 
-**Campaign ID (proposed):** `C2_full_ollama_behavioral`  
+**Campaign ID:** `C2_core_ollama_behavioral`  
+**Config:** `experiments/configs/C2_core_ollama_behavioral.json`  
 **Document date:** 2026-06-03  
-**Status:** Pre-execution plan (no runs started)  
+**Status:** Config frozen; execution not started  
 **Benchmark release:** v0.1.0 — [10.5281/zenodo.20522834](https://doi.org/10.5281/zenodo.20522834)  
 **Prior campaign:** C1 pilot (`C1_pilot_ollama_behavioral`, 60 runs, frozen locally)
 
@@ -14,7 +15,7 @@ C2 is the **first full-scale behavioral generation campaign** on the approved v0
 
 C1 validated the Ollama pipeline on three pilot systems. C2 extends coverage to **all twelve approved systems** while preserving C1-compatible inference settings for comparability and reproducibility.
 
-**This document is planning only.** No campaign execution, config freeze, or benchmark asset changes are implied.
+**This document describes the C2 design.** Campaign configuration is frozen at `experiments/configs/C2_core_ollama_behavioral.json` (180 runs). Full campaign execution is not implied by this plan alone.
 
 ---
 
@@ -123,7 +124,7 @@ Scaling assumptions (conservative):
 
 ## 4. Inference and protocol (inherit from C1)
 
-Proposed C2 config should mirror C1 unless a protocol version bump is documented:
+Frozen config: `experiments/configs/C2_core_ollama_behavioral.json` (mirrors C1 unless a protocol version bump is documented):
 
 | Parameter | C1 value | C2 recommendation |
 |-----------|----------|-------------------|
@@ -138,7 +139,7 @@ Proposed C2 config should mirror C1 unless a protocol version bump is documented
 Output layout (unchanged):
 
 ```text
-experiments/runs/C2_full_ollama_behavioral/<timestamp>/
+experiments/runs/C2_core_ollama_behavioral/<timestamp>/
   manifest.json
   metrics.csv
   summary/              # via aggregate_campaign_results.py
@@ -170,7 +171,7 @@ Minimum cell sizes after merge:
 
 | Phase | Scope | Runs | Dependency |
 |-------|-------|-----:|------------|
-| **P0** | Freeze `experiments/configs/C2_full_ollama_behavioral.json` from this plan | 0 | Plan approval |
+| **P0** | Config frozen at `experiments/configs/C2_core_ollama_behavioral.json` | 0 | Done |
 | **P1** | Register C1 pilot runs in combined analysis manifest | 0 | C1 frozen |
 | **P2** | Generate core systems only (9×4×5) | 180 | Ollama models pulled |
 | **P3** | Aggregate + `campaign_reports` on merged 240-run registry | 0 | P1 + P2 |
@@ -194,8 +195,8 @@ Minimum cell sizes after merge:
 
 | Artefact | Location |
 |----------|----------|
-| Frozen config | `experiments/configs/C2_full_ollama_behavioral.json` |
-| Run directory | `experiments/runs/C2_full_ollama_behavioral/<timestamp>/` |
+| Frozen config | `experiments/configs/C2_core_ollama_behavioral.json` |
+| Run directory | `experiments/runs/C2_core_ollama_behavioral/<timestamp>/` |
 | Combined registry | `experiments/manifests/` (run registry entry linking C1 + C2) |
 | Neutral reports | `<run-dir>/campaign_reports/` (CSV, JSON, Markdown only) |
 | Analysis import | Private writing repository (`~/papers/emse2026/paper/`) |
@@ -222,6 +223,7 @@ This design maximises corpus coverage and replicate depth for RQ1–RQ5 while st
 ## References
 
 - C1 config: `experiments/configs/C1_pilot_ollama_behavioral.json`
+- C2 config: `experiments/configs/C2_core_ollama_behavioral.json`
 - C1 audits: `experiments/analysis/C1_replicate_audit.md`, `experiments/analysis/C1_negative_test_audit.md`
 - Study design campaigns: `docs/study_design.md` §10
 - Evaluation protocol: `docs/evaluation_protocol.md`

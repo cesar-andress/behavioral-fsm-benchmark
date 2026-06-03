@@ -30,6 +30,7 @@ from ollama_campaign_lib import (  # noqa: E402
 )
 
 CONFIG_PATH = REPO_ROOT / "experiments/configs/C1_pilot_ollama_behavioral.json"
+C2_CONFIG_PATH = REPO_ROOT / "experiments/configs/C2_core_ollama_behavioral.json"
 
 
 @pytest.fixture(scope="module")
@@ -58,6 +59,35 @@ def test_build_run_matrix_size(campaign_config) -> None:
     assert matrix[0].system_id == "vending_machine"
     assert matrix[0].model == "qwen2.5-coder:7b"
     assert matrix[0].replicate == 1
+    assert matrix[-1].replicate == 5
+
+
+def test_load_c2_campaign_config() -> None:
+    config = load_campaign_config(C2_CONFIG_PATH, repo_root=REPO_ROOT)
+    assert config.campaign_id == "C2_core_ollama_behavioral"
+    assert config.systems == [
+        "parking_gate",
+        "access_control",
+        "bike_rental",
+        "warehouse_inventory",
+        "smart_thermostat",
+        "elevator",
+        "hotel_booking",
+        "train_ticket_booking",
+        "package_locker",
+    ]
+    assert config.models == [
+        "qwen2.5-coder:7b",
+        "llama3.1:8b",
+        "mistral-nemo:12b",
+        "gemma2:9b",
+    ]
+    assert config.replicates == 5
+    assert config.temperature == 0.0
+    assert config.prompt_template_path.name == "behavioral_fsm_generation.md"
+    matrix = build_run_matrix(config)
+    assert len(matrix) == 180
+    assert matrix[0].system_id == "parking_gate"
     assert matrix[-1].replicate == 5
 
 
