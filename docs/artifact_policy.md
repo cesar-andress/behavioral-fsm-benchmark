@@ -10,13 +10,16 @@ What belongs in this **public** research-software repository versus what is kept
 | JSON schemas | `benchmark/schemas/` | Versioned with benchmark spec |
 | Study documentation | `docs/`, `README.md`, `REPRODUCIBILITY.md` | English, authoritative design docs |
 | Pilot gold FSMs | `benchmark/gold_fsms/` | `metadata.status = approved` |
+| Core gold FSMs | `benchmark/gold_fsms/` | Nine core systems in v0.1.0 |
 | Behavioral test suites | `benchmark/test_suites/` | Paired with gold FSMs |
 | Test fixtures | `tests/fixtures/` | Deterministic unit-test inputs |
 | Guard definitions | `benchmark/guards/` | Data artifacts for perturbation design |
 | Campaign templates | `experiments/configs/TEMPLATE_*.json` | Not executed runs |
 | Manifest schemas | `experiments/manifests/` | Registry and experiment metadata |
 | Upstream pin | `benchmark/datasets/upstream_manifest.json` | FSM-Bench-20 import reference |
-| Pilot requirement specs | `benchmark/datasets/systems/vending_machine.json`, `login_system.json` | Authored pilot systems |
+| Requirement specs | `benchmark/datasets/systems/*.json` | Tracked for pilot + core (v0.1.0) |
+| Corpus evaluation | `scripts/evaluate_gold_corpus.py` | Regenerates `results/gold_corpus/` locally |
+| Release audit | `scripts/audit_public_release.py` | Blocks manuscript/local-output leakage |
 | Reproducibility docs | `reproducibility/` | Replication packaging scripts and guides |
 | Citation metadata | `CITATION.cff`, `LICENSE` | Release identification |
 
@@ -41,7 +44,8 @@ What belongs in this **public** research-software repository versus what is kept
 | Experiment outputs | `experiments/runs/`, `experiments/logs/` |
 | Analysis exports | `analysis/figures/*.{png,pdf,svg}`, `analysis/tables/*.{tex,csv}` |
 | Release bundles | `releases/*.zip`, `releases/*.tar.gz` |
-| Bulk imported datasets | `benchmark/datasets/systems/*.json` (except tracked pilots) |
+| Bulk imported datasets | `benchmark/datasets/systems/*.json` (except tracked pilot + core specs) |
+| Local corpus reports | `results/gold_corpus/` |
 | Manuscript directory | `paper/` (must not exist inside public repo) |
 
 ## Zenodo / GitHub release snapshot

@@ -1,66 +1,154 @@
 # Reproducibility Guide — behavioral-fsm-benchmark
 
-End-to-end replication of the EMSE empirical study using **local Ollama inference** (no paid APIs required for the primary campaign).
-
-> **Status:** Bootstrap — framework skeleton in place; pipeline entry points not yet implemented.
+Replication instructions for release **v0.1.0** (framework + approved gold corpus). LLM campaign execution is documented for future milestones.
 
 ## Overview
 
 | Item | Value |
 |------|-------|
+| Release | `v0.1.0` (2026-06-03) |
 | Upstream dataset | FSM-Bench-20 — [10.5281/zenodo.20516296](https://doi.org/10.5281/zenodo.20516296) |
 | Import manifest | `benchmark/datasets/upstream_manifest.json` |
-| Structural gates | G1–G3 (IST-compatible baseline) |
-| Behavioral layers | Oracles, gold conformance, equivalence (planned) |
-| Robustness | Requirement perturbations (`benchmark/guards/`) |
-| Reproducibility | Multi-run variance (campaign C4) |
-| Temperature | 0.0 (primary); variance study uses repeated runs |
+| Gold corpus | 12 systems (3 pilot + 9 core) — see `benchmark/index.json` |
+| Structural gates | G1 (JSON), G2 (schema + referential), G3 (strict), G3a (guard-aware) |
+| Behavioral layer | Oracle / path / negative test suites + gold self-tests |
+| Local outputs | `results/`, `experiments/runs/`, `experiments/logs/` (gitignored) |
 
-## Prerequisites
+## Environment setup
+
+### Prerequisites
 
 ```bash
-python3.11 --version   # or 3.12
+python3.12 --version   # Python 3.11+ required
+git --version
+```
+
+Optional for future LLM campaigns:
+
+```bash
 ollama --version
 ```
 
-## Installation
+### Installation
 
 ```bash
-git clone git@github.com-ucjc:cesar-andress/behavioral-fsm-benchmark.git
+git clone https://github.com/cesar-andress/behavioral-fsm-benchmark.git
 cd behavioral-fsm-benchmark
-python3.12 -m venv .venv && source .venv/bin/activate
+python3.12 -m venv .venv
+source .venv/bin/activate
 pip install -e ".[dev]"
-pytest
 ```
 
-## Dataset import (planned)
+Verify import:
 
 ```bash
-python scripts/import_upstream_dataset.py
+python -c "import framework; print('framework OK')"
 ```
 
-Imported files land in `benchmark/datasets/systems/` (gitignored).
+## Exact commands — validation
 
-## Campaign workflow (planned)
+From the repository root with the virtual environment activated:
 
-| ID | Config | Purpose |
-|----|--------|---------|
+```bash
+pytest
+ruff check framework/ tests/ scripts/
+python scripts/audit_public_release.py
+```
+
+Expected:
+
+```text
+release_audit=PASS
+```
+
+All tests should pass (172+ as of v0.1.0).
+
+## Exact commands — gold corpus evaluation
+
+```bash
+python scripts/evaluate_gold_corpus.py
+```
+
+Optional custom output directory:
+
+```bash
+python scripts/audit_public_release.py
+python scripts/evaluate_gold_corpus.py --output-dir results/gold_corpus
+```
+
+### Expected console output
+
+```text
+systems_total=12
+systems_passed=12
+all_passed=True
+metrics_csv=.../results/gold_corpus/metrics.csv
+metrics_json=.../results/gold_corpus/metrics.json
+summary_md=.../results/gold_corpus/summary.md
+PASS vending_machine: bta=1.000 rcov=0.500 tcov=1.000 pcov=1.000
+...
+PASS package_locker: bta=1.000 rcov=1.000 tcov=1.000 pcov=1.000
+```
+
+Exit code: `0`.
+
+### Expected output files
+
+| File | Content |
+|------|---------|
+| `results/gold_corpus/metrics.csv` | One row per system: schema, G2, G3, G3a, self-test, RCov, TCov, PCov |
+| `results/gold_corpus/metrics.json` | Full structured report with timestamps and per-system errors |
+| `results/gold_corpus/summary.md` | Markdown table with corpus PASS/FAIL status |
+
+Pilot systems may report requirement coverage below `1.000` (legacy traceability on transitions); core systems report `rcov=1.000`. All systems must pass schema, G2, G3, G3a, and behavioral self-tests at `bta=1.000`.
+
+## Per-system validation (optional)
+
+Validate one gold FSM:
+
+```bash
+python scripts/validate_fsm.py benchmark/gold_fsms/parking_gate.json \
+  --schema reference_fsm.schema.json
+```
+
+Run one behavioral suite:
+
+```bash
+python scripts/run_behavioral_tests.py \
+  benchmark/gold_fsms/parking_gate.json \
+  benchmark/test_suites/parking_gate.json
+```
+
+Expected: `behavioral_pass_rate=1.000`, exit code `0`.
+
+## Manuscript and private artifacts
+
+The EMSE manuscript is **not** in this repository. It is maintained privately at:
+
+```text
+~/papers/emse2026/paper/
+```
+
+Do not commit manuscript sources, PDFs, submission files, or reviewer correspondence to the public repository. Run `python scripts/audit_public_release.py` before tagging releases.
+
+## Campaign workflow (future)
+
+Planned experiment campaigns (not part of v0.1.0 freeze):
+
+| ID | Config template | Purpose |
+|----|-----------------|---------|
 | C0 | `experiments/configs/TEMPLATE_parity.json` | Structural parity vs IST freeze |
 | C1 | `experiments/configs/TEMPLATE_structural.json` | Structural baseline |
 | C2 | `experiments/configs/TEMPLATE_behavioral.json` | Behavioral evaluation |
 | C3 | `experiments/configs/TEMPLATE_robustness.json` | Perturbation sensitivity |
 | C4 | `experiments/configs/TEMPLATE_reproducibility.json` | Multi-run variance |
 
-Outputs: `experiments/runs/` (artifacts), `experiments/logs/` (logs).
-
-## Analysis export
-
-Post-hoc scripts in `analysis/scripts/` export tables and figures for manuscript use (private, outside this repository).
+Outputs will land in `experiments/runs/` and `experiments/logs/` (gitignored until explicitly frozen).
 
 ## Archival
 
-Follow [docs/release_policy.md](docs/release_policy.md). Build script: `reproducibility/build_replication_package.sh`.
+Follow [docs/release_policy.md](docs/release_policy.md). Build script: `reproducibility/build_replication_package.sh` (when campaign data is frozen).
 
 ## Artifact policy
 
-Raw outputs are not committed. See [docs/artifact_policy.md](docs/artifact_policy.md).
+Raw experiment outputs and local evaluation reports are not committed by default. See [docs/artifact_policy.md](docs/artifact_policy.md).

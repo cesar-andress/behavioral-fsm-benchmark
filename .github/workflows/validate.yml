@@ -25,6 +25,10 @@ jobs:
               print(f"OK: {p}")
           PY
       - name: Lint
-        run: ruff check framework/ tests/
+        run: ruff check framework/ tests/ scripts/
       - name: Test
         run: pytest tests/ -q
+      - name: Public release audit
+        run: python scripts/audit_public_release.py
+      - name: Gold corpus evaluation
+        run: python scripts/evaluate_gold_corpus.py

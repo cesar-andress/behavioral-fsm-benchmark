@@ -65,10 +65,14 @@ Dual-record strategy (recommended):
 Before tagging:
 
 ```bash
-python -m json.tool benchmark/schemas/*.schema.json
-pytest tests/
-ruff check framework/ scripts/
+pytest
+ruff check framework/ tests/ scripts/
+python scripts/audit_public_release.py
+python scripts/evaluate_gold_corpus.py
+git status
 ```
+
+Release audit checks tracked files for manuscript sources, LaTeX/PDF artifacts, submission/reviewer material, local experiment logs, and editor metadata paths. See `scripts/audit_public_release.py`.
 
 Language policy: all tracked files in English.
 

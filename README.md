@@ -2,34 +2,125 @@
 
 Public **research-software repository** for an Empirical Software Engineering (EMSE) study on LLM-generated finite state machines.
 
-## Public scope
+**Release:** `v0.1.0` — framework, approved gold corpus (pilot + core), corpus evaluation, and reproducibility documentation.
 
-This repository contains:
+## Purpose
 
-1. **Evaluation framework** — Python packages for structural validation, behavioral oracles, gold comparison, coverage, and guard-aware checks.
-2. **Benchmark artifacts** — JSON schemas, pilot gold FSMs, behavioral test suites, guard definitions, and dataset import manifests.
-3. **Study documentation** — pre-registered study design, benchmark specification, evaluation protocol, and reproducibility guides.
-4. **Experiment infrastructure** — campaign templates and manifest schemas (raw run outputs are not committed by default).
+This repository provides:
 
-## Private manuscript (not in this repository)
+1. A **Python evaluation framework** for structural gates (G1–G3), guard-aware determinism (G3a), behavioral oracles, gold comparison, and coverage metrics.
+2. A **tiered behavioral benchmark** extending [FSM-Bench-20](https://doi.org/10.5281/zenodo.20516296) with human-approved gold FSMs and behavioral test suites.
+3. **Study documentation** (design, benchmark specification, evaluation protocol) and replication instructions.
+4. **Release hygiene** tooling to keep the public repository free of manuscript drafts and local experiment outputs.
 
-The EMSE manuscript is maintained **separately** in a private directory outside this public repository (`~/papers/emse2026/paper`). Draft prose, submission files, reviewer correspondence, and LaTeX build outputs are **not** part of this GitHub project.
+Campaign execution (LLM inference runs) is planned for a later milestone; `v0.1.0` freezes the evaluation stack and gold corpus.
 
-Future **Zenodo** releases will archive only:
+## Repository layout
 
-- reproducible software (framework, scripts, tests),
-- benchmark schemas and approved pilot artifacts,
-- documentation and replication instructions.
+```text
+behavioral-fsm-benchmark/
+├── benchmark/           JSON schemas, gold FSMs, test suites, requirement specs, guards
+│   ├── catalog.json     tier registry (pilot / core / stretch)
+│   ├── index.json       system index with artifact paths
+│   ├── gold_fsms/       approved reference FSMs
+│   ├── test_suites/     behavioral oracle / path / negative tests
+│   └── datasets/systems/ requirement specifications (tracked for pilot + core)
+├── framework/           Python evaluation engine
+├── scripts/             CLI entry points (validation, corpus evaluation, release audit)
+├── tests/               unit and integration tests
+├── docs/                study design, protocols, artifact and release policies
+├── experiments/         campaign templates (raw runs gitignored)
+├── reproducibility/     replication packaging scripts
+├── REPRODUCIBILITY.md   step-by-step replication guide
+└── CHANGELOG.md         release history
+```
 
-No private draft manuscript files are included in public releases.
+## Installation
 
-## Working title
+Requires **Python 3.11+** (3.12 recommended).
 
-**Beyond Structural Validity: Evaluating Behavioral Correctness, Robustness, and Reproducibility of LLM-Generated Finite State Machines from Natural-Language Requirements**
+```bash
+git clone https://github.com/cesar-andress/behavioral-fsm-benchmark.git
+cd behavioral-fsm-benchmark
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
 
-## Target journal
+## Validation commands
 
-**Empirical Software Engineering (EMSE)** — Springer Nature
+Run the full test suite and linter:
+
+```bash
+pytest
+ruff check framework/ tests/ scripts/
+```
+
+Validate a single gold FSM (schema + structural + determinism):
+
+```bash
+python scripts/validate_fsm.py benchmark/gold_fsms/vending_machine.json \
+  --schema reference_fsm.schema.json
+```
+
+Run a behavioral test suite against a gold FSM:
+
+```bash
+python scripts/run_behavioral_tests.py \
+  benchmark/gold_fsms/vending_machine.json \
+  benchmark/test_suites/vending_machine.json
+```
+
+## Gold corpus evaluation
+
+Evaluate all systems listed in `benchmark/index.json` (12 systems in `v0.1.0`):
+
+```bash
+python scripts/audit_public_release.py
+python scripts/evaluate_gold_corpus.py
+```
+
+Reports are written to `results/gold_corpus/` (gitignored):
+
+| Output | Description |
+|--------|-------------|
+| `metrics.csv` | Per-system gate and coverage metrics |
+| `metrics.json` | Structured corpus report |
+| `summary.md` | Human-readable pass/fail summary |
+
+Expected result for the released corpus: `all_passed=True` with behavioral pass rate `1.000` for every system.
+
+## Artifact scope (v0.1.0)
+
+| Tier | Systems | Status |
+|------|---------|--------|
+| Pilot | `vending_machine`, `login_system`, `atm` | Approved gold + test suites |
+| Core | `parking_gate`, `access_control`, `bike_rental`, `warehouse_inventory`, `smart_thermostat`, `elevator`, `hotel_booking`, `train_ticket_booking`, `package_locker` | Approved gold + test suites |
+
+Each system provides:
+
+- `benchmark/datasets/systems/<system>.json` — requirements
+- `benchmark/gold_fsms/<system>.json` — reference FSM
+- `benchmark/test_suites/<system>.json` — behavioral tests
+
+See [docs/artifact_policy.md](docs/artifact_policy.md) and [docs/benchmark_specification.md](docs/benchmark_specification.md).
+
+## Manuscript exclusion policy
+
+The EMSE **manuscript is private** and lives **outside** this repository:
+
+```text
+~/papers/emse2026/paper/
+```
+
+This public repository must **not** contain:
+
+- Manuscript drafts, LaTeX sources, or PDFs
+- Submission files or editorial correspondence
+- Reviewer materials or private research notes
+- Local experiment logs or editor/tooling metadata (`.cursor/`, `.claude/`, `.venv/`, etc.)
+
+Enforced by `.gitignore`, `scripts/audit_public_release.py`, and the [Release Audit](.github/workflows/release-audit.yml) CI workflow. Zenodo/GitHub releases archive **software and benchmark artifacts only**.
 
 ## Relationship to FSM-Bench-20 (IST 2026)
 
@@ -37,24 +128,9 @@ No private draft manuscript files are included in public releases.
 |-----------------------|-----------------------------------|
 | G1 JSON, G2 schema, G3 guard-blind determinism | Guard-aware determinism (G3a) + behavioral oracles |
 | Requirement citation coverage as proxy | Test-suite agreement + gold reference conformance |
-| Single-run descriptive campaign (140 runs) | Multi-run reproducibility + perturbation robustness |
+| Single-run descriptive campaign (140 runs) | Multi-run reproducibility + perturbation robustness (planned) |
 | Placeholder gold FSMs | Tiered human-approved reference FSMs |
 | Zenodo DOI [10.5281/zenodo.20516296](https://doi.org/10.5281/zenodo.20516296) | Upstream import via `benchmark/datasets/upstream_manifest.json` |
-
-## Repository layout
-
-```text
-behavioral-fsm-benchmark/
-├── benchmark/       schemas, gold_fsms, test_suites, datasets, guards
-├── framework/       Python evaluation engine
-├── experiments/     configs, manifests, runs/, logs/
-├── analysis/        post-hoc scripts, tables/, figures/
-├── docs/            study design, protocols, policies
-├── reproducibility/ environment, docker, replication scripts
-├── releases/        versioned release artifacts
-├── scripts/         CLI entry points
-└── tests/           unit and integration tests
-```
 
 ## Governance
 
@@ -65,24 +141,10 @@ behavioral-fsm-benchmark/
 | Evaluation protocol | [docs/evaluation_protocol.md](docs/evaluation_protocol.md) |
 | Artifact policy | [docs/artifact_policy.md](docs/artifact_policy.md) |
 | Release policy | [docs/release_policy.md](docs/release_policy.md) |
-| Repository governance | [docs/repository_governance.md](docs/repository_governance.md) |
 | Reproducibility | [REPRODUCIBILITY.md](REPRODUCIBILITY.md) |
+| Changelog | [CHANGELOG.md](CHANGELOG.md) |
 | Contributing | [CONTRIBUTING.md](CONTRIBUTING.md) |
 
-## Quick start
-
-```bash
-cd ~/papers/emse2026/behavioral-fsm-benchmark
-python3.12 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
-pytest
-ruff check framework/ tests/ scripts/
-```
-
-## Status
-
-Pilot benchmark systems (`vending_machine`, `login_system`) with approved gold FSMs and behavioral test suites. Framework M1–M2 implemented; campaign execution pending.
-
-## License
+## License and citation
 
 MIT — see [LICENSE](LICENSE). Citation metadata: [CITATION.cff](CITATION.cff).

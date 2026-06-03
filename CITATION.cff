@@ -19,7 +19,8 @@ keywords:
   - reproducibility
   - empirical software engineering
 abstract: >
-  behavioral-fsm-benchmark extends FSM-Bench-20 (IST 2026) with behavioral
-  oracles, gold reference FSMs, guard-aware determinism, test-suite agreement,
-  equivalence checking, robustness perturbations, and multi-run reproducibility
-  instrumentation for EMSE submission.
+  behavioral-fsm-benchmark v0.1.0 provides an offline Python evaluation framework
+  and an approved gold corpus (three pilot and nine core systems) extending
+  FSM-Bench-20 with behavioral oracles, guard-aware determinism (G3a),
+  gold reference FSMs, test-suite agreement, coverage metrics, and corpus-level
+  validation tooling for empirical software engineering research.
