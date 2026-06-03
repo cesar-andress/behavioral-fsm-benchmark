@@ -1,0 +1,52 @@
+{
+  "system_name": "Access Control",
+  "domain": "physical access control",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/access_control.json",
+    "notes": "Core gold FSM for access_control"
+  },
+  "states": [
+    "Locked",
+    "Unlocked"
+  ],
+  "initial_state": "Locked",
+  "events": [
+    "badge_scan",
+    "lock_command"
+  ],
+  "transitions": [
+    {
+      "source": "Locked",
+      "event": "badge_scan",
+      "guard": "badge_valid",
+      "target": "Unlocked",
+      "requirement": "R1, R2, R4, R8"
+    },
+    {
+      "source": "Unlocked",
+      "event": "lock_command",
+      "target": "Locked",
+      "requirement": "R3, R5, R6, R7",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "badge_scan"
+      ],
+      "reason": "Invalid badge rejected per R4",
+      "requirement": "R4"
+    },
+    {
+      "trace": [
+        "lock_command"
+      ],
+      "reason": "Lock rejected when Locked per R5",
+      "requirement": "R5"
+    }
+  ]
+}

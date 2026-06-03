@@ -1,0 +1,77 @@
+{
+  "system_name": "ATM",
+  "domain": "automated teller machine",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/atm.json",
+    "notes": "Pilot gold FSM for cash withdrawal ATM"
+  },
+  "states": ["Idle", "Authenticating", "Ready", "Dispensing"],
+  "initial_state": "Idle",
+  "events": [
+    "insert_card",
+    "pin_ok",
+    "pin_fail",
+    "select_withdraw",
+    "dispense_complete",
+    "eject_card"
+  ],
+  "transitions": [
+    {
+      "source": "Idle",
+      "event": "insert_card",
+      "guard": "",
+      "target": "Authenticating",
+      "requirement": "R1, R2"
+    },
+    {
+      "source": "Authenticating",
+      "event": "pin_ok",
+      "guard": "",
+      "target": "Ready",
+      "requirement": "R3"
+    },
+    {
+      "source": "Authenticating",
+      "event": "pin_fail",
+      "guard": "",
+      "target": "Idle",
+      "requirement": "R4"
+    },
+    {
+      "source": "Ready",
+      "event": "select_withdraw",
+      "guard": "",
+      "target": "Dispensing",
+      "requirement": "R5, R8"
+    },
+    {
+      "source": "Dispensing",
+      "event": "dispense_complete",
+      "guard": "",
+      "target": "Ready",
+      "requirement": "R6"
+    },
+    {
+      "source": "Ready",
+      "event": "eject_card",
+      "guard": "",
+      "target": "Idle",
+      "requirement": "R7"
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": ["insert_card", "pin_ok", "insert_card"],
+      "reason": "Card insert rejected while Ready per R8",
+      "requirement": "R8"
+    },
+    {
+      "trace": ["select_withdraw"],
+      "reason": "Withdraw rejected from Idle",
+      "requirement": "R5"
+    }
+  ]
+}

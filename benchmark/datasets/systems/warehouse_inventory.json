@@ -1,0 +1,14 @@
+{
+  "system_name": "Warehouse Inventory",
+  "domain": "warehouse logistics",
+  "requirements": [
+    "R1: Inventory starts Idle.",
+    "R2: Receive stock from Idle moves to Stocked.",
+    "R3: Allocate from Stocked moves to Allocated.",
+    "R4: Dispatch from Allocated moves to Dispatched.",
+    "R5: Cancel allocation from Allocated returns to Stocked.",
+    "R6: Restock from Dispatched returns to Stocked.",
+    "R7: Allocate is rejected from Idle.",
+    "R8: Dispatch is rejected from Stocked."
+  ]
+}

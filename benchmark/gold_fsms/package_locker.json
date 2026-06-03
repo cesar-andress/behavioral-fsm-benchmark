@@ -1,0 +1,71 @@
+{
+  "system_name": "Package Locker",
+  "domain": "parcel pickup locker",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/package_locker.json",
+    "notes": "Core gold FSM for package_locker"
+  },
+  "states": [
+    "Empty",
+    "Loaded",
+    "ReadyForPickup",
+    "Completed"
+  ],
+  "initial_state": "Empty",
+  "events": [
+    "load_package",
+    "send_notification",
+    "enter_code",
+    "collect_package"
+  ],
+  "transitions": [
+    {
+      "source": "Empty",
+      "event": "load_package",
+      "target": "Loaded",
+      "requirement": "R1, R2, R7",
+      "guard": ""
+    },
+    {
+      "source": "Loaded",
+      "event": "send_notification",
+      "target": "ReadyForPickup",
+      "requirement": "R3, R6",
+      "guard": ""
+    },
+    {
+      "source": "ReadyForPickup",
+      "event": "enter_code",
+      "guard": "code_valid",
+      "target": "Completed",
+      "requirement": "R4, R8"
+    },
+    {
+      "source": "Completed",
+      "event": "collect_package",
+      "target": "Empty",
+      "requirement": "R5",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "load_package",
+        "load_package"
+      ],
+      "reason": "Load rejected while Loaded per R6",
+      "requirement": "R6"
+    },
+    {
+      "trace": [
+        "send_notification"
+      ],
+      "reason": "Notification rejected from Empty per R7",
+      "requirement": "R7"
+    }
+  ]
+}

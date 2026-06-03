@@ -1,0 +1,14 @@
+{
+  "system_name": "Smart Thermostat",
+  "domain": "building climate control",
+  "requirements": [
+    "R1: Thermostat starts Off.",
+    "R2: Power on heat from Off moves to Heating.",
+    "R3: Power on cool from Off moves to Cooling.",
+    "R4: Power off from Heating returns to Off.",
+    "R5: Power off from Cooling returns to Off.",
+    "R6: Target reached from Heating returns to Off.",
+    "R7: Target reached from Cooling returns to Off.",
+    "R8: Heat command is rejected while Heating."
+  ]
+}

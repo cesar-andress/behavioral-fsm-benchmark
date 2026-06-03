@@ -1,0 +1,14 @@
+{
+  "system_name": "Parking Gate",
+  "domain": "parking automation",
+  "requirements": [
+    "R1: The gate starts in Closed.",
+    "R2: Vehicle detection in Closed opens the gate (Opening).",
+    "R3: Completion signal in Opening moves to Open.",
+    "R4: Close command in Open starts closing (Closing).",
+    "R5: Gate closed signal in Closing returns to Closed.",
+    "R6: Vehicle detection is ignored while Open.",
+    "R7: Close command is rejected in Closed.",
+    "R8: A full open-close cycle ends in Closed."
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "system_name": "Hotel Booking",
+  "domain": "hospitality reservation",
+  "requirements": [
+    "R1: Session starts with NoBooking.",
+    "R2: Search from NoBooking shows SearchResults.",
+    "R3: Select room from SearchResults holds a booking.",
+    "R4: Confirm payment from BookingHeld confirms reservation.",
+    "R5: Cancel from BookingHeld returns to NoBooking.",
+    "R6: Cancel from Confirmed returns to NoBooking.",
+    "R7: Confirm payment is rejected from SearchResults.",
+    "R8: Select room is rejected from NoBooking without search."
+  ]
+}

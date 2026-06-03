@@ -3,9 +3,20 @@
   "benchmark_name": "behavioral-fsm-benchmark",
   "upstream_dataset": "FSM-Bench-20",
   "systems_count": 20,
-  "pilot_systems": ["vending_machine", "login_system"],
-  "gold_fsm_status": "pilot_partial",
-  "test_suite_status": "pilot_partial",
+  "pilot_systems": ["vending_machine", "login_system", "atm"],
+  "core_systems": [
+    "parking_gate",
+    "access_control",
+    "bike_rental",
+    "warehouse_inventory",
+    "smart_thermostat",
+    "elevator",
+    "hotel_booking",
+    "train_ticket_booking",
+    "package_locker"
+  ],
+  "gold_fsm_status": "core_complete",
+  "test_suite_status": "core_complete",
   "systems": [
     {
       "system_id": "vending_machine",
@@ -20,6 +31,76 @@
       "gold_fsm": "benchmark/gold_fsms/login_system.json",
       "test_suite": "benchmark/test_suites/login_system.json",
       "requirements": "benchmark/datasets/systems/login_system.json"
+    },
+    {
+      "system_id": "atm",
+      "tier": "pilot",
+      "gold_fsm": "benchmark/gold_fsms/atm.json",
+      "test_suite": "benchmark/test_suites/atm.json",
+      "requirements": "benchmark/datasets/systems/atm.json"
+    },
+    {
+      "system_id": "parking_gate",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/parking_gate.json",
+      "test_suite": "benchmark/test_suites/parking_gate.json",
+      "requirements": "benchmark/datasets/systems/parking_gate.json"
+    },
+    {
+      "system_id": "access_control",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/access_control.json",
+      "test_suite": "benchmark/test_suites/access_control.json",
+      "requirements": "benchmark/datasets/systems/access_control.json"
+    },
+    {
+      "system_id": "bike_rental",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/bike_rental.json",
+      "test_suite": "benchmark/test_suites/bike_rental.json",
+      "requirements": "benchmark/datasets/systems/bike_rental.json"
+    },
+    {
+      "system_id": "warehouse_inventory",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/warehouse_inventory.json",
+      "test_suite": "benchmark/test_suites/warehouse_inventory.json",
+      "requirements": "benchmark/datasets/systems/warehouse_inventory.json"
+    },
+    {
+      "system_id": "smart_thermostat",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/smart_thermostat.json",
+      "test_suite": "benchmark/test_suites/smart_thermostat.json",
+      "requirements": "benchmark/datasets/systems/smart_thermostat.json"
+    },
+    {
+      "system_id": "elevator",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/elevator.json",
+      "test_suite": "benchmark/test_suites/elevator.json",
+      "requirements": "benchmark/datasets/systems/elevator.json"
+    },
+    {
+      "system_id": "hotel_booking",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/hotel_booking.json",
+      "test_suite": "benchmark/test_suites/hotel_booking.json",
+      "requirements": "benchmark/datasets/systems/hotel_booking.json"
+    },
+    {
+      "system_id": "train_ticket_booking",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/train_ticket_booking.json",
+      "test_suite": "benchmark/test_suites/train_ticket_booking.json",
+      "requirements": "benchmark/datasets/systems/train_ticket_booking.json"
+    },
+    {
+      "system_id": "package_locker",
+      "tier": "core",
+      "gold_fsm": "benchmark/gold_fsms/package_locker.json",
+      "test_suite": "benchmark/test_suites/package_locker.json",
+      "requirements": "benchmark/datasets/systems/package_locker.json"
     }
   ]
 }

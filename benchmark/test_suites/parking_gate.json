@@ -1,0 +1,207 @@
+{
+  "system_name": "Parking Gate",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "full_open_close_cycle",
+      "kind": "oracle",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "close_command",
+        "gate_closed"
+      ],
+      "description": "R8 full cycle",
+      "expected_final_state": "Closed",
+      "expected_trace": [
+        "Opening",
+        "Open",
+        "Closing",
+        "Closed"
+      ]
+    },
+    {
+      "test_id": "detect_to_opening",
+      "kind": "oracle",
+      "events": [
+        "detect_vehicle"
+      ],
+      "description": "R2 vehicle detection",
+      "expected_final_state": "Opening"
+    },
+    {
+      "test_id": "opening_to_open",
+      "kind": "oracle",
+      "events": [
+        "detect_vehicle",
+        "gate_opened"
+      ],
+      "description": "R3 gate opened",
+      "expected_final_state": "Open",
+      "expected_trace": [
+        "Opening",
+        "Open"
+      ]
+    },
+    {
+      "test_id": "open_to_closing",
+      "kind": "oracle",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "close_command"
+      ],
+      "description": "R4 close command",
+      "expected_final_state": "Closing",
+      "expected_trace": [
+        "Opening",
+        "Open",
+        "Closing"
+      ]
+    },
+    {
+      "test_id": "closing_to_closed",
+      "kind": "oracle",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "close_command",
+        "gate_closed"
+      ],
+      "description": "R5 gate closed",
+      "expected_final_state": "Closed"
+    },
+    {
+      "test_id": "remain_closed_initial",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial Closed",
+      "expected_final_state": "Closed"
+    },
+    {
+      "test_id": "open_before_close",
+      "kind": "oracle",
+      "events": [
+        "detect_vehicle",
+        "gate_opened"
+      ],
+      "description": "Open reachable before close",
+      "expected_final_state": "Open"
+    },
+    {
+      "test_id": "cycle_returns_closed",
+      "kind": "oracle",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "close_command",
+        "gate_closed"
+      ],
+      "description": "R8 cycle ends Closed",
+      "expected_final_state": "Closed"
+    },
+    {
+      "test_id": "reject_second_detect_in_opening",
+      "kind": "negative",
+      "events": [
+        "detect_vehicle",
+        "detect_vehicle"
+      ],
+      "description": "Second detect rejected in Opening",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_detect_while_open",
+      "kind": "negative",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "detect_vehicle"
+      ],
+      "description": "R6 forbidden detect in Open",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_close_while_closed",
+      "kind": "negative",
+      "events": [
+        "close_command"
+      ],
+      "description": "R7 forbidden close in Closed",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "path_two_step_open",
+      "kind": "path",
+      "events": [
+        "detect_vehicle",
+        "gate_opened"
+      ],
+      "description": "Path to Open",
+      "expected_final_state": "Open",
+      "expected_trace": [
+        "Opening",
+        "Open"
+      ]
+    },
+    {
+      "test_id": "path_three_step_closing",
+      "kind": "path",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "close_command"
+      ],
+      "description": "Path to Closing",
+      "expected_final_state": "Closing"
+    },
+    {
+      "test_id": "path_four_step_closed",
+      "kind": "path",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "close_command",
+        "gate_closed"
+      ],
+      "description": "Path full cycle",
+      "expected_final_state": "Closed"
+    },
+    {
+      "test_id": "path_single_detect",
+      "kind": "path",
+      "events": [
+        "detect_vehicle"
+      ],
+      "description": "Path detect only",
+      "expected_final_state": "Opening"
+    },
+    {
+      "test_id": "path_open_then_close",
+      "kind": "path",
+      "events": [
+        "detect_vehicle",
+        "gate_opened",
+        "close_command"
+      ],
+      "description": "Path through Open to Closing",
+      "expected_final_state": "Closing",
+      "expected_trace": [
+        "Opening",
+        "Open",
+        "Closing"
+      ]
+    },
+    {
+      "test_id": "path_idle_no_events",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial state",
+      "expected_final_state": "Closed"
+    }
+  ]
+}

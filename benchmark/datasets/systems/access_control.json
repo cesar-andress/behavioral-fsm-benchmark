@@ -1,0 +1,14 @@
+{
+  "system_name": "Access Control",
+  "domain": "physical access control",
+  "requirements": [
+    "R1: Door starts Locked.",
+    "R2: Valid badge scan unlocks the door.",
+    "R3: Lock command from Unlocked returns to Locked.",
+    "R4: Invalid badge scan is rejected in Locked.",
+    "R5: Lock command is rejected while already Locked.",
+    "R6: Badge scan is rejected while Unlocked.",
+    "R7: Unlock then lock restores Locked.",
+    "R8: Only Unlocked state permits entry."
+  ]
+}

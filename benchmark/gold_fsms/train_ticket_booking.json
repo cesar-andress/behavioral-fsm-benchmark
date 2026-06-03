@@ -1,0 +1,78 @@
+{
+  "system_name": "Train Ticket Booking",
+  "domain": "rail ticketing",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/train_ticket_booking.json",
+    "notes": "Core gold FSM for train_ticket_booking"
+  },
+  "states": [
+    "Start",
+    "RouteSelected",
+    "SeatHeld",
+    "TicketIssued"
+  ],
+  "initial_state": "Start",
+  "events": [
+    "select_route",
+    "choose_seat",
+    "pay",
+    "cancel"
+  ],
+  "transitions": [
+    {
+      "source": "Start",
+      "event": "select_route",
+      "target": "RouteSelected",
+      "requirement": "R1, R2, R8",
+      "guard": ""
+    },
+    {
+      "source": "RouteSelected",
+      "event": "choose_seat",
+      "target": "SeatHeld",
+      "requirement": "R3, R7",
+      "guard": ""
+    },
+    {
+      "source": "SeatHeld",
+      "event": "pay",
+      "target": "TicketIssued",
+      "requirement": "R4",
+      "guard": ""
+    },
+    {
+      "source": "SeatHeld",
+      "event": "cancel",
+      "target": "Start",
+      "requirement": "R5",
+      "guard": ""
+    },
+    {
+      "source": "TicketIssued",
+      "event": "cancel",
+      "target": "Start",
+      "requirement": "R6",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "select_route",
+        "pay"
+      ],
+      "reason": "Pay rejected from RouteSelected per R7",
+      "requirement": "R7"
+    },
+    {
+      "trace": [
+        "choose_seat"
+      ],
+      "reason": "Choose seat rejected from Start per R8",
+      "requirement": "R8"
+    }
+  ]
+}

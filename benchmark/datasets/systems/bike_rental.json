@@ -1,0 +1,14 @@
+{
+  "system_name": "Bike Rental",
+  "domain": "micromobility rental",
+  "requirements": [
+    "R1: Dock starts Available.",
+    "R2: Reserve from Available moves to Reserved.",
+    "R3: Confirm pickup from Reserved moves to Rented.",
+    "R4: Return from Rented restores Available.",
+    "R5: Report fault from Rented moves to Maintenance.",
+    "R6: Repair complete from Maintenance restores Available.",
+    "R7: Reserve is rejected while Rented.",
+    "R8: Return is rejected while Available."
+  ]
+}

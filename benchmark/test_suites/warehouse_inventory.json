@@ -1,0 +1,180 @@
+{
+  "system_name": "Warehouse Inventory",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "fulfillment_cycle",
+      "kind": "oracle",
+      "events": [
+        "receive_stock",
+        "allocate",
+        "dispatch",
+        "restock"
+      ],
+      "description": "Full fulfillment cycle",
+      "expected_final_state": "Stocked",
+      "expected_trace": [
+        "Stocked",
+        "Allocated",
+        "Dispatched",
+        "Stocked"
+      ]
+    },
+    {
+      "test_id": "receive_stock",
+      "kind": "oracle",
+      "events": [
+        "receive_stock"
+      ],
+      "description": "R2 receive stock",
+      "expected_final_state": "Stocked"
+    },
+    {
+      "test_id": "allocate_item",
+      "kind": "oracle",
+      "events": [
+        "receive_stock",
+        "allocate"
+      ],
+      "description": "R3 allocate",
+      "expected_final_state": "Allocated",
+      "expected_trace": [
+        "Stocked",
+        "Allocated"
+      ]
+    },
+    {
+      "test_id": "initial_idle",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial Idle",
+      "expected_final_state": "Idle"
+    },
+    {
+      "test_id": "cancel_allocation",
+      "kind": "oracle",
+      "events": [
+        "receive_stock",
+        "allocate",
+        "cancel_allocation"
+      ],
+      "description": "R5 cancel allocation",
+      "expected_final_state": "Stocked"
+    },
+    {
+      "test_id": "dispatch_order",
+      "kind": "oracle",
+      "events": [
+        "receive_stock",
+        "allocate",
+        "dispatch"
+      ],
+      "description": "R4 dispatch",
+      "expected_final_state": "Dispatched"
+    },
+    {
+      "test_id": "restock_after_dispatch",
+      "kind": "oracle",
+      "events": [
+        "receive_stock",
+        "allocate",
+        "dispatch",
+        "restock"
+      ],
+      "description": "R6 restock",
+      "expected_final_state": "Stocked"
+    },
+    {
+      "test_id": "stocked_after_receive",
+      "kind": "oracle",
+      "events": [
+        "receive_stock"
+      ],
+      "description": "Stocked state after receive",
+      "expected_final_state": "Stocked"
+    },
+    {
+      "test_id": "reject_allocate_idle",
+      "kind": "negative",
+      "events": [
+        "allocate"
+      ],
+      "description": "R7 allocate rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_dispatch_stocked",
+      "kind": "negative",
+      "events": [
+        "receive_stock",
+        "dispatch"
+      ],
+      "description": "R8 dispatch rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "path_to_stocked",
+      "kind": "path",
+      "events": [
+        "receive_stock"
+      ],
+      "description": "Path stocked",
+      "expected_final_state": "Stocked"
+    },
+    {
+      "test_id": "path_to_allocated",
+      "kind": "path",
+      "events": [
+        "receive_stock",
+        "allocate"
+      ],
+      "description": "Path allocated",
+      "expected_final_state": "Allocated"
+    },
+    {
+      "test_id": "path_to_dispatched",
+      "kind": "path",
+      "events": [
+        "receive_stock",
+        "allocate",
+        "dispatch"
+      ],
+      "description": "Path dispatched",
+      "expected_final_state": "Dispatched"
+    },
+    {
+      "test_id": "path_cancel",
+      "kind": "path",
+      "events": [
+        "receive_stock",
+        "allocate",
+        "cancel_allocation"
+      ],
+      "description": "Path cancel",
+      "expected_final_state": "Stocked"
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "Idle"
+    },
+    {
+      "test_id": "path_restock",
+      "kind": "path",
+      "events": [
+        "receive_stock",
+        "allocate",
+        "dispatch",
+        "restock"
+      ],
+      "description": "Path restock",
+      "expected_final_state": "Stocked"
+    }
+  ]
+}

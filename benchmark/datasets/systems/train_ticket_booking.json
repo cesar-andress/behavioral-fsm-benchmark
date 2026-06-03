@@ -1,0 +1,14 @@
+{
+  "system_name": "Train Ticket Booking",
+  "domain": "rail ticketing",
+  "requirements": [
+    "R1: Flow starts at Start.",
+    "R2: Select route from Start moves to RouteSelected.",
+    "R3: Choose seat from RouteSelected moves to SeatHeld.",
+    "R4: Pay from SeatHeld issues ticket.",
+    "R5: Cancel from SeatHeld returns to Start.",
+    "R6: Cancel from TicketIssued returns to Start.",
+    "R7: Pay is rejected from RouteSelected.",
+    "R8: Choose seat is rejected from Start."
+  ]
+}

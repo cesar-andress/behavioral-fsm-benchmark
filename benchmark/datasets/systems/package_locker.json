@@ -1,0 +1,14 @@
+{
+  "system_name": "Package Locker",
+  "domain": "parcel pickup locker",
+  "requirements": [
+    "R1: Locker starts Empty.",
+    "R2: Load package from Empty moves to Loaded.",
+    "R3: Send notification from Loaded moves to ReadyForPickup.",
+    "R4: Enter valid code from ReadyForPickup completes pickup.",
+    "R5: Collect package from Completed returns locker to Empty.",
+    "R6: Load is rejected while Loaded.",
+    "R7: Notification is rejected from Empty.",
+    "R8: Invalid code is rejected in ReadyForPickup."
+  ]
+}

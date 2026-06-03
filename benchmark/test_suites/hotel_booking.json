@@ -1,0 +1,178 @@
+{
+  "system_name": "Hotel Booking",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "confirmed_booking",
+      "kind": "oracle",
+      "events": [
+        "search",
+        "select_room",
+        "confirm_payment"
+      ],
+      "description": "Full booking",
+      "expected_final_state": "Confirmed",
+      "expected_trace": [
+        "SearchResults",
+        "BookingHeld",
+        "Confirmed"
+      ]
+    },
+    {
+      "test_id": "search_only",
+      "kind": "oracle",
+      "events": [
+        "search"
+      ],
+      "description": "R2 search",
+      "expected_final_state": "SearchResults"
+    },
+    {
+      "test_id": "hold_booking",
+      "kind": "oracle",
+      "events": [
+        "search",
+        "select_room"
+      ],
+      "description": "R3 select room",
+      "expected_final_state": "BookingHeld",
+      "expected_trace": [
+        "SearchResults",
+        "BookingHeld"
+      ]
+    },
+    {
+      "test_id": "initial_no_booking",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial",
+      "expected_final_state": "NoBooking"
+    },
+    {
+      "test_id": "cancel_from_held",
+      "kind": "oracle",
+      "events": [
+        "search",
+        "select_room",
+        "cancel"
+      ],
+      "description": "R5 cancel held",
+      "expected_final_state": "NoBooking"
+    },
+    {
+      "test_id": "cancel_from_confirmed",
+      "kind": "oracle",
+      "events": [
+        "search",
+        "select_room",
+        "confirm_payment",
+        "cancel"
+      ],
+      "description": "R6 cancel confirmed",
+      "expected_final_state": "NoBooking"
+    },
+    {
+      "test_id": "confirm_payment_step",
+      "kind": "oracle",
+      "events": [
+        "search",
+        "select_room",
+        "confirm_payment"
+      ],
+      "description": "R4 confirm payment",
+      "expected_final_state": "Confirmed"
+    },
+    {
+      "test_id": "search_results_state",
+      "kind": "oracle",
+      "events": [
+        "search"
+      ],
+      "description": "SearchResults reachable",
+      "expected_final_state": "SearchResults"
+    },
+    {
+      "test_id": "reject_confirm_search",
+      "kind": "negative",
+      "events": [
+        "search",
+        "confirm_payment"
+      ],
+      "description": "R7 confirm rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_select_no_search",
+      "kind": "negative",
+      "events": [
+        "select_room"
+      ],
+      "description": "R8 select rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "path_search",
+      "kind": "path",
+      "events": [
+        "search"
+      ],
+      "description": "Path search",
+      "expected_final_state": "SearchResults"
+    },
+    {
+      "test_id": "path_held",
+      "kind": "path",
+      "events": [
+        "search",
+        "select_room"
+      ],
+      "description": "Path held",
+      "expected_final_state": "BookingHeld"
+    },
+    {
+      "test_id": "path_confirmed",
+      "kind": "path",
+      "events": [
+        "search",
+        "select_room",
+        "confirm_payment"
+      ],
+      "description": "Path confirmed",
+      "expected_final_state": "Confirmed"
+    },
+    {
+      "test_id": "path_cancel_held",
+      "kind": "path",
+      "events": [
+        "search",
+        "select_room",
+        "cancel"
+      ],
+      "description": "Path cancel held",
+      "expected_final_state": "NoBooking"
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "NoBooking"
+    },
+    {
+      "test_id": "path_cancel_confirmed",
+      "kind": "path",
+      "events": [
+        "search",
+        "select_room",
+        "confirm_payment",
+        "cancel"
+      ],
+      "description": "Path cancel confirmed",
+      "expected_final_state": "NoBooking"
+    }
+  ]
+}

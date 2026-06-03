@@ -1,0 +1,187 @@
+{
+  "system_name": "Elevator",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "full_ride_cycle",
+      "kind": "oracle",
+      "events": [
+        "call_elevator",
+        "arrived",
+        "close_door",
+        "door_sealed"
+      ],
+      "description": "R8 full cycle",
+      "expected_final_state": "Idle",
+      "expected_trace": [
+        "Moving",
+        "DoorOpen",
+        "Closing",
+        "Idle"
+      ]
+    },
+    {
+      "test_id": "call_to_moving",
+      "kind": "oracle",
+      "events": [
+        "call_elevator"
+      ],
+      "description": "R2 call",
+      "expected_final_state": "Moving"
+    },
+    {
+      "test_id": "arrive_open_doors",
+      "kind": "oracle",
+      "events": [
+        "call_elevator",
+        "arrived"
+      ],
+      "description": "R3 arrived",
+      "expected_final_state": "DoorOpen",
+      "expected_trace": [
+        "Moving",
+        "DoorOpen"
+      ]
+    },
+    {
+      "test_id": "initial_idle",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial Idle",
+      "expected_final_state": "Idle"
+    },
+    {
+      "test_id": "close_from_open",
+      "kind": "oracle",
+      "events": [
+        "call_elevator",
+        "arrived",
+        "close_door"
+      ],
+      "description": "R4 close door",
+      "expected_final_state": "Closing",
+      "expected_trace": [
+        "Moving",
+        "DoorOpen",
+        "Closing"
+      ]
+    },
+    {
+      "test_id": "sealed_to_idle",
+      "kind": "oracle",
+      "events": [
+        "call_elevator",
+        "arrived",
+        "close_door",
+        "door_sealed"
+      ],
+      "description": "R5 door sealed",
+      "expected_final_state": "Idle"
+    },
+    {
+      "test_id": "door_open_reached",
+      "kind": "oracle",
+      "events": [
+        "call_elevator",
+        "arrived"
+      ],
+      "description": "DoorOpen reachable",
+      "expected_final_state": "DoorOpen"
+    },
+    {
+      "test_id": "moving_after_call",
+      "kind": "oracle",
+      "events": [
+        "call_elevator"
+      ],
+      "description": "Moving after elevator call",
+      "expected_final_state": "Moving"
+    },
+    {
+      "test_id": "reject_call_moving",
+      "kind": "negative",
+      "events": [
+        "call_elevator",
+        "call_elevator"
+      ],
+      "description": "R6 call rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_close_idle",
+      "kind": "negative",
+      "events": [
+        "close_door"
+      ],
+      "description": "R7 close rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "path_moving",
+      "kind": "path",
+      "events": [
+        "call_elevator"
+      ],
+      "description": "Path moving",
+      "expected_final_state": "Moving"
+    },
+    {
+      "test_id": "path_door_open",
+      "kind": "path",
+      "events": [
+        "call_elevator",
+        "arrived"
+      ],
+      "description": "Path door open",
+      "expected_final_state": "DoorOpen"
+    },
+    {
+      "test_id": "path_closing",
+      "kind": "path",
+      "events": [
+        "call_elevator",
+        "arrived",
+        "close_door"
+      ],
+      "description": "Path closing",
+      "expected_final_state": "Closing"
+    },
+    {
+      "test_id": "path_full_cycle",
+      "kind": "path",
+      "events": [
+        "call_elevator",
+        "arrived",
+        "close_door",
+        "door_sealed"
+      ],
+      "description": "Path full cycle",
+      "expected_final_state": "Idle"
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "Idle"
+    },
+    {
+      "test_id": "path_arrive_only",
+      "kind": "path",
+      "events": [
+        "call_elevator",
+        "arrived"
+      ],
+      "description": "Path arrive",
+      "expected_final_state": "DoorOpen",
+      "expected_trace": [
+        "Moving",
+        "DoorOpen"
+      ]
+    }
+  ]
+}

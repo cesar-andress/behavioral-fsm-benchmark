@@ -1,0 +1,14 @@
+{
+  "system_name": "ATM",
+  "domain": "automated teller machine",
+  "requirements": [
+    "R1: The ATM starts in Idle.",
+    "R2: Inserting a card from Idle moves to Authenticating.",
+    "R3: A valid PIN from Authenticating moves to Ready.",
+    "R4: An invalid PIN from Authenticating returns to Idle.",
+    "R5: Selecting withdraw from Ready moves to Dispensing.",
+    "R6: Dispense complete from Dispensing returns to Ready.",
+    "R7: Ejecting the card from Ready returns to Idle.",
+    "R8: Card insert is rejected while Ready."
+  ]
+}

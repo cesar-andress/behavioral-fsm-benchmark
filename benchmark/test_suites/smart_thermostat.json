@@ -1,0 +1,176 @@
+{
+  "system_name": "Smart Thermostat",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "heat_cycle_off",
+      "kind": "oracle",
+      "events": [
+        "power_on_heat",
+        "power_off"
+      ],
+      "description": "R2/R4 heat cycle",
+      "expected_final_state": "Off",
+      "expected_trace": [
+        "Heating",
+        "Off"
+      ]
+    },
+    {
+      "test_id": "cool_cycle_off",
+      "kind": "oracle",
+      "events": [
+        "power_on_cool",
+        "power_off"
+      ],
+      "description": "R3/R5 cool cycle",
+      "expected_final_state": "Off",
+      "expected_trace": [
+        "Cooling",
+        "Off"
+      ]
+    },
+    {
+      "test_id": "heat_target_reached",
+      "kind": "oracle",
+      "events": [
+        "power_on_heat",
+        "target_reached"
+      ],
+      "description": "R6 target reached heating",
+      "expected_final_state": "Off",
+      "expected_trace": [
+        "Heating",
+        "Off"
+      ]
+    },
+    {
+      "test_id": "cool_target_reached",
+      "kind": "oracle",
+      "events": [
+        "power_on_cool",
+        "target_reached"
+      ],
+      "description": "R7 target reached cooling",
+      "expected_final_state": "Off",
+      "expected_trace": [
+        "Cooling",
+        "Off"
+      ]
+    },
+    {
+      "test_id": "initial_off",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial Off",
+      "expected_final_state": "Off"
+    },
+    {
+      "test_id": "start_heating",
+      "kind": "oracle",
+      "events": [
+        "power_on_heat"
+      ],
+      "description": "R2 start heating",
+      "expected_final_state": "Heating"
+    },
+    {
+      "test_id": "start_cooling",
+      "kind": "oracle",
+      "events": [
+        "power_on_cool"
+      ],
+      "description": "R3 start cooling",
+      "expected_final_state": "Cooling"
+    },
+    {
+      "test_id": "off_after_cool_off",
+      "kind": "oracle",
+      "events": [
+        "power_on_cool",
+        "power_off"
+      ],
+      "description": "Cooling stops on power off",
+      "expected_final_state": "Off"
+    },
+    {
+      "test_id": "reject_heat_while_heating",
+      "kind": "negative",
+      "events": [
+        "power_on_heat",
+        "power_on_heat"
+      ],
+      "description": "R8 heat rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_cool_while_cooling",
+      "kind": "negative",
+      "events": [
+        "power_on_cool",
+        "power_on_cool"
+      ],
+      "description": "Cool command rejected while Cooling",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "path_heat",
+      "kind": "path",
+      "events": [
+        "power_on_heat"
+      ],
+      "description": "Path heating",
+      "expected_final_state": "Heating"
+    },
+    {
+      "test_id": "path_cool",
+      "kind": "path",
+      "events": [
+        "power_on_cool"
+      ],
+      "description": "Path cooling",
+      "expected_final_state": "Cooling"
+    },
+    {
+      "test_id": "path_heat_off",
+      "kind": "path",
+      "events": [
+        "power_on_heat",
+        "power_off"
+      ],
+      "description": "Path heat off",
+      "expected_final_state": "Off"
+    },
+    {
+      "test_id": "path_cool_off",
+      "kind": "path",
+      "events": [
+        "power_on_cool",
+        "power_off"
+      ],
+      "description": "Path cool off",
+      "expected_final_state": "Off"
+    },
+    {
+      "test_id": "path_heat_target",
+      "kind": "path",
+      "events": [
+        "power_on_heat",
+        "target_reached"
+      ],
+      "description": "Path heat target",
+      "expected_final_state": "Off"
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "Off"
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "system_name": "Package Locker",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "full_pickup_cycle",
+      "kind": "oracle",
+      "events": [
+        "load_package",
+        "send_notification",
+        "enter_code",
+        "collect_package"
+      ],
+      "description": "Full locker cycle",
+      "expected_final_state": "Empty",
+      "expected_trace": [
+        "Loaded",
+        "ReadyForPickup",
+        "Completed",
+        "Empty"
+      ],
+      "guard_context": {
+        "code_valid": true
+      }
+    },
+    {
+      "test_id": "load_package",
+      "kind": "oracle",
+      "events": [
+        "load_package"
+      ],
+      "description": "R2 load",
+      "expected_final_state": "Loaded"
+    },
+    {
+      "test_id": "notify_recipient",
+      "kind": "oracle",
+      "events": [
+        "load_package",
+        "send_notification"
+      ],
+      "description": "R3 notify",
+      "expected_final_state": "ReadyForPickup",
+      "expected_trace": [
+        "Loaded",
+        "ReadyForPickup"
+      ]
+    },
+    {
+      "test_id": "initial_empty",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial",
+      "expected_final_state": "Empty"
+    },
+    {
+      "test_id": "enter_valid_code",
+      "kind": "oracle",
+      "events": [
+        "load_package",
+        "send_notification",
+        "enter_code"
+      ],
+      "description": "R4 valid code",
+      "expected_final_state": "Completed",
+      "guard_context": {
+        "code_valid": true
+      }
+    },
+    {
+      "test_id": "collect_clears",
+      "kind": "oracle",
+      "events": [
+        "load_package",
+        "send_notification",
+        "enter_code",
+        "collect_package"
+      ],
+      "description": "R5 collect",
+      "expected_final_state": "Empty",
+      "guard_context": {
+        "code_valid": true
+      }
+    },
+    {
+      "test_id": "ready_state",
+      "kind": "oracle",
+      "events": [
+        "load_package",
+        "send_notification"
+      ],
+      "description": "ReadyForPickup reachable",
+      "expected_final_state": "ReadyForPickup"
+    },
+    {
+      "test_id": "loaded_after_package",
+      "kind": "oracle",
+      "events": [
+        "load_package"
+      ],
+      "description": "Loaded state after deposit",
+      "expected_final_state": "Loaded"
+    },
+    {
+      "test_id": "reject_load_loaded",
+      "kind": "negative",
+      "events": [
+        "load_package",
+        "load_package"
+      ],
+      "description": "R6 load rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_notify_empty",
+      "kind": "negative",
+      "events": [
+        "send_notification"
+      ],
+      "description": "R7 notify rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_invalid_code",
+      "kind": "negative",
+      "events": [
+        "load_package",
+        "send_notification",
+        "enter_code"
+      ],
+      "description": "R8 invalid code",
+      "expected_final_state": null,
+      "guard_context": {
+        "code_valid": false
+      }
+    },
+    {
+      "test_id": "path_loaded",
+      "kind": "path",
+      "events": [
+        "load_package"
+      ],
+      "description": "Path loaded",
+      "expected_final_state": "Loaded"
+    },
+    {
+      "test_id": "path_ready",
+      "kind": "path",
+      "events": [
+        "load_package",
+        "send_notification"
+      ],
+      "description": "Path ready",
+      "expected_final_state": "ReadyForPickup"
+    },
+    {
+      "test_id": "path_completed",
+      "kind": "path",
+      "events": [
+        "load_package",
+        "send_notification",
+        "enter_code"
+      ],
+      "description": "Path completed",
+      "expected_final_state": "Completed",
+      "guard_context": {
+        "code_valid": true
+      }
+    },
+    {
+      "test_id": "path_empty_again",
+      "kind": "path",
+      "events": [
+        "load_package",
+        "send_notification",
+        "enter_code",
+        "collect_package"
+      ],
+      "description": "Path reset",
+      "expected_final_state": "Empty",
+      "guard_context": {
+        "code_valid": true
+      }
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "Empty"
+    },
+    {
+      "test_id": "path_invalid_code",
+      "kind": "path",
+      "events": [
+        "load_package",
+        "send_notification",
+        "enter_code"
+      ],
+      "description": "Path invalid code rejection",
+      "guard_context": {
+        "code_valid": false
+      }
+    }
+  ]
+}

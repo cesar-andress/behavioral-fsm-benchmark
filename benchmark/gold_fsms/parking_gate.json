@@ -1,0 +1,72 @@
+{
+  "system_name": "Parking Gate",
+  "domain": "parking automation",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/parking_gate.json",
+    "notes": "Core gold FSM for parking_gate"
+  },
+  "states": [
+    "Closed",
+    "Opening",
+    "Open",
+    "Closing"
+  ],
+  "initial_state": "Closed",
+  "events": [
+    "detect_vehicle",
+    "gate_opened",
+    "close_command",
+    "gate_closed"
+  ],
+  "transitions": [
+    {
+      "source": "Closed",
+      "event": "detect_vehicle",
+      "target": "Opening",
+      "requirement": "R1, R2",
+      "guard": ""
+    },
+    {
+      "source": "Opening",
+      "event": "gate_opened",
+      "target": "Open",
+      "requirement": "R3",
+      "guard": ""
+    },
+    {
+      "source": "Open",
+      "event": "close_command",
+      "target": "Closing",
+      "requirement": "R4, R6",
+      "guard": ""
+    },
+    {
+      "source": "Closing",
+      "event": "gate_closed",
+      "target": "Closed",
+      "requirement": "R5, R7, R8",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "detect_vehicle",
+        "gate_opened",
+        "detect_vehicle"
+      ],
+      "reason": "Detection ignored in Open per R6",
+      "requirement": "R6"
+    },
+    {
+      "trace": [
+        "close_command"
+      ],
+      "reason": "Close rejected in Closed per R7",
+      "requirement": "R7"
+    }
+  ]
+}

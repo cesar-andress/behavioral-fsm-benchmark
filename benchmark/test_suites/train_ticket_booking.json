@@ -1,0 +1,178 @@
+{
+  "system_name": "Train Ticket Booking",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "ticket_issued",
+      "kind": "oracle",
+      "events": [
+        "select_route",
+        "choose_seat",
+        "pay"
+      ],
+      "description": "Full ticket flow",
+      "expected_final_state": "TicketIssued",
+      "expected_trace": [
+        "RouteSelected",
+        "SeatHeld",
+        "TicketIssued"
+      ]
+    },
+    {
+      "test_id": "route_selected",
+      "kind": "oracle",
+      "events": [
+        "select_route"
+      ],
+      "description": "R2 select route",
+      "expected_final_state": "RouteSelected"
+    },
+    {
+      "test_id": "seat_held",
+      "kind": "oracle",
+      "events": [
+        "select_route",
+        "choose_seat"
+      ],
+      "description": "R3 choose seat",
+      "expected_final_state": "SeatHeld",
+      "expected_trace": [
+        "RouteSelected",
+        "SeatHeld"
+      ]
+    },
+    {
+      "test_id": "initial_start",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial",
+      "expected_final_state": "Start"
+    },
+    {
+      "test_id": "cancel_seat_held",
+      "kind": "oracle",
+      "events": [
+        "select_route",
+        "choose_seat",
+        "cancel"
+      ],
+      "description": "R5 cancel held",
+      "expected_final_state": "Start"
+    },
+    {
+      "test_id": "cancel_issued",
+      "kind": "oracle",
+      "events": [
+        "select_route",
+        "choose_seat",
+        "pay",
+        "cancel"
+      ],
+      "description": "R6 cancel issued",
+      "expected_final_state": "Start"
+    },
+    {
+      "test_id": "pay_step",
+      "kind": "oracle",
+      "events": [
+        "select_route",
+        "choose_seat",
+        "pay"
+      ],
+      "description": "R4 pay",
+      "expected_final_state": "TicketIssued"
+    },
+    {
+      "test_id": "route_state_reachable",
+      "kind": "oracle",
+      "events": [
+        "select_route"
+      ],
+      "description": "RouteSelected reachable",
+      "expected_final_state": "RouteSelected"
+    },
+    {
+      "test_id": "reject_pay_route",
+      "kind": "negative",
+      "events": [
+        "select_route",
+        "pay"
+      ],
+      "description": "R7 pay rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_seat_start",
+      "kind": "negative",
+      "events": [
+        "choose_seat"
+      ],
+      "description": "R8 seat rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "path_route",
+      "kind": "path",
+      "events": [
+        "select_route"
+      ],
+      "description": "Path route",
+      "expected_final_state": "RouteSelected"
+    },
+    {
+      "test_id": "path_seat",
+      "kind": "path",
+      "events": [
+        "select_route",
+        "choose_seat"
+      ],
+      "description": "Path seat",
+      "expected_final_state": "SeatHeld"
+    },
+    {
+      "test_id": "path_ticket",
+      "kind": "path",
+      "events": [
+        "select_route",
+        "choose_seat",
+        "pay"
+      ],
+      "description": "Path ticket",
+      "expected_final_state": "TicketIssued"
+    },
+    {
+      "test_id": "path_cancel_held",
+      "kind": "path",
+      "events": [
+        "select_route",
+        "choose_seat",
+        "cancel"
+      ],
+      "description": "Path cancel held",
+      "expected_final_state": "Start"
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "Start"
+    },
+    {
+      "test_id": "path_cancel_issued",
+      "kind": "path",
+      "events": [
+        "select_route",
+        "choose_seat",
+        "pay",
+        "cancel"
+      ],
+      "description": "Path cancel issued",
+      "expected_final_state": "Start"
+    }
+  ]
+}

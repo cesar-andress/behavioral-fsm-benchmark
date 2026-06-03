@@ -1,0 +1,202 @@
+{
+  "system_name": "Bike Rental",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "happy_rental_cycle",
+      "kind": "oracle",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "return_bike"
+      ],
+      "description": "Full rental cycle",
+      "expected_final_state": "Available",
+      "expected_trace": [
+        "Reserved",
+        "Rented",
+        "Available"
+      ]
+    },
+    {
+      "test_id": "reserve_only",
+      "kind": "oracle",
+      "events": [
+        "reserve"
+      ],
+      "description": "R2 reserve",
+      "expected_final_state": "Reserved"
+    },
+    {
+      "test_id": "pickup_from_reserved",
+      "kind": "oracle",
+      "events": [
+        "reserve",
+        "confirm_pickup"
+      ],
+      "description": "R3 pickup",
+      "expected_final_state": "Rented",
+      "expected_trace": [
+        "Reserved",
+        "Rented"
+      ]
+    },
+    {
+      "test_id": "initial_available",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial Available",
+      "expected_final_state": "Available"
+    },
+    {
+      "test_id": "maintenance_cycle",
+      "kind": "oracle",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "report_fault",
+        "repair_complete"
+      ],
+      "description": "R5/R6 maintenance path",
+      "expected_final_state": "Available"
+    },
+    {
+      "test_id": "to_maintenance",
+      "kind": "oracle",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "report_fault"
+      ],
+      "description": "R5 report fault",
+      "expected_final_state": "Maintenance"
+    },
+    {
+      "test_id": "repair_restores",
+      "kind": "oracle",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "report_fault",
+        "repair_complete"
+      ],
+      "description": "R6 repair complete",
+      "expected_final_state": "Available"
+    },
+    {
+      "test_id": "return_from_rented",
+      "kind": "oracle",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "return_bike"
+      ],
+      "description": "R4 return bike",
+      "expected_final_state": "Available"
+    },
+    {
+      "test_id": "reject_return_available",
+      "kind": "negative",
+      "events": [
+        "return_bike"
+      ],
+      "description": "R8 return rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_reserve_rented",
+      "kind": "negative",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "reserve"
+      ],
+      "description": "R7 reserve rejected",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "path_to_reserved",
+      "kind": "path",
+      "events": [
+        "reserve"
+      ],
+      "description": "Path reserve",
+      "expected_final_state": "Reserved"
+    },
+    {
+      "test_id": "path_to_rented",
+      "kind": "path",
+      "events": [
+        "reserve",
+        "confirm_pickup"
+      ],
+      "description": "Path rented",
+      "expected_final_state": "Rented",
+      "expected_trace": [
+        "Reserved",
+        "Rented"
+      ]
+    },
+    {
+      "test_id": "path_return",
+      "kind": "path",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "return_bike"
+      ],
+      "description": "Path return",
+      "expected_final_state": "Available"
+    },
+    {
+      "test_id": "path_maintenance",
+      "kind": "path",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "report_fault"
+      ],
+      "description": "Path maintenance",
+      "expected_final_state": "Maintenance"
+    },
+    {
+      "test_id": "path_repair",
+      "kind": "path",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "report_fault",
+        "repair_complete"
+      ],
+      "description": "Path repair",
+      "expected_final_state": "Available"
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "Available"
+    },
+    {
+      "test_id": "path_reserve_pickup_return",
+      "kind": "path",
+      "events": [
+        "reserve",
+        "confirm_pickup",
+        "return_bike"
+      ],
+      "description": "Path full rental",
+      "expected_final_state": "Available",
+      "expected_trace": [
+        "Reserved",
+        "Rented",
+        "Available"
+      ]
+    }
+  ]
+}

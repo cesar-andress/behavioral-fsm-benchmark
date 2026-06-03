@@ -1,0 +1,221 @@
+{
+  "system_name": "Access Control",
+  "metadata": {
+    "status": "approved",
+    "tier": "core",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "unlock_with_valid_badge",
+      "kind": "oracle",
+      "events": [
+        "badge_scan"
+      ],
+      "description": "R2 valid badge",
+      "expected_final_state": "Unlocked",
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "lock_from_unlocked",
+      "kind": "oracle",
+      "events": [
+        "badge_scan",
+        "lock_command"
+      ],
+      "description": "R3 lock command",
+      "expected_final_state": "Locked",
+      "expected_trace": [
+        "Unlocked",
+        "Locked"
+      ],
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "unlock_lock_cycle",
+      "kind": "oracle",
+      "events": [
+        "badge_scan",
+        "lock_command"
+      ],
+      "description": "R7 cycle",
+      "expected_final_state": "Locked",
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "initial_locked",
+      "kind": "oracle",
+      "events": [],
+      "description": "R1 initial Locked",
+      "expected_final_state": "Locked"
+    },
+    {
+      "test_id": "unlocked_entry_state",
+      "kind": "oracle",
+      "events": [
+        "badge_scan"
+      ],
+      "description": "R8 unlocked entry state",
+      "expected_final_state": "Unlocked",
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "lock_restores_secure",
+      "kind": "oracle",
+      "events": [
+        "badge_scan",
+        "lock_command"
+      ],
+      "description": "R7 lock restores Locked",
+      "expected_final_state": "Locked",
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "valid_badge_from_locked",
+      "kind": "oracle",
+      "events": [
+        "badge_scan"
+      ],
+      "description": "R2 unlock transition",
+      "expected_final_state": "Unlocked",
+      "expected_trace": [
+        "Unlocked"
+      ],
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "reject_invalid_badge",
+      "kind": "negative",
+      "events": [
+        "badge_scan"
+      ],
+      "description": "R4 invalid badge fails",
+      "expected_final_state": null,
+      "guard_context": {
+        "badge_valid": false
+      }
+    },
+    {
+      "test_id": "lock_without_unlock",
+      "kind": "oracle",
+      "events": [],
+      "description": "Locked without events",
+      "expected_final_state": "Locked"
+    },
+    {
+      "test_id": "second_badge_while_unlocked",
+      "kind": "negative",
+      "events": [
+        "badge_scan",
+        "badge_scan"
+      ],
+      "description": "R6 badge rejected when Unlocked",
+      "expected_final_state": null,
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "reject_lock_when_locked",
+      "kind": "negative",
+      "events": [
+        "lock_command"
+      ],
+      "description": "R5 forbidden lock",
+      "expected_final_state": null
+    },
+    {
+      "test_id": "reject_badge_when_unlocked",
+      "kind": "negative",
+      "events": [
+        "badge_scan",
+        "badge_scan"
+      ],
+      "description": "R6 duplicate badge scan rejected",
+      "expected_final_state": null,
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "path_unlock",
+      "kind": "path",
+      "events": [
+        "badge_scan"
+      ],
+      "description": "Path unlock",
+      "expected_final_state": "Unlocked",
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "path_lock_after_unlock",
+      "kind": "path",
+      "events": [
+        "badge_scan",
+        "lock_command"
+      ],
+      "description": "Path lock",
+      "expected_final_state": "Locked",
+      "expected_trace": [
+        "Unlocked",
+        "Locked"
+      ],
+      "guard_context": {
+        "badge_valid": true
+      }
+    },
+    {
+      "test_id": "path_initial",
+      "kind": "path",
+      "events": [],
+      "description": "Path initial",
+      "expected_final_state": "Locked"
+    },
+    {
+      "test_id": "path_invalid_scan",
+      "kind": "path",
+      "events": [
+        "badge_scan"
+      ],
+      "description": "Path invalid scan rejection",
+      "guard_context": {
+        "badge_valid": false
+      }
+    },
+    {
+      "test_id": "path_rejected_lock",
+      "kind": "path",
+      "events": [
+        "lock_command"
+      ],
+      "description": "Path rejected lock"
+    },
+    {
+      "test_id": "path_full_cycle",
+      "kind": "path",
+      "events": [
+        "badge_scan",
+        "lock_command"
+      ],
+      "description": "Path full cycle",
+      "expected_final_state": "Locked",
+      "guard_context": {
+        "badge_valid": true
+      }
+    }
+  ]
+}

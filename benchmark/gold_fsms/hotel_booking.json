@@ -1,0 +1,78 @@
+{
+  "system_name": "Hotel Booking",
+  "domain": "hospitality reservation",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/hotel_booking.json",
+    "notes": "Core gold FSM for hotel_booking"
+  },
+  "states": [
+    "NoBooking",
+    "SearchResults",
+    "BookingHeld",
+    "Confirmed"
+  ],
+  "initial_state": "NoBooking",
+  "events": [
+    "search",
+    "select_room",
+    "confirm_payment",
+    "cancel"
+  ],
+  "transitions": [
+    {
+      "source": "NoBooking",
+      "event": "search",
+      "target": "SearchResults",
+      "requirement": "R1, R2, R8",
+      "guard": ""
+    },
+    {
+      "source": "SearchResults",
+      "event": "select_room",
+      "target": "BookingHeld",
+      "requirement": "R3, R7",
+      "guard": ""
+    },
+    {
+      "source": "BookingHeld",
+      "event": "confirm_payment",
+      "target": "Confirmed",
+      "requirement": "R4",
+      "guard": ""
+    },
+    {
+      "source": "BookingHeld",
+      "event": "cancel",
+      "target": "NoBooking",
+      "requirement": "R5",
+      "guard": ""
+    },
+    {
+      "source": "Confirmed",
+      "event": "cancel",
+      "target": "NoBooking",
+      "requirement": "R6",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "search",
+        "confirm_payment"
+      ],
+      "reason": "Confirm rejected from SearchResults per R7",
+      "requirement": "R7"
+    },
+    {
+      "trace": [
+        "select_room"
+      ],
+      "reason": "Select rejected without search per R8",
+      "requirement": "R8"
+    }
+  ]
+}

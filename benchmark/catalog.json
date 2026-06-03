@@ -14,11 +14,62 @@
           "system_id": "login_system",
           "gold_status": "approved",
           "test_suite_status": "approved"
+        },
+        {
+          "system_id": "atm",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
         }
       ]
     },
     "core": {
-      "systems": []
+      "systems": [
+        {
+          "system_id": "parking_gate",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "access_control",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "bike_rental",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "warehouse_inventory",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "smart_thermostat",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "elevator",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "hotel_booking",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "train_ticket_booking",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "package_locker",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        }
+      ]
     },
     "stretch": {
       "systems": []

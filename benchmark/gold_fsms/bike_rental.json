@@ -1,0 +1,80 @@
+{
+  "system_name": "Bike Rental",
+  "domain": "micromobility rental",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/bike_rental.json",
+    "notes": "Core gold FSM for bike_rental"
+  },
+  "states": [
+    "Available",
+    "Reserved",
+    "Rented",
+    "Maintenance"
+  ],
+  "initial_state": "Available",
+  "events": [
+    "reserve",
+    "confirm_pickup",
+    "return_bike",
+    "report_fault",
+    "repair_complete"
+  ],
+  "transitions": [
+    {
+      "source": "Available",
+      "event": "reserve",
+      "target": "Reserved",
+      "requirement": "R1, R2, R8",
+      "guard": ""
+    },
+    {
+      "source": "Reserved",
+      "event": "confirm_pickup",
+      "target": "Rented",
+      "requirement": "R3, R7",
+      "guard": ""
+    },
+    {
+      "source": "Rented",
+      "event": "return_bike",
+      "target": "Available",
+      "requirement": "R4",
+      "guard": ""
+    },
+    {
+      "source": "Rented",
+      "event": "report_fault",
+      "target": "Maintenance",
+      "requirement": "R5",
+      "guard": ""
+    },
+    {
+      "source": "Maintenance",
+      "event": "repair_complete",
+      "target": "Available",
+      "requirement": "R6",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "reserve",
+        "confirm_pickup",
+        "reserve"
+      ],
+      "reason": "Reserve rejected while Rented per R7",
+      "requirement": "R7"
+    },
+    {
+      "trace": [
+        "return_bike"
+      ],
+      "reason": "Return rejected while Available per R8",
+      "requirement": "R8"
+    }
+  ]
+}

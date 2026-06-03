@@ -1,0 +1,14 @@
+{
+  "system_name": "Elevator",
+  "domain": "vertical transport",
+  "requirements": [
+    "R1: Elevator starts Idle.",
+    "R2: Call from Idle moves to Moving.",
+    "R3: Arrival from Moving opens doors (DoorOpen).",
+    "R4: Close door command from DoorOpen moves to Closing.",
+    "R5: Door sealed signal from Closing returns to Idle.",
+    "R6: Call is rejected while Moving.",
+    "R7: Close door is rejected while Idle.",
+    "R8: A complete ride cycle ends in Idle."
+  ]
+}

@@ -35,6 +35,16 @@ reproducibility/build/*
 benchmark/datasets/systems/*.json
 !benchmark/datasets/systems/vending_machine.json
 !benchmark/datasets/systems/login_system.json
+!benchmark/datasets/systems/atm.json
+!benchmark/datasets/systems/parking_gate.json
+!benchmark/datasets/systems/access_control.json
+!benchmark/datasets/systems/bike_rental.json
+!benchmark/datasets/systems/warehouse_inventory.json
+!benchmark/datasets/systems/smart_thermostat.json
+!benchmark/datasets/systems/elevator.json
+!benchmark/datasets/systems/hotel_booking.json
+!benchmark/datasets/systems/train_ticket_booking.json
+!benchmark/datasets/systems/package_locker.json
 
 # Private manuscript (maintained outside this public repository)
 paper/

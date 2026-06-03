@@ -1,0 +1,71 @@
+{
+  "system_name": "Elevator",
+  "domain": "vertical transport",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/elevator.json",
+    "notes": "Core gold FSM for elevator"
+  },
+  "states": [
+    "Idle",
+    "Moving",
+    "DoorOpen",
+    "Closing"
+  ],
+  "initial_state": "Idle",
+  "events": [
+    "call_elevator",
+    "arrived",
+    "close_door",
+    "door_sealed"
+  ],
+  "transitions": [
+    {
+      "source": "Idle",
+      "event": "call_elevator",
+      "target": "Moving",
+      "requirement": "R1, R2",
+      "guard": ""
+    },
+    {
+      "source": "Moving",
+      "event": "arrived",
+      "target": "DoorOpen",
+      "requirement": "R3, R6",
+      "guard": ""
+    },
+    {
+      "source": "DoorOpen",
+      "event": "close_door",
+      "target": "Closing",
+      "requirement": "R4",
+      "guard": ""
+    },
+    {
+      "source": "Closing",
+      "event": "door_sealed",
+      "target": "Idle",
+      "requirement": "R5, R7, R8",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "call_elevator",
+        "call_elevator"
+      ],
+      "reason": "Call rejected while Moving per R6",
+      "requirement": "R6"
+    },
+    {
+      "trace": [
+        "close_door"
+      ],
+      "reason": "Close rejected while Idle per R7",
+      "requirement": "R7"
+    }
+  ]
+}

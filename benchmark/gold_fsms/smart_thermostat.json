@@ -1,0 +1,86 @@
+{
+  "system_name": "Smart Thermostat",
+  "domain": "building climate control",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/smart_thermostat.json",
+    "notes": "Core gold FSM for smart_thermostat"
+  },
+  "states": [
+    "Off",
+    "Heating",
+    "Cooling"
+  ],
+  "initial_state": "Off",
+  "events": [
+    "power_on_heat",
+    "power_on_cool",
+    "power_off",
+    "target_reached"
+  ],
+  "transitions": [
+    {
+      "source": "Off",
+      "event": "power_on_heat",
+      "target": "Heating",
+      "requirement": "R1, R2",
+      "guard": ""
+    },
+    {
+      "source": "Off",
+      "event": "power_on_cool",
+      "target": "Cooling",
+      "requirement": "R3",
+      "guard": ""
+    },
+    {
+      "source": "Heating",
+      "event": "power_off",
+      "target": "Off",
+      "requirement": "R4, R8",
+      "guard": ""
+    },
+    {
+      "source": "Heating",
+      "event": "target_reached",
+      "target": "Off",
+      "requirement": "R6",
+      "guard": ""
+    },
+    {
+      "source": "Cooling",
+      "event": "power_off",
+      "target": "Off",
+      "requirement": "R5",
+      "guard": ""
+    },
+    {
+      "source": "Cooling",
+      "event": "target_reached",
+      "target": "Off",
+      "requirement": "R7",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "power_on_heat",
+        "power_on_heat"
+      ],
+      "reason": "Heat rejected while Heating per R8",
+      "requirement": "R8"
+    },
+    {
+      "trace": [
+        "power_on_cool",
+        "power_off",
+        "power_on_cool"
+      ],
+      "reason": "Cool rejected while Cooling",
+      "requirement": "R8"
+    }
+  ]
+}

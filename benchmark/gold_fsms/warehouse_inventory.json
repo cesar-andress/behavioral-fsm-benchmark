@@ -1,0 +1,79 @@
+{
+  "system_name": "Warehouse Inventory",
+  "domain": "warehouse logistics",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/warehouse_inventory.json",
+    "notes": "Core gold FSM for warehouse_inventory"
+  },
+  "states": [
+    "Idle",
+    "Stocked",
+    "Allocated",
+    "Dispatched"
+  ],
+  "initial_state": "Idle",
+  "events": [
+    "receive_stock",
+    "allocate",
+    "dispatch",
+    "cancel_allocation",
+    "restock"
+  ],
+  "transitions": [
+    {
+      "source": "Idle",
+      "event": "receive_stock",
+      "target": "Stocked",
+      "requirement": "R1, R2",
+      "guard": ""
+    },
+    {
+      "source": "Stocked",
+      "event": "allocate",
+      "target": "Allocated",
+      "requirement": "R3, R7",
+      "guard": ""
+    },
+    {
+      "source": "Allocated",
+      "event": "dispatch",
+      "target": "Dispatched",
+      "requirement": "R4, R8",
+      "guard": ""
+    },
+    {
+      "source": "Allocated",
+      "event": "cancel_allocation",
+      "target": "Stocked",
+      "requirement": "R5",
+      "guard": ""
+    },
+    {
+      "source": "Dispatched",
+      "event": "restock",
+      "target": "Stocked",
+      "requirement": "R6",
+      "guard": ""
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": [
+        "allocate"
+      ],
+      "reason": "Allocate rejected from Idle per R7",
+      "requirement": "R7"
+    },
+    {
+      "trace": [
+        "receive_stock",
+        "dispatch"
+      ],
+      "reason": "Dispatch rejected from Stocked per R8",
+      "requirement": "R8"
+    }
+  ]
+}
