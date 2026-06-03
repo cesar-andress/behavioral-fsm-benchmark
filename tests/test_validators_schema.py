@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from framework.io.load_json import load_json
+from framework.io.paths import gold_fsm_path
 from framework.validators.schema_validator import validate_against_schema
 
 
@@ -30,4 +31,10 @@ def test_schema_validation_requirement_spec(fixtures_dir: Path) -> None:
 def test_schema_validation_test_suite(fixtures_dir: Path) -> None:
     payload = load_json(fixtures_dir / "test_suite.json")
     ok, errors = validate_against_schema(payload, "testsuite.schema.json")
+    assert ok, errors
+
+
+def test_schema_validation_reference_fsm_resolves_ref() -> None:
+    payload = load_json(gold_fsm_path("vending_machine"))
+    ok, errors = validate_against_schema(payload, "reference_fsm.schema.json")
     assert ok, errors

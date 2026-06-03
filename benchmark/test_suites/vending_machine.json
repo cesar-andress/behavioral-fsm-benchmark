@@ -1,0 +1,54 @@
+{
+  "system_name": "Vending Machine",
+  "metadata": {
+    "status": "approved",
+    "tier": "pilot",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "happy_path_coffee",
+      "kind": "oracle",
+      "events": ["insert_coin", "press_coffee", "dispense_complete"],
+      "expected_final_state": "Idle",
+      "expected_trace": ["CreditAvailable", "Dispensing", "Idle"],
+      "description": "Full coffee transaction returns to Idle"
+    },
+    {
+      "test_id": "reject_coffee_from_idle",
+      "kind": "negative",
+      "events": ["press_coffee"],
+      "expected_final_state": null,
+      "description": "Coffee button rejected in Idle (R4)"
+    },
+    {
+      "test_id": "coin_insert_only",
+      "kind": "oracle",
+      "events": ["insert_coin"],
+      "expected_final_state": "CreditAvailable",
+      "description": "Coin insert from Idle"
+    },
+    {
+      "test_id": "reject_dispense_from_idle",
+      "kind": "negative",
+      "events": ["dispense_complete"],
+      "expected_final_state": null,
+      "description": "Dispense complete rejected in Idle"
+    },
+    {
+      "test_id": "path_to_dispensing",
+      "kind": "path",
+      "events": ["insert_coin", "press_coffee"],
+      "expected_final_state": "Dispensing",
+      "expected_trace": ["CreditAvailable", "Dispensing"],
+      "description": "Two-step path ending in Dispensing"
+    },
+    {
+      "test_id": "reject_coffee_during_dispensing",
+      "kind": "negative",
+      "events": ["insert_coin", "press_coffee", "press_coffee"],
+      "expected_final_state": null,
+      "description": "Second coffee press rejected while dispensing"
+    }
+  ]
+}

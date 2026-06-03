@@ -1,11 +1,25 @@
 {
   "schema_version": "1.0",
-  "benchmark_name": "FSM-Behavior-Bench",
+  "benchmark_name": "behavioral-fsm-benchmark",
   "upstream_dataset": "FSM-Bench-20",
   "systems_count": 20,
-  "gold_fsm_status": "placeholder",
-  "oracle_status": "placeholder",
-  "perturbation_status": "placeholder",
-  "systems": [],
-  "notes": "System entries will be populated as gold FSMs, oracles, and perturbations are authored."
+  "pilot_systems": ["vending_machine", "login_system"],
+  "gold_fsm_status": "pilot_partial",
+  "test_suite_status": "pilot_partial",
+  "systems": [
+    {
+      "system_id": "vending_machine",
+      "tier": "pilot",
+      "gold_fsm": "benchmark/gold_fsms/vending_machine.json",
+      "test_suite": "benchmark/test_suites/vending_machine.json",
+      "requirements": "benchmark/datasets/systems/vending_machine.json"
+    },
+    {
+      "system_id": "login_system",
+      "tier": "pilot",
+      "gold_fsm": "benchmark/gold_fsms/login_system.json",
+      "test_suite": "benchmark/test_suites/login_system.json",
+      "requirements": "benchmark/datasets/systems/login_system.json"
+    }
+  ]
 }

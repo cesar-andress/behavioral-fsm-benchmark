@@ -23,7 +23,8 @@ def test_evaluate_case_full_pipeline(
     assert result.behavioral is not None
     assert result.equivalence is not None
     assert result.coverage is not None
-    assert result.coverage.path_coverage == 1.0
+    assert result.coverage.path_coverage == 2 / 3
+    assert result.behavioral.behavioral_pass_rate == 2 / 3
 
 
 def test_evaluate_case_schema_validation_runs(generated_fsm) -> None:

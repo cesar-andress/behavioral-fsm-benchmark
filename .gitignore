@@ -21,8 +21,10 @@ analysis/figures/*
 analysis/tables/*
 !analysis/tables/.gitkeep
 
-# Imported dataset (regeneratable from upstream)
+# Imported dataset (regeneratable from upstream; pilot specs are tracked)
 benchmark/datasets/systems/*.json
+!benchmark/datasets/systems/vending_machine.json
+!benchmark/datasets/systems/login_system.json
 
 # AI-only and local assistant artifacts
 prompts/

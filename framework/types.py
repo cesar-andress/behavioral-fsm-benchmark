@@ -124,6 +124,10 @@ class TestCaseResult:
     evaluable: bool
     message: str = ""
     simulation: SimulationResult | None = None
+    kind: str = ""
+    final_state_matched: bool | None = None
+    trace_matched: bool | None = None
+    rejection_matched: bool | None = None
 
 
 @dataclass
@@ -132,6 +136,16 @@ class BehavioralResults:
     tests_passed: int
     tests_total: int
     test_results: list[TestCaseResult] = field(default_factory=list)
+    behavioral_pass_rate: float = 0.0
+    final_state_agreement_rate: float = 0.0
+    trace_agreement_rate: float = 0.0
+    rejected_event_agreement_rate: float = 0.0
+    final_state_tests: int = 0
+    final_state_matches: int = 0
+    trace_tests: int = 0
+    trace_matches: int = 0
+    negative_tests: int = 0
+    rejection_matches: int = 0
 
 
 @dataclass

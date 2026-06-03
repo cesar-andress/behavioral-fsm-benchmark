@@ -1,16 +1,44 @@
 {
-  "system_name": "PLACEHOLDER — Vending Machine",
-  "domain": "Retail automation",
+  "system_name": "Vending Machine",
+  "domain": "vending machine",
   "metadata": {
-    "status": "placeholder",
-    "approved_by": null,
-    "approved_at": null,
-    "source": "pending_migration_from_ist2026",
-    "notes": "Replace with approved gold FSM before behavioral evaluation"
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/vending_machine.json",
+    "notes": "Pilot gold FSM for drink vending machine"
   },
-  "states": [],
-  "initial_state": "",
-  "events": [],
-  "transitions": [],
-  "forbidden_behaviours": []
+  "states": ["Idle", "CreditAvailable", "Dispensing"],
+  "initial_state": "Idle",
+  "events": ["insert_coin", "press_coffee", "dispense_complete"],
+  "transitions": [
+    {
+      "source": "Idle",
+      "event": "insert_coin",
+      "guard": "",
+      "target": "CreditAvailable",
+      "requirement": "R2"
+    },
+    {
+      "source": "CreditAvailable",
+      "event": "press_coffee",
+      "guard": "",
+      "target": "Dispensing",
+      "requirement": "R3"
+    },
+    {
+      "source": "Dispensing",
+      "event": "dispense_complete",
+      "guard": "",
+      "target": "Idle",
+      "requirement": "R5"
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": ["press_coffee"],
+      "reason": "Coffee selection ignored in Idle per R4",
+      "requirement": "R4"
+    }
+  ]
 }

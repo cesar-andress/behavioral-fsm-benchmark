@@ -29,7 +29,7 @@ def test_gold_vs_generated_comparison(
     eq = compare_fsms(gold_fsm, generated_fsm, spec=requirement_spec, test_suite=test_suite)
     assert eq.state_overlap_rate == 1.0
     assert eq.extra_transitions
-    assert eq.behavioral_agreement_rate == 1.0
+    assert eq.behavioral_agreement_rate == 2 / 3
 
 
 def test_build_equivalence_with_coverage(

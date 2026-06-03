@@ -1,0 +1,51 @@
+{
+  "system_name": "Login System",
+  "domain": "authentication",
+  "metadata": {
+    "status": "approved",
+    "approved_by": "benchmark-author",
+    "approved_at": "2026-06-03",
+    "source": "benchmark/datasets/systems/login_system.json",
+    "notes": "Pilot gold FSM for credential-based login"
+  },
+  "states": ["LoggedOut", "Authenticating", "LoggedIn"],
+  "initial_state": "LoggedOut",
+  "events": ["submit_credentials", "login_success", "login_failure", "logout"],
+  "transitions": [
+    {
+      "source": "LoggedOut",
+      "event": "submit_credentials",
+      "guard": "",
+      "target": "Authenticating",
+      "requirement": "R2"
+    },
+    {
+      "source": "Authenticating",
+      "event": "login_success",
+      "guard": "",
+      "target": "LoggedIn",
+      "requirement": "R3"
+    },
+    {
+      "source": "Authenticating",
+      "event": "login_failure",
+      "guard": "",
+      "target": "LoggedOut",
+      "requirement": "R4"
+    },
+    {
+      "source": "LoggedIn",
+      "event": "logout",
+      "guard": "",
+      "target": "LoggedOut",
+      "requirement": "R5"
+    }
+  ],
+  "forbidden_behaviours": [
+    {
+      "trace": ["logout"],
+      "reason": "Logout rejected when already LoggedOut per R6",
+      "requirement": "R6"
+    }
+  ]
+}

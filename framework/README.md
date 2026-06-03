@@ -17,6 +17,7 @@ pip install -e ".[dev]"
 | `framework.behavioral` | Event-sequence simulator, oracle evaluation, test-suite runner |
 | `framework.equivalence` | Gold-vs-generated transition matching and behavioral agreement scaffold |
 | `framework.coverage` | Requirement, transition, and path coverage metrics |
+| `framework.benchmark` | Load/validate gold FSMs and test suites from `benchmark/` |
 | `framework.evaluation` | End-to-end single-case evaluation pipeline |
 | `framework.repair` | Reserved for optional candidate normalization (post-M1) |
 
@@ -40,4 +41,6 @@ pip install -e ".[dev]"
 
 ## Status
 
-M1 complete: core load/validate/simulate/compare pipeline implemented with pytest coverage per module. See `docs/implementation_roadmap.md`.
+M1 complete: core load/validate/simulate/compare pipeline implemented with pytest coverage per module.
+
+M2 pilot: gold FSMs and behavioral test suites for `vending_machine` and `login_system` under `benchmark/`. See `docs/implementation_roadmap.md`.

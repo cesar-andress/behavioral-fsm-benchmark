@@ -1,0 +1,55 @@
+{
+  "system_name": "Login System",
+  "metadata": {
+    "status": "approved",
+    "tier": "pilot",
+    "version": "1.0"
+  },
+  "tests": [
+    {
+      "test_id": "successful_login",
+      "kind": "oracle",
+      "events": ["submit_credentials", "login_success"],
+      "expected_final_state": "LoggedIn",
+      "expected_trace": ["Authenticating", "LoggedIn"],
+      "description": "Successful authentication flow"
+    },
+    {
+      "test_id": "failed_login",
+      "kind": "oracle",
+      "events": ["submit_credentials", "login_failure"],
+      "expected_final_state": "LoggedOut",
+      "expected_trace": ["Authenticating", "LoggedOut"],
+      "description": "Failed login returns to LoggedOut"
+    },
+    {
+      "test_id": "logout_after_login",
+      "kind": "path",
+      "events": ["submit_credentials", "login_success", "logout"],
+      "expected_final_state": "LoggedOut",
+      "expected_trace": ["Authenticating", "LoggedIn", "LoggedOut"],
+      "description": "Login followed by logout"
+    },
+    {
+      "test_id": "reject_logout_when_logged_out",
+      "kind": "negative",
+      "events": ["logout"],
+      "expected_final_state": null,
+      "description": "Logout rejected in LoggedOut (R6)"
+    },
+    {
+      "test_id": "reject_login_success_from_logged_out",
+      "kind": "negative",
+      "events": ["login_success"],
+      "expected_final_state": null,
+      "description": "Login success rejected without authentication step"
+    },
+    {
+      "test_id": "reject_submit_while_logged_in",
+      "kind": "negative",
+      "events": ["submit_credentials", "login_success", "submit_credentials"],
+      "expected_final_state": null,
+      "description": "Re-submit credentials rejected while LoggedIn"
+    }
+  ]
+}

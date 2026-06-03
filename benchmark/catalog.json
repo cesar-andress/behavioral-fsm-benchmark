@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "benchmark_name": "behavioral-fsm-benchmark",
+  "upstream_dataset": "FSM-Bench-20",
+  "tiers": {
+    "pilot": {
+      "systems": [
+        {
+          "system_id": "vending_machine",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        },
+        {
+          "system_id": "login_system",
+          "gold_status": "approved",
+          "test_suite_status": "approved"
+        }
+      ]
+    },
+    "core": {
+      "systems": []
+    },
+    "stretch": {
+      "systems": []
+    }
+  }
+}

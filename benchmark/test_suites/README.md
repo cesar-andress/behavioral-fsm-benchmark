@@ -1,8 +1,15 @@
-# Behavioral Test Suites — FSM-Bench-Next
+# Behavioral Test Suites — behavioral-fsm-benchmark
 
-Per-system executable test artifacts: oracles, multi-step paths, forbidden paths, guard contexts.
+Per-system executable behavioral test artifacts: oracles, multi-step paths, and negative (rejection) tests.
 
 **Schema:** `../schemas/testsuite.schema.json`  
-**Spec:** `../../paper/notes/benchmark_specification.md` §4.3
+**Spec:** `../../docs/benchmark_specification.md` §5
 
-Legacy path `benchmark/oracles/` merges into this directory. Do not populate data until reference FSM pilot completes.
+## Pilot systems (approved)
+
+| System ID | File | Tests |
+|-----------|------|------:|
+| `vending_machine` | `vending_machine.json` | 6 |
+| `login_system` | `login_system.json` | 6 |
+
+Load via `framework.benchmark.load_test_suite(system_id)` and execute with `framework.behavioral.test_runner.run_test_suite`.

@@ -21,6 +21,6 @@ def test_transition_coverage(gold_fsm, generated_fsm) -> None:
     assert cov.matched_exact == cov.reference_total
 
 
-def test_path_coverage(generated_fsm, test_suite) -> None:
-    rate = compute_path_coverage(generated_fsm, test_suite)
+def test_path_coverage(gold_fsm, test_suite) -> None:
+    rate = compute_path_coverage(gold_fsm, test_suite)
     assert rate == 1.0

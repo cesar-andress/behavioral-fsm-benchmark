@@ -5,7 +5,8 @@ from __future__ import annotations
 from framework.behavioral.test_runner import run_test_suite
 from framework.coverage.requirement_coverage import compute_requirement_coverage
 from framework.coverage.transition_coverage import compute_transition_coverage
-from framework.equivalence.transition_matcher import format_transition_key, transition_set
+from framework.equivalence.transition_diagnostics import compute_transition_diagnostics
+from framework.equivalence.transition_matcher import transition_set
 from framework.types import (
     FSM,
     EquivalenceResults,
@@ -24,9 +25,7 @@ def compare_fsms(
 ) -> EquivalenceResults:
     gold_exact = transition_set(gold, include_guard=True)
     cand_exact = transition_set(candidate, include_guard=True)
-
-    missing_exact = sorted(gold_exact - cand_exact, key=str)
-    extra_exact = sorted(cand_exact - gold_exact, key=str)
+    diagnostics = compute_transition_diagnostics(gold, candidate, include_guard=True)
 
     gold_state_count = len(gold.states)
     gold_event_count = len(gold.events)
@@ -53,8 +52,8 @@ def compare_fsms(
         exact_transition_match_rate=exact_rate,
         state_overlap_rate=state_overlap,
         event_overlap_rate=event_overlap,
-        missing_transitions=[format_transition_key(k) for k in missing_exact],
-        extra_transitions=[format_transition_key(k) for k in extra_exact],
+        missing_transitions=diagnostics.missing_transitions,
+        extra_transitions=diagnostics.extra_transitions,
         unsupported_transitions=unsupported,
         behavioral_agreement_rate=behavioral_rate,
     )

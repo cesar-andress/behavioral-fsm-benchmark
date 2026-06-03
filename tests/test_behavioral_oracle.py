@@ -13,9 +13,10 @@ def test_oracle_passes_expected_final_state(gold_fsm) -> None:
         events=["insert_coin", "press_coffee", "dispense_complete"],
         expected_final_state="Idle",
     )
-    ok, evaluable, message, simulation = evaluate_oracle(gold_fsm, test)
-    assert ok and evaluable
-    assert simulation.success
+    outcome = evaluate_oracle(gold_fsm, test)
+    assert outcome.passed and outcome.evaluable
+    assert outcome.simulation.success
+    assert outcome.final_state_matched is True
 
 
 def test_oracle_negative_test_expects_rejection(gold_fsm) -> None:
@@ -25,9 +26,10 @@ def test_oracle_negative_test_expects_rejection(gold_fsm) -> None:
         events=["press_coffee"],
         expected_final_state=None,
     )
-    ok, evaluable, message, simulation = evaluate_oracle(gold_fsm, test)
-    assert ok and evaluable
-    assert "rejection" in message
+    outcome = evaluate_oracle(gold_fsm, test)
+    assert outcome.passed and outcome.evaluable
+    assert outcome.rejection_matched is True
+    assert "rejection" in outcome.message
 
 
 def test_oracle_fails_wrong_final_state(gold_fsm) -> None:
@@ -37,8 +39,9 @@ def test_oracle_fails_wrong_final_state(gold_fsm) -> None:
         events=["insert_coin"],
         expected_final_state="Dispensing",
     )
-    ok, evaluable, _, _ = evaluate_oracle(gold_fsm, test)
-    assert not ok and evaluable
+    outcome = evaluate_oracle(gold_fsm, test)
+    assert not outcome.passed and outcome.evaluable
+    assert outcome.final_state_matched is False
 
 
 def test_oracle_expected_trace(gold_fsm) -> None:
@@ -49,5 +52,6 @@ def test_oracle_expected_trace(gold_fsm) -> None:
         expected_final_state="Idle",
         expected_trace=["CreditAvailable", "Dispensing", "Idle"],
     )
-    ok, evaluable, _, _ = evaluate_oracle(gold_fsm, test)
-    assert ok and evaluable
+    outcome = evaluate_oracle(gold_fsm, test)
+    assert outcome.passed and outcome.evaluable
+    assert outcome.trace_matched is True

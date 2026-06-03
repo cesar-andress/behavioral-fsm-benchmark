@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from framework.behavioral.metrics import apply_metrics_to_results
 from framework.behavioral.oracle import evaluate_oracle
 from framework.types import FSM, BehavioralResults, TestCaseResult, TestSuite
 
@@ -12,25 +13,31 @@ def run_test_suite(fsm: FSM, suite: TestSuite) -> BehavioralResults:
     evaluable = 0
 
     for test in suite.tests:
-        ok, is_evaluable, message, simulation = evaluate_oracle(fsm, test)
-        if is_evaluable:
+        outcome = evaluate_oracle(fsm, test)
+        if outcome.evaluable:
             evaluable += 1
-            if ok:
+            if outcome.passed:
                 passed += 1
         results.append(
             TestCaseResult(
                 test_id=test.test_id,
-                passed=ok,
-                evaluable=is_evaluable,
-                message=message,
-                simulation=simulation,
+                passed=outcome.passed,
+                evaluable=outcome.evaluable,
+                message=outcome.message,
+                simulation=outcome.simulation,
+                kind=test.kind,
+                final_state_matched=outcome.final_state_matched,
+                trace_matched=outcome.trace_matched,
+                rejection_matched=outcome.rejection_matched,
             )
         )
 
     rate = passed / evaluable if evaluable else 0.0
-    return BehavioralResults(
+    behavioral = BehavioralResults(
         oracle_pass_rate=rate,
         tests_passed=passed,
         tests_total=evaluable,
         test_results=results,
+        behavioral_pass_rate=rate,
     )
+    return apply_metrics_to_results(behavioral, suite.tests)

@@ -33,7 +33,10 @@ def main() -> int:
     suite = parse_test_suite(suite_payload)
     results = run_test_suite(fsm, suite)
 
-    print(f"oracle_pass_rate={results.oracle_pass_rate:.3f}")
+    print(f"behavioral_pass_rate={results.behavioral_pass_rate:.3f}")
+    print(f"final_state_agreement={results.final_state_agreement_rate:.3f}")
+    print(f"trace_agreement={results.trace_agreement_rate:.3f}")
+    print(f"rejected_event_agreement={results.rejected_event_agreement_rate:.3f}")
     print(f"tests_passed={results.tests_passed}/{results.tests_total}")
     for item in results.test_results:
         status = "PASS" if item.passed else "FAIL"
@@ -43,7 +46,11 @@ def main() -> int:
         write_json(
             args.json_out,
             {
+                "behavioral_pass_rate": results.behavioral_pass_rate,
                 "oracle_pass_rate": results.oracle_pass_rate,
+                "final_state_agreement_rate": results.final_state_agreement_rate,
+                "trace_agreement_rate": results.trace_agreement_rate,
+                "rejected_event_agreement_rate": results.rejected_event_agreement_rate,
                 "tests_passed": results.tests_passed,
                 "tests_total": results.tests_total,
                 "test_results": [

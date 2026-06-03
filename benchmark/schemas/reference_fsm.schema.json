@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "behavioral-fsm-benchmark/reference_fsm/v1",
   "title": "Gold / Reference FSM",
   "allOf": [{ "$ref": "generated_fsm.schema.json" }],
   "properties": {

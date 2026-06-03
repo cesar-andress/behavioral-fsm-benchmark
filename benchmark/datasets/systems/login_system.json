@@ -1,0 +1,12 @@
+{
+  "system_name": "Login System",
+  "domain": "authentication",
+  "requirements": [
+    "R1: The system starts in LoggedOut.",
+    "R2: Submitting credentials from LoggedOut moves to Authenticating.",
+    "R3: A successful login from Authenticating moves to LoggedIn.",
+    "R4: A failed login from Authenticating returns to LoggedOut.",
+    "R5: Logout from LoggedIn returns to LoggedOut.",
+    "R6: Logout is not allowed when already LoggedOut."
+  ]
+}

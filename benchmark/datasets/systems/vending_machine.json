@@ -1,0 +1,12 @@
+{
+  "system_name": "Vending Machine",
+  "domain": "vending machine",
+  "requirements": [
+    "R1: The machine starts in Idle.",
+    "R2: Inserting a coin in Idle moves to CreditAvailable.",
+    "R3: Pressing coffee in CreditAvailable moves to Dispensing.",
+    "R4: Pressing coffee in Idle must be ignored (no state change).",
+    "R5: Dispense complete in Dispensing returns to Idle.",
+    "R6: The machine returns to Idle after a successful dispense cycle."
+  ]
+}
